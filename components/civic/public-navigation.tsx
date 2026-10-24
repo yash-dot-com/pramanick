@@ -3,8 +3,16 @@
 import Link from "next/link"
 import { AudioLines } from "lucide-react"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-import { LanguageSwitcher, LocalizedText } from "@/components/language-provider"
-import { cn } from "@/lib/utils"
+import { LanguageSwitcher } from "@/components/language-provider"
+import { SlidingNavigation } from "@/components/ui/sliding-navigation"
+
+const pages = [
+  { href: "/", label: "Home", id: "home" },
+  { href: "/app", label: "Issue map", id: "map" },
+  { href: "/dashboard", label: "Dashboard", id: "dashboard" },
+  { href: "/leaderboard", label: "Officer records", id: "leaderboard" },
+  { href: "/operations", label: "Agent workspace", id: "operations" },
+]
 
 export function PublicNavigation({
   current,
@@ -25,40 +33,11 @@ export function PublicNavigation({
             </span>
             Pramanik
           </Link>
-          <nav
-            aria-label="Main navigation"
-            className="order-last flex w-full flex-wrap items-center gap-1 lg:order-none lg:w-auto"
-          >
-            {[
-              { href: "/", label: "Home", id: "home" },
-              { href: "/app", label: "Issue map", id: "map" },
-              { href: "/dashboard", label: "Dashboard", id: "dashboard" },
-              {
-                href: "/leaderboard",
-                label: "Officer records",
-                id: "leaderboard",
-              },
-              {
-                href: "/operations",
-                label: "Agent workspace",
-                id: "operations",
-              },
-            ].map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                aria-current={current === item.id ? "page" : undefined}
-                className={cn(
-                  "rounded-lg border border-transparent px-3 py-2 text-xs transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-none",
-                  current === item.id
-                    ? "border-primary/20 bg-primary/10 font-medium text-primary"
-                    : "text-muted-foreground"
-                )}
-              >
-                <LocalizedText text={item.label} />
-              </Link>
-            ))}
-          </nav>
+          <SlidingNavigation
+            items={pages}
+            current={current}
+            className="order-last w-full lg:order-none lg:w-auto"
+          />
           <div className="flex items-center gap-2 lg:ml-5">
             <ThemeSwitcher />
             <LanguageSwitcher />

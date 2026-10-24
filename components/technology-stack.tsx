@@ -4,52 +4,36 @@ import { LocalizedText } from "@/components/language-provider"
 
 const technologies = [
   {
-    name: "OpenAI",
-    label: "Agents SDK",
+    name: "OpenAI Agents SDK",
+    label: "Coordinator & parallel specialists",
     description:
       "A coordinator and parallel specialists turn reports, evidence and conversation history into the next action.",
     href: "https://openai.github.io/openai-agents-js/",
     icon: null,
   },
   {
-    name: "Bolna",
-    label: "Voice follow-ups",
+    name: "OpenAI Realtime",
+    label: "Live voice conversations",
     description:
-      "Phone conversations, call records and transcripts keep each follow-up connected to its case.",
+      "GPT powers the live conversation: listening, responding and using case tools while the agent speaks with the person on the phone.",
+    href: "https://developers.openai.com/api/docs/guides/realtime",
+    icon: null,
+  },
+  {
+    name: "OpenAI GPT",
+    label: "Reasoning, tools & evidence",
+    description:
+      "GPT prepares questions from the case history, reviews evidence, and turns conversations into structured promises, deadlines and next steps.",
+    href: "https://developers.openai.com/",
+    icon: null,
+  },
+  {
+    name: "Bolna",
+    label: "Phone numbers & calling",
+    description:
+      "Bolna provides the phone-number and telephony layer, giving the voice agent a real number to call from. OpenAI powers the conversation; Bolna connects the call and makes its records available.",
     href: "https://www.bolna.ai/",
     icon: "/brands/bolna.ico",
-  },
-  {
-    name: "Sarvam AI",
-    label: "Indian-language speech",
-    description:
-      "Speech recognition and voice responses help residents explain an issue in their own language.",
-    href: "https://www.sarvam.ai/",
-    icon: "/brands/sarvam.ico",
-  },
-  {
-    name: "Next.js",
-    label: "Public application",
-    description:
-      "The issue map, public timeline and conversation evidence come together in one interface.",
-    href: "https://nextjs.org/",
-    icon: "/brands/nextjs.ico",
-  },
-  {
-    name: "SQLite",
-    label: "Case memory",
-    description:
-      "Reports, promises, deadlines and past conversations stay in a durable case record.",
-    href: "https://www.sqlite.org/",
-    icon: "/brands/sqlite.ico",
-  },
-  {
-    name: "MapLibre",
-    label: "Location context",
-    description:
-      "A shared map connects every complaint and resident check to the place that needs attention.",
-    href: "https://maplibre.org/",
-    icon: "/brands/maplibre.ico",
   },
 ]
 
@@ -68,13 +52,13 @@ export function TechnologyStack() {
             id="technology-heading"
             className="font-heading text-4xl leading-tight font-normal tracking-tight sm:text-5xl"
           >
-            <LocalizedText text="An office powered by agents." />
+            <LocalizedText text="An autonomous office, built on OpenAI." />
           </h2>
           <p className="text-sm leading-7 text-muted-foreground">
-            <LocalizedText text="Built for the OpenAI hackathon. Reasoning, voice, memory and location work together to keep the next follow-up moving." />
+            <LocalizedText text="Built for the OpenAI hackathon. OpenAI powers the reasoning, agent coordination and live voice. Bolna supplies the phone number and calling connection." />
           </p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {technologies.map((technology) => (
             <a
               key={technology.name}
@@ -117,7 +101,7 @@ export function TechnologyStack() {
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t pt-6 text-[11px] text-muted-foreground">
           <p>
-            <LocalizedText text="Also built with React, TypeScript, shadcn/ui and Tailwind CSS." />
+            <LocalizedText text="OpenAI for the intelligence. Bolna for the phone line." />
           </p>
           <a
             href="https://github.com/yash-dot-com/pramanick"
