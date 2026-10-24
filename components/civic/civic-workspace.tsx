@@ -183,7 +183,7 @@ export function CivicWorkspace() {
   }
 
   return (
-    <main className="relative flex h-dvh gap-2 overflow-hidden bg-background p-2 text-foreground">
+    <main className="relative flex h-full gap-2 overflow-hidden bg-background p-2 text-foreground">
       {panel && (
         <DockedPanel
           width={sidebarWidth}

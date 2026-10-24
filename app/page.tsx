@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { instrumentSerif } from "@/lib/fonts"
 import { TechnologyStack } from "@/components/technology-stack"
+import { PublicNavigation } from "@/components/civic/public-navigation"
 import { Button } from "@/components/ui/button"
 import { LocalizedText } from "@/components/language-provider"
 
@@ -21,34 +22,7 @@ export default function Page() {
         >
           Skip to content
         </a>
-        <header className="relative z-10 mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-7 sm:px-10">
-          <Link href="/" className="text-lg font-semibold tracking-tight">
-            Pramanik<span className="text-primary">.</span>
-          </Link>
-          <nav
-            aria-label="Main navigation"
-            className="flex items-center gap-5 text-xs text-muted-foreground sm:gap-7"
-          >
-            <Link
-              href="/app"
-              className="transition-colors hover:text-foreground"
-            >
-              <LocalizedText text="Issue map" />
-            </Link>
-            <Link
-              href="/dashboard"
-              className="transition-colors hover:text-foreground"
-            >
-              <LocalizedText text="Follow-ups" />
-            </Link>
-            <Link
-              href="/leaderboard"
-              className="transition-colors hover:text-foreground"
-            >
-              <LocalizedText text="Service record" />
-            </Link>
-          </nav>
-        </header>
+        <PublicNavigation current="home" />
         <section
           id="main-content"
           className="relative z-10 mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-6 pt-16 pb-48 text-center sm:pt-20 sm:pb-56"
@@ -72,20 +46,34 @@ export default function Page() {
             <Button
               size="lg"
               nativeButton={false}
-              render={<Link href="/app" />}
+              render={<Link href="/dashboard" />}
               className="min-w-40"
             >
-              <LocalizedText text="Report an issue" />
+              <LocalizedText text="Open dashboard" />
             </Button>
             <Button
               size="lg"
               variant="secondary"
               nativeButton={false}
-              render={<Link href="/dashboard" />}
+              render={<Link href="/app" />}
               className="min-w-40"
             >
-              <LocalizedText text="See the follow-ups" />
+              <LocalizedText text="Explore issue map" />
             </Button>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+            <Link
+              href="/operations"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              <LocalizedText text="See the agent workspace" /> ↗
+            </Link>
+            <Link
+              href="/leaderboard"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              <LocalizedText text="View officer records" /> ↗
+            </Link>
           </div>
           <p className="mt-7 max-w-md text-xs leading-6 text-muted-foreground">
             <LocalizedText text="What was said. What was promised. What actually changed." />
