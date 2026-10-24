@@ -310,7 +310,7 @@ export function OfficeProfile({
           </p>
         )}
         <Badge variant="outline">
-          <LocalizedText text="Assignment requires review" />
+          <LocalizedText text="Office details are being checked" />
         </Badge>
       </div>
       <Separator />
@@ -319,7 +319,7 @@ export function OfficeProfile({
           ["Address", office.address || "Not published"],
           ["Published contact", office.publishedPhone || "Not published"],
           ...(record.email ? [["Email", record.email]] : []),
-          ["Jurisdiction", office.jurisdiction || "Not established"],
+          ["Area served", office.jurisdiction || "Still being checked"],
           [
             "Categories",
             office.categories
@@ -328,50 +328,61 @@ export function OfficeProfile({
           ],
         ].map(([label, value]) => (
           <div key={label}>
-            <dt className="mb-1 text-xs text-muted-foreground">{label}</dt>
-            <dd className="leading-relaxed break-words">{value}</dd>
+            <dt className="mb-1 text-xs text-muted-foreground">
+              <LocalizedText text={label} />
+            </dt>
+            <dd className="leading-relaxed break-words">
+              <LocalizedText text={value} />
+            </dd>
           </div>
         ))}
       </dl>
       <Separator />
-      <div className="space-y-2 text-xs text-muted-foreground">
-        <p>
-          <LocalizedText
-            text={
-              record.verificationStatus?.replaceAll("_", " ") ??
-              "Imported directory record"
-            }
-          />
-          <LocalizedText
-            text={record.sourceAsOf ? ` · ${record.sourceAsOf}` : ""}
-          />
-        </p>
-        {record.notes && (
-          <p className="leading-relaxed">
-            <LocalizedText text={record.notes} />
+      <details className="space-y-2 text-xs text-muted-foreground">
+        <summary className="cursor-pointer font-medium">
+          <LocalizedText text="About this directory listing" />
+        </summary>
+        <div className="space-y-3 pt-3">
+          <p>
+            <LocalizedText
+              text={
+                record.verificationStatus?.replaceAll("_", " ") ??
+                "Imported directory record"
+              }
+            />
+            <LocalizedText
+              text={record.sourceAsOf ? ` · ${record.sourceAsOf}` : ""}
+            />
           </p>
-        )}
-        <p>
-          <LocalizedText
-            text={
-              office.lat != null
-                ? "Supplied office point; jurisdiction is not established by location."
-                : "No coordinates supplied; this entry is not pinned."
-            }
-          />
-        </p>
-        {office.source && (
-          <Button
-            variant="link"
-            size="sm"
-            nativeButton={false}
-            render={<a href={office.source} target="_blank" rel="noreferrer" />}
-          >
-            <LocalizedText text="Published source" />
-            <ExternalLink />
-          </Button>
-        )}
-      </div>
+          {record.notes && (
+            <p className="leading-relaxed">
+              <LocalizedText text={record.notes} />
+            </p>
+          )}
+          <p>
+            <LocalizedText
+              text={
+                office.lat != null
+                  ? "This pin shows the office location. We still need to confirm which issues it handles."
+                  : "This office has no map location in the directory yet."
+              }
+            />
+          </p>
+          {office.source && (
+            <Button
+              variant="link"
+              size="sm"
+              nativeButton={false}
+              render={
+                <a href={office.source} target="_blank" rel="noreferrer" />
+              }
+            >
+              <LocalizedText text="Published source" />
+              <ExternalLink />
+            </Button>
+          )}
+        </div>
+      </details>
       <Button variant="ghost" size="sm" onClick={onClose}>
         <X />
         <LocalizedText text="Close details" />

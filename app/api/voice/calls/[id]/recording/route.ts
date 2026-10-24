@@ -4,6 +4,9 @@ import { errorResponse } from "@/lib/civic/http"
 import * as s from "@/lib/db/schema"
 import { bolnaRequest } from "@/lib/voice/bolna"
 import { allowedRecordingUrl } from "@/lib/voice/recording"
+import { readFile } from "node:fs/promises"
+import { resolve } from "node:path"
+import { isScriptedDemo } from "@/lib/civic/demo-office-data"
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 export async function GET(
@@ -23,6 +26,56 @@ export async function GET(
     if (!contact?.publicationConsent || !contact.recordingConsent)
       throw new CivicError("This recording is not published", 403)
     let url = call.recordingUrl
+    if (
+      contact.isDemo &&
+      isScriptedDemo(call.outcome) &&
+      url &&
+      /^\/demo-office\/audio\/[a-z-]+\.mp3$/.test(url)
+    ) {
+      const body = await readFile(
+        resolve(process.cwd(), "public", url.slice(1))
+      )
+      const headers = new Headers({
+        "Content-Type": "audio/mpeg",
+        "Cache-Control": "public, max-age=3600",
+        "Accept-Ranges": "bytes",
+        "X-Content-Type-Options": "nosniff",
+      })
+      if (new URL(request.url).searchParams.get("download") === "1")
+        headers.set(
+          "Content-Disposition",
+          `attachment; filename="${url.split("/").at(-1)}"`
+        )
+      const range = request.headers.get("range")
+      if (range) {
+        const match = /^bytes=(\d*)-(\d*)$/.exec(range)
+        if (!match || (!match[1] && !match[2]))
+          return new Response(null, {
+            status: 416,
+            headers: { "Content-Range": `bytes */${body.length}` },
+          })
+        const start = match[1]
+          ? Number(match[1])
+          : Math.max(0, body.length - Number(match[2]))
+        const end =
+          match[1] && match[2]
+            ? Math.min(Number(match[2]), body.length - 1)
+            : body.length - 1
+        if (start >= body.length || start > end)
+          return new Response(null, {
+            status: 416,
+            headers: { "Content-Range": `bytes */${body.length}` },
+          })
+        headers.set("Content-Range", `bytes ${start}-${end}/${body.length}`)
+        headers.set("Content-Length", String(end - start + 1))
+        return new Response(body.subarray(start, end + 1), {
+          status: 206,
+          headers,
+        })
+      }
+      headers.set("Content-Length", String(body.length))
+      return new Response(body, { headers })
+    }
     if (call.executionId) {
       const execution = await bolnaRequest(
         `/executions/${encodeURIComponent(call.executionId)}`
@@ -74,6 +127,11 @@ export async function GET(
       "Content-Type": contentType,
       "X-Content-Type-Options": "nosniff",
     })
+    if (new URL(request.url).searchParams.get("download") === "1")
+      headers.set(
+        "Content-Disposition",
+        `attachment; filename="pramanik-conversation-${id}.${/mpeg/.test(contentType) ? "mp3" : /wav/.test(contentType) ? "wav" : "audio"}"`
+      )
     for (const name of ["content-length", "content-range", "accept-ranges"]) {
       const value = response.headers.get(name)
       if (value) headers.set(name, value)

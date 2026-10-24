@@ -1,8 +1,8 @@
 # Phase 9 — Voice-first reporting
 
-**Code implemented; remote draft tool configured · live conversation check pending.**
+**Sarvam + GPT path implemented · user listening check pending.**
 
-- Microphone opens official Bolna browser SDK.
+- Browser microphone → Sarvam transcription → GPT reasoning → streamed Sarvam speech.
 - Marathi default; Hindi/English selection; short targeted questions.
 - Draft title, category/type, description and landmark.
 - Spoken corrections update the draft; no silent publication.
@@ -13,5 +13,7 @@
 
 **Your check:** speak → review → place pin → confirm → find case on map.
 
-- Live inferred details update through the partial-inference tool, before the final draft.
-- Connection/listening/speaking states come from the SDK; read/write actions come from persisted server events.
+- Inferred details update after each speaking turn, before the final draft.
+- Pause detection or Send turn submits a clip; 24-second cap. The microphone pauses during replies.
+- Visible transcription, reading, inference and speech events reflect server activity.
+- Original resident wording stays saved; the final map pin is always chosen on screen.

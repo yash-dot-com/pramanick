@@ -2,6 +2,43 @@ export type Locale = "en" | "hi" | "mr"
 export const localeNames = { en: "English", hi: "हिन्दी", mr: "मराठी" } as const
 // English source strings remain stable keys; records and quotations keep their originals.
 export const messages: Record<string, { hi: string; mr: string }> = {
+  "Light mode": { hi: "हल्का रंग", mr: "उजळ रंग" },
+  "Dark mode": { hi: "गहरा रंग", mr: "गडद रंग" },
+  "Use device theme": { hi: "डिवाइस जैसा रंग", mr: "डिव्हाइसप्रमाणे रंग" },
+  "Issue overview": { hi: "समस्या की जानकारी", mr: "समस्येची माहिती" },
+  Updates: { hi: "अपडेट", mr: "घडामोडी" },
+  Photos: { hi: "तस्वीरें", mr: "फोटो" },
+  "Follow-up": { hi: "आगे की कार्रवाई", mr: "पाठपुरावा" },
+  Fixed: { hi: "ठीक हुआ", mr: "दुरुस्त" },
+  "Check the repair": { hi: "मरम्मत जाँचें", mr: "दुरुस्ती तपासा" },
+  "What happens next": { hi: "अब आगे क्या होगा", mr: "पुढे काय होणार" },
+  "Who we’re following up with": {
+    hi: "किससे प्रगति पूछी जा रही है",
+    mr: "कोणाकडे पाठपुरावा सुरू आहे",
+  },
+  "Latest promise": { hi: "हाल का वादा", mr: "शेवटचे आश्वासन" },
+  "Full record & agent activity": {
+    hi: "पूरी जानकारी और एजेंट का काम",
+    mr: "संपूर्ण नोंद आणि एजंटचे काम",
+  },
+  "Read update": { hi: "अपडेट पढ़ें", mr: "सविस्तर वाचा" },
+  "Show full history": { hi: "पूरा इतिहास देखें", mr: "संपूर्ण इतिहास पहा" },
+  "Show key updates": {
+    hi: "मुख्य अपडेट देखें",
+    mr: "महत्त्वाच्या घडामोडी पहा",
+  },
+  "Ask Pramanik about this issue": {
+    hi: "इस समस्या के बारे में प्रामाणिक से पूछें",
+    mr: "या समस्येबद्दल प्रामाणिकला विचारा",
+  },
+  "Next steps": { hi: "अगले कदम", mr: "पुढील पावले" },
+  "Working now": { hi: "अभी काम जारी है", mr: "सध्या सुरू असलेले काम" },
+  "Waiting for follow-up": {
+    hi: "अगली कार्रवाई की प्रतीक्षा",
+    mr: "पुढील पाठपुराव्याची प्रतीक्षा",
+  },
+  "Completed actions": { hi: "पूरे हुए काम", mr: "पूर्ण झालेली कामे" },
+  "Call language": { hi: "कॉल की भाषा", mr: "कॉलची भाषा" },
   "Agent dashboard": { hi: "एजेंट डैशबोर्ड", mr: "एजंट डॅशबोर्ड" },
   "Start demo": { hi: "डेमो शुरू करें", mr: "डेमो सुरू करा" },
   "Pause demo": { hi: "डेमो रोकें", mr: "डेमो थांबवा" },

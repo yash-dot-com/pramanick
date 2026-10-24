@@ -15,7 +15,8 @@
 - Use live GPS at the venue. A phone browser on the HTTPS tunnel is practical for location and camera; reliable Wi-Fi alone does not guarantee precise GPS.
 - Use a clearly labeled fictional venue case and actual photographs of a controlled demonstration.
 - Have distinct before/after photos under 2MB; don't use generated or unrelated photos as real repair evidence.
-- Keep `/app`, `/operations`, `/leaderboard` ready.
+- Keep `/app`, `/dashboard`, `/operations`, `/leaderboard` ready.
+- Use the sun icon for the light theme; check the native-language citizen voice once before presenting.
 
 ## 1 — Report
 
@@ -29,8 +30,9 @@
 
 ## 2 — Agent takes ownership of follow-through
 
-- Operations → open case → assign **Pramanik demo civic office**.
-- Click **Start follow-up**.
+- Open `/dashboard`, select the locality and call language, then click **Start demo**.
+- Show the real activity and action-plan board. The routine reads reports and prepares the call plan.
+- An individual case can also use **Start follow-up**.
 - Show the generated brief/questions and durable call job.
 - Friend answers as the explicitly labeled demonstration responsibility holder.
 - Friend promises one concrete action at a clear date/time, in Asia/Kolkata.

@@ -5,6 +5,7 @@ import * as s from "@/lib/db/schema"
 import { voiceOperations } from "./operations"
 import { publicActionPlan } from "./action-plan"
 import { publicRecordingPath } from "./recording"
+import { isScriptedDemo, demoOfficers } from "@/lib/civic/demo-office-data"
 
 export function publicAgentDashboard() {
   const { db } = store()
@@ -28,7 +29,12 @@ export function publicAgentDashboard() {
       status: call.status,
       createdAt: call.createdAt,
       duration: call.duration,
-      kind: person?.phone ? "phone" : "browser",
+      kind:
+        person?.isDemo && isScriptedDemo(call.outcome)
+          ? "scripted_demo"
+          : person?.phone
+            ? "phone"
+            : "browser",
       providerConfirmed: !!call.executionId,
       person: person
         ? {
@@ -61,6 +67,16 @@ export function publicAgentDashboard() {
   )
   return {
     capturedAt: new Date().toISOString(),
+    demoOffice: {
+      officers: demoOfficers.filter((officer) =>
+        contacts.some((contact) => contact.officeId === officer.id)
+      ),
+      conversations: calls.filter(
+        (call) =>
+          call.contactId.startsWith("office-demo-") &&
+          isScriptedDemo(call.outcome)
+      ).length,
+    },
     worker: operations.worker,
     demoPhoneConfigured: operations.phoneDemoConfigured,
     publication: {
@@ -94,6 +110,7 @@ export function publicAgentDashboard() {
           .filter((session) => session.provider === "sarvam").length +
         calls.filter(
           (call) =>
+            !isScriptedDemo(call.outcome) &&
             !contacts.find((person) => person.id === call.contactId)?.phone
         ).length,
       activeRuns: operations.followUpRuns.filter((run) =>
@@ -124,6 +141,15 @@ export function publicAgentDashboard() {
       .where(isNull(s.agentActivities.intakeSessionId))
       .orderBy(desc(sql`rowid`))
       .limit(120)
+      .all(),
+    officeActivities: db
+      .select()
+      .from(s.agentActivities)
+      .where(
+        sql`json_extract(${s.agentActivities.detail}, '$.officeRole') IS NOT NULL`
+      )
+      .orderBy(desc(s.agentActivities.updatedAt))
+      .limit(1000)
       .all(),
     runs: operations.followUpRuns.map((run) => ({
       id: run.id,

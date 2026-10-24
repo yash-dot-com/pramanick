@@ -24,22 +24,22 @@ The requested office has a coordinator and specialist work for report aggregatio
 
 Each desk needs real assigned work, a current state, a dated result, and a visible handoff. Independent work may run in parallel; a call must wait for its case brief, approved recipient, and relevant evidence. Animating desks cannot establish that parallel specialist agents exist.
 
-The current implementation has a durable job queue and a serial worker. The choice between a new coordinator/parallel-specialist implementation and an office view over the current workflow is pending user clarification. Existing job lease and idempotency behavior should be preserved.
+The user selected a real coordinator and parallel specialists. The existing durable queue remains intact. Each preparation job now starts three independent Agents SDK invocations together; the coordinator waits for their persisted findings before producing the brief. External calls remain dependent jobs with the existing lease, idempotency and recipient checks.
 
-### Proposed first backend change, for review
+### Implemented coordinator
 
-Keep SQLite and the existing durable queue. A case-preparation job would become the coordinator's work item. It would start independent report aggregation, history/evidence review and responsibility research in parallel, using the already installed Agents SDK. After those results are saved, the coordinator would prepare the follow-up brief. Calling remains a dependent action, with the existing recipient, spacing, retry and uncertain-dispatch checks.
+`lib/voice/coordinator.ts` starts report aggregation, history/evidence review and responsibility research in parallel. Each result cites source IDs from its assigned case. Successful specialist work is reused on a retry when the case fingerprint is unchanged. One failed specialist prevents handoff until recovery; all sibling results settle and remain recorded. The coordinator receives recent original transcripts as well as complaint texts, commitments, location, evidence captions and directory candidates.
 
 Record each specialist's assignment, coordinator/parent ID, input record references, start, result, error and handoff in persisted activity records. The office UI would render these records. A specialist is working only while that actual invocation is active; idle desks stay idle. Recovery must preserve completed work and avoid repeating a phone effect.
 
-This is a proposed implementation, not a claim that the current worker already runs those specialists.
+`/dashboard` renders these persisted assignments and results as a public office. Running indicators require a recent activity, an active run and an online worker. Historical examples remain labeled. The real model-backed validation script confirmed overlapping specialist execution followed by a saved coordinator plan; its isolated fictional contact has no phone and no call was placed.
 
 ## Public case file
 
 - One chronological record of reports, dated evidence, office assignment, conversations, promises, follow-ups, disputes, verification, and escalation.
 - Original conversation wording stays available separately from display translation. Speaker labels follow the saved transcript; missing timestamps or identities stay missing.
 - Show the actual contact's name and role, with demo and browser-conversation labels where applicable.
-- Audio and transcripts follow the existing publication permissions while the requested publication/review policy is being clarified.
+- Real audio and transcripts retain the existing publication behavior. Fictional fixtures are pre-published with clearly identified scripted text and synthetic voices.
 - Give residents access to the saved evidence bundle and the case location. Claims and resident-verified outcomes remain distinct.
 
 ## Continuous response assessment
@@ -50,18 +50,25 @@ Every assessment must identify its case and conversation, date, supporting wordi
 
 Keep per-conversation notes separate from longitudinal office/person metrics. Existing response profiles already calculate some documented metrics; the future evaluation version and review process need to be recorded with newly introduced assessments.
 
-## Current boundaries to resolve before a public launch
+## Demonstration and deployment
+
+- Two fictional contacts, Meera Deshmukh (roads/drainage) and Nikhil Jadhav (water/lighting), have responsibilities but no invented phone numbers or dialing authorization.
+- Four narrated cases cover verified repair, an open deadline, a late completion claim awaiting residents, and a disputed clearance. Eight MP3s, original speaker-by-speaker scripts, summaries, promises, resident responses and illustrative proof are bundled in `public/demo-office/`.
+- The recording proxy supports playback, seeking and downloading for the bundled audio; the production tracing configuration includes these files. Fixtures do not receive fabricated Bolna execution IDs and are excluded from real phone/browser counts. Scripted profile measures are shown separately from provider/directory records.
+- Seed data is additive and repeat-safe. `PRAMANIK_DEMO_OFFICE=false` disables new office fixture creation. It does not delete existing examples. The existing worker still runs separately from the web server; serverless instances do not run a permanent worker automatically.
+- [Bolna's execution API](https://www.bolna.ai/docs/api-reference/executions/get_execution) provides `transcript`, `summary` and `telephony_data.recording_url` after final completion. A call-disconnected event is not final completion; summary generation depends on the agent configuration. The app's existing sync/proxy handles provider media, and the audio download link uses the same app route.
+
+## Remaining production boundaries
 
 - Only a configured demo recipient is callable today. Per-official responsibility and contact approval is a separate requested capability; no real recipient has been authorized by this product description.
 - Existing demo routes have no authentication. Public visibility must be separated from operator mutation access before deployment; a local read-only screen does not secure the backend.
-- The deployment destination and public-launch authorization have not been selected.
-- Coordinator/parallel execution, real-contact approval, and conversation-publication policy have been asked as explicit decisions. Implementation of those choices depends on the answers.
+- Real multi-official dialing remains separate from the two fictional demonstration personas. No real official recipient has been supplied.
 
 ## Incremental implementation
 
 1. Connect the public case file to existing saved records: chronology, actual contacts, conversations, promises, proof and source-linked response notes.
-2. Implement the selected coordinator/worker architecture, persisted assignments and handoffs, and truthful live desk states.
-3. Make the office view the public dashboard, with case/locality navigation and a resident-friendly explanation of each current action.
+2. Implemented the selected coordinator/worker architecture, persisted assignments and handoffs, and truthful live desk states.
+3. Implemented the office view on the public dashboard, with case navigation and a resident-friendly explanation of each desk.
 4. Implement the selected contact/publication controls and reviewable response assessments.
 5. Separate public and operator access, then prepare a concrete deployment for approval.
 

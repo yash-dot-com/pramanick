@@ -1,0 +1,34 @@
+{
+  "road-first": {
+    "duration": 20.887891,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "road-followup": {
+    "duration": 21.876644,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "water-first": {
+    "duration": 22.517143,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "water-followup": {
+    "duration": 26.430113,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "light-first": {
+    "duration": 20.306757,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "light-followup": {
+    "duration": 22.752063,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "drain-first": {
+    "duration": 20.181905,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  },
+  "drain-followup": {
+    "duration": 20.603628,
+    "source": "Synthetic speech of fictional scripted dialogue"
+  }
+}

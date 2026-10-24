@@ -48,7 +48,7 @@ export function DockedPanel({
       style={{ width: `min(${width}px, calc(100vw - 24px))` }}
       aria-label={title}
     >
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-3">
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-muted/20 px-3">
         {onBack && (
           <Button
             variant="ghost"

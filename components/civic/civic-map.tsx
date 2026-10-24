@@ -192,13 +192,7 @@ export function CivicMap({
         fallback
       ) : (
         <MapBoundary fallback={fallback}>
-          <Map
-            center={[73.855, 18.549]}
-            zoom={11.4}
-            minZoom={9}
-            maxZoom={18}
-            theme="dark"
-          >
+          <Map center={[73.855, 18.549]} zoom={11.4} minZoom={9} maxZoom={18}>
             <MapControls showCompass showFullscreen position="bottom-right" />
             <MapBehavior
               selected={selected}

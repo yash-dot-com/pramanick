@@ -4,6 +4,15 @@
 
 **Report → start follow-up → remember promises → check repair → close or escalate.**
 
+## Latest interface work
+
+- Light / dark / device theme using the existing shadcn tokens; map follows the theme.
+- Simpler sidebar: progress, next step, Updates / Photos / Calls.
+- Detailed audit history, downloads and agent activity stay available under Full record.
+- Citizen voice now uses Sarvam speech + GPT reasoning; Bolna handles outbound calls.
+- Language switch covers UI text and cached display translations of records.
+- You confirmed the clearer sidebar and synchronized map/component theme switching. Marathi listening and the full call loop remain to be checked.
+
 ## Latest agent work
 
 - Public `/dashboard`: routine monitoring, saved actions, plan Kanban, call history and issue links.
@@ -15,7 +24,10 @@
 
 ## Implemented in code
 
-- **Map:** stock dark mapcn; white pins with red/amber/green status; hover summary; full-height sidebar with horizontal width handle.
+- **Public office:** a real coordinator runs report, memory/evidence and responsibility specialists concurrently; saved assignments/results feed the office desks on `/dashboard`.
+- **Narrated demonstration:** two fictional officers, four detailed case histories, eight synthetic MP3 conversations, original transcripts, commitments, resident checks and separate sample response measures. See `docs/PUBLIC-CIVIC-OFFICE.md`.
+
+- **Map:** stock themed mapcn; white pins with red/amber/green status; hover summary; full-height sidebar with horizontal width handle.
 - **Reporting:** voice/text → editable draft → user-selected pin → optional before photo → duplicate matching.
 - **Casework:** start for an issue/locality; brief; configured demo phone; pause/resume; remembered promises and deadlines.
 - **Evidence:** public timeline; versioned Markdown/JSON dossiers; consent-aware conversation publication.

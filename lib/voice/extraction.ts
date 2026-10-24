@@ -137,7 +137,7 @@ export async function extractCallOutcome(callId: string) {
               .from(s.issues)
               .where(eq(s.issues.id, outcome.issueId))
               .get()?.status === "verified"
-          if (!closed)
+          if (!closed && !citizenConversation)
             executeVoiceTool("select_issue_context", {
               pramanik_call_id: call.id,
               issue_id: outcome.issueId,

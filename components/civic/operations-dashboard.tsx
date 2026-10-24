@@ -3,6 +3,7 @@
 import { LanguageSwitcher, LocalizedText } from "@/components/language-provider"
 
 import Link from "next/link"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import dynamic from "next/dynamic"
 import { useCallback, useEffect, useRef, useState } from "react"
 import {
@@ -235,6 +236,7 @@ export function OperationsDashboard() {
           </Badge>
         </div>
         <div className="flex flex-wrap gap-2">
+          <ThemeSwitcher />
           <LanguageSwitcher />
           <Button
             variant="outline"
@@ -496,11 +498,6 @@ export function OperationsDashboard() {
                       >
                         <CardContent className="space-y-3 px-4">
                           <div className="flex flex-wrap gap-1">
-                            {issue.isDemo && (
-                              <Badge variant="outline">
-                                <LocalizedText text="Demo" />
-                              </Badge>
-                            )}
                             <StatusBadge status={issue.status} />
                           </div>
                           <button

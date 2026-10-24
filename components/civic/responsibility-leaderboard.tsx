@@ -7,11 +7,12 @@ import {
 } from "@/components/language-provider"
 
 import Link from "next/link"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { ArrowLeft, ArrowUpRight, Search, Trophy } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -61,6 +62,7 @@ export function ResponsibilityLeaderboard() {
   const [error, setError] = useState("")
   const [query, setQuery] = useState("")
   const [kind, setKind] = useState("person")
+  const [recordSet, setRecordSet] = useState("scripted_demo")
   const [metric, setMetric] = useState<Metric>("verifiedFixRate")
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const refresh = useCallback(async () => {
@@ -71,12 +73,15 @@ export function ResponsibilityLeaderboard() {
   }, [])
   useEffect(() => {
     const profile = new URLSearchParams(window.location.search).get("profile")
-    if (profile) setSelectedId(profile)
     const read = () => {
       if (document.visibilityState !== "hidden")
         void refresh().catch((error) => setError(error.message))
     }
-    read()
+    void refresh()
+      .then(() => {
+        if (profile) setSelectedId(profile)
+      })
+      .catch((error) => setError(error.message))
     const timer = setInterval(read, 10000)
     return () => clearInterval(timer)
   }, [refresh])
@@ -85,6 +90,7 @@ export function ResponsibilityLeaderboard() {
       (data?.profiles ?? [])
         .filter(
           (profile) =>
+            profile.dataMode === recordSet &&
             profile.kind === kind &&
             `${profile.name} ${profile.role} ${profile.officeName}`
               .toLowerCase()
@@ -97,7 +103,7 @@ export function ResponsibilityLeaderboard() {
           if (bv === null) return -1
           return metric === "medianResolutionHours" ? av - bv : bv - av
         }),
-    [data, kind, metric, query]
+    [data, kind, metric, query, recordSet]
   )
   const selected = data?.profiles.find((profile) => profile.id === selectedId)
   const open = (profile: ResponsibilityProfile) => {
@@ -126,6 +132,7 @@ export function ResponsibilityLeaderboard() {
           </h1>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeSwitcher />
           <LanguageSwitcher />
           <Button
             variant="outline"
@@ -149,6 +156,17 @@ export function ResponsibilityLeaderboard() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
+          <select
+            aria-label="Record source"
+            value={recordSet}
+            onChange={(event) => setRecordSet(event.target.value)}
+            className="rounded-lg border bg-background px-3 py-2 text-xs"
+          >
+            <option value="scripted_demo">Fictional demonstration</option>
+            <option value="provider_records">
+              Provider & directory records
+            </option>
+          </select>
           <Select
             value={kind}
             onValueChange={(value) => {
@@ -198,6 +216,13 @@ export function ResponsibilityLeaderboard() {
             />
           </div>
         </div>
+        {recordSet === "scripted_demo" && (
+          <p className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-900 dark:text-amber-200">
+            These sample measures come from fictional cases and scripted
+            conversations. Open a person to inspect the promises, delays and
+            resident checks behind each number.
+          </p>
+        )}
         {error && (
           <p role="alert" className="text-sm text-destructive">
             <LocalizedText text={error} />
@@ -250,11 +275,6 @@ export function ResponsibilityLeaderboard() {
                     <p className="mt-1 max-w-xs text-xs text-muted-foreground">
                       <LocalizedText text={profile.role} />
                     </p>
-                    {profile.isDemo && (
-                      <Badge variant="outline" className="mt-2">
-                        <LocalizedText text="Fictional demo" />
-                      </Badge>
-                    )}
                   </td>
                   <td className="p-4 font-medium tabular-nums">
                     <LocalizedText
@@ -330,11 +350,6 @@ export function ResponsibilityLeaderboard() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-5">
-              {selected.isDemo && (
-                <Badge variant="secondary">
-                  <LocalizedText text="Fictional demo responsibility holder" />
-                </Badge>
-              )}
               <p className="text-xs text-muted-foreground">
                 <LocalizedText text={selected.attribution} />
               </p>

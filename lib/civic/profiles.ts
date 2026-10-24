@@ -2,6 +2,7 @@ import { snapshot, store } from "./repository"
 import { publicText } from "./dossier"
 import * as s from "@/lib/db/schema"
 import { demoContact } from "@/lib/voice/contact"
+import { isScriptedDemo } from "./demo-office-data"
 
 const terminal = new Set([
   "completed",
@@ -37,11 +38,21 @@ export function responsibilityProfiles() {
   const contactsForOffice = (id: string) =>
     contacts.filter((contact) => contact.officeId === id)
   const facts = (contactIds: string[], officeId?: string) => {
+    const scripted = allCalls.some(
+      (call) =>
+        contactIds.includes(call.contactId) &&
+        isScriptedDemo(call.outcome) &&
+        contacts.some(
+          (contact) => contact.id === call.contactId && contact.isDemo
+        )
+    )
     const phoneCalls = allCalls.filter(
       (call) =>
         contactIds.includes(call.contactId) &&
-        !!call.executionId &&
-        !!contacts.find((contact) => contact.id === call.contactId)?.phone
+        (scripted
+          ? isScriptedDemo(call.outcome)
+          : !!call.executionId &&
+            !!contacts.find((contact) => contact.id === call.contactId)?.phone)
     )
     const associated = new Set([
       ...phoneCalls.map((call) => call.issueId),
@@ -174,6 +185,9 @@ export function responsibilityProfiles() {
           }))
       })
     return {
+      dataMode: scripted
+        ? ("scripted_demo" as const)
+        : ("provider_records" as const),
       assignedCases: cases.length,
       verifiedFixes: verified.length,
       unresolvedCases: cases.length - verified.length,
@@ -235,9 +249,11 @@ export function responsibilityProfiles() {
           ].sort()[0] ?? null,
         to: new Date().toISOString(),
       },
-      attribution: officeId
-        ? "Current office assignments plus attributed calls. Team outcomes may involve several people."
-        : "Cases discussed on this person's demo phone calls; this does not establish sole responsibility for a repair.",
+      attribution: scripted
+        ? "Illustrative measures computed from fictional cases and scripted conversations with synthetic audio. These are not real official performance records."
+        : officeId
+          ? "Current office assignments plus attributed calls. Team outcomes may involve several people."
+          : "Cases discussed on this person's demo phone calls; this does not establish sole responsibility for a repair.",
     }
   }
   const profiles = offices.map((office) => ({

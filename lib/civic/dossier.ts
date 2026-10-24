@@ -6,6 +6,7 @@ import { CivicError, snapshot, store, surveyFor } from "./repository"
 import { localityName } from "./model"
 import * as s from "@/lib/db/schema"
 import { publicRecordingPath } from "@/lib/voice/recording"
+import { isScriptedDemo } from "./demo-office-data"
 
 export function publicText(value: string | null | undefined) {
   return (value ?? "")
@@ -55,6 +56,7 @@ export function dossierContent(issueId: string) {
         createdAt: call.createdAt,
         duration: call.duration,
         phoneAttempt: !!call.executionId && !!contact?.phone,
+        scriptedDemo: !!contact?.isDemo && isScriptedDemo(call.outcome),
         summary: publicText(
           attributed?.summary ??
             (call.issueId === issueId ? call.summary : null)
@@ -85,7 +87,9 @@ export function dossierContent(issueId: string) {
           : null,
         recordingUrl:
           contact?.publicationConsent && contact.recordingConsent
-            ? call.recordingUrl ? publicRecordingPath(call.id) : null
+            ? call.recordingUrl
+              ? publicRecordingPath(call.id)
+              : null
             : null,
       }
     })
@@ -356,7 +360,7 @@ export function dossierMarkdown(dossier: ReturnType<typeof readDossier>) {
     "## Conversations",
     ...dossier.calls.map(
       (call) =>
-        `- ${call.createdAt} · ${call.person?.name ?? "Participant"} · ${call.status}\n  ${call.summary || "No published summary."}${call.transcript ? `\n\n${call.transcript}` : ""}`
+        `### ${call.createdAt} · ${call.person?.name ?? "Participant"}\n${call.person?.role ?? ""} · ${call.status}${call.scriptedDemo ? " · FICTIONAL SCRIPTED SAMPLE; audio uses synthetic voices" : ""}\n\n${call.summary || "No published summary."}${call.recordingUrl ? `\n\nAudio: ${call.recordingUrl}` : ""}${call.nextAction ? `\n\nNext follow-up: ${call.nextAction}` : ""}${call.transcript ? `\n\nOriginal transcript:\n\n${call.transcript}` : ""}\n`
     ),
     "",
     "## Evidence gaps",

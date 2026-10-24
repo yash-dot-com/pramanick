@@ -30,12 +30,12 @@ export function publicResponseNotes(call: PublicCaseCall) {
   const quote =
     typeof signals?.evidenceQuote === "string" ? signals.evidenceQuote : ""
   const supported =
-    call.phoneAttempt &&
+    (call.phoneAttempt || call.scriptedDemo) &&
     !!normalized(quote) &&
     !!call.transcript &&
     normalized(call.transcript).includes(normalized(quote))
   return {
-    eligible: call.phoneAttempt,
+    eligible: call.phoneAttempt || call.scriptedDemo === true,
     quote: supported ? quote : null,
     items: [
       { key: "responsibilityClarified", label: "Clarified who is responsible" },

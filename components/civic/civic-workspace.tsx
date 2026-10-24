@@ -7,6 +7,7 @@ import {
 } from "@/components/language-provider"
 
 import Link from "next/link"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import dynamic from "next/dynamic"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
@@ -74,7 +75,7 @@ export function CivicWorkspace() {
   const [showIssues, setShowIssues] = useState(true)
   const [showOffices, setShowOffices] = useState(true)
   const [reportOpen, setReportOpen] = useState(false)
-  const [sidebarWidth, setSidebarWidth] = useState(350)
+  const [sidebarWidth, setSidebarWidth] = useState(380)
   const [voiceDraft, setVoiceDraft] = useState<IntakeDraft | null>(null)
   const [voiceOpen, setVoiceOpen] = useState(false)
   const [caseVoiceOpen, setCaseVoiceOpen] = useState(false)
@@ -192,7 +193,7 @@ export function CivicWorkspace() {
               ? "Browse"
               : selectedOffice
                 ? "Office details"
-                : "Issue details"
+                : "Issue overview"
           }
           onClose={closePanel}
           onBack={panel === "detail" ? browse : undefined}
@@ -336,11 +337,6 @@ export function CivicWorkspace() {
                         <LocalizedText
                           text={CATEGORIES[issue.category].label}
                         />
-                        {issue.isDemo && (
-                          <Badge variant="outline">
-                            <LocalizedText text="Demo" />
-                          </Badge>
-                        )}
                       </span>
                       <span className="text-sm">
                         <LocalizedText text={issue.title} />
@@ -390,6 +386,7 @@ export function CivicWorkspace() {
             >
               <ListFilter />
             </Button>
+            <ThemeSwitcher />
             <LanguageSwitcher />
             <Select value={localityId} onValueChange={localityChanged}>
               <SelectTrigger className="w-40" aria-label="Select locality">

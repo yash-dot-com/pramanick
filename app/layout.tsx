@@ -30,9 +30,12 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider forcedTheme="dark">
+        <ThemeProvider defaultTheme="light" storageKey="pramanik-theme">
           <LanguageProvider>
             <TooltipProvider>{children}</TooltipProvider>
+            <div className="pointer-events-none fixed right-3 bottom-3 z-50 rounded-full border bg-background/90 px-3 py-1 text-[10px] text-muted-foreground shadow-sm backdrop-blur">
+              Demo workspace
+            </div>
           </LanguageProvider>
         </ThemeProvider>
       </body>

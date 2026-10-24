@@ -8,6 +8,14 @@ import {
   ArrowUpRight,
   Building2,
   CalendarClock,
+  CheckCircle2,
+  ChevronDown,
+  FileText,
+  ImageIcon,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Sparkles,
   Download,
   Loader2,
   LocateFixed,
@@ -30,6 +38,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { CATEGORIES, formatDate, type Office } from "@/lib/civic/model"
 import type { readDossier } from "@/lib/civic/dossier"
+import { IssueJourney } from "./issue-journey"
+import { callLabels } from "@/lib/voice/presentation"
 import { StatusBadge } from "./status-badge"
 import { AgentActivityFeed, type AgentActivity } from "./agent-activity-feed"
 import { EscalationPanel } from "./escalation-panel"
@@ -56,6 +66,8 @@ export function IssueDossier({
   onVoice?: () => void
   initialTab?: string
 }) {
+  const [tab, setTab] = useState(initialTab)
+  const [showAllEvents, setShowAllEvents] = useState(false)
   const [data, setData] = useState<Dossier | null>(null)
   const [activities, setActivities] = useState<AgentActivity[]>([])
   const [error, setError] = useState("")
@@ -69,6 +81,13 @@ export function IssueDossier({
   const [officeId, setOfficeId] = useState("")
   const [assignmentNote, setAssignmentNote] = useState("")
   const requestId = useRef<string | null>(null)
+  const tabsAnchor = useRef<HTMLDivElement | null>(null)
+  function openTab(value: string) {
+    setTab(value)
+    requestAnimationFrame(() =>
+      tabsAnchor.current?.scrollIntoView({ block: "start", behavior: "smooth" })
+    )
+  }
   const refresh = useCallback(async () => {
     const response = await fetch(
       `/api/issues/${encodeURIComponent(issueId)}/dossier`,
@@ -172,345 +191,545 @@ export function IssueDossier({
         "needs_review",
       ].includes(item.state)
     )
+  const allEvents = [...data.timeline].reverse()
+  const publicEvents = allEvents.filter(
+    (entry) =>
+      !["casework_plan", "agent_brief", "agent_run"].includes(entry.kind)
+  )
+  const events = showAllEvents ? allEvents : publicEvents.slice(0, 4)
+  const runningActivity = activities.find(
+    (activity) => activity.state === "running"
+  )
+  const nextPromise = data.commitments.find(
+    (promise) => promise.status !== "fulfilled"
+  )
+  const headline =
+    issue.status === "verified"
+      ? "Residents checked the repair"
+      : issue.status === "awaiting_verification"
+        ? "Does it look fixed to you?"
+        : issue.status === "disputed"
+          ? "The issue still needs attention"
+          : run?.state === "awaiting_configuration"
+            ? "The call plan is ready"
+            : run?.state === "paused"
+              ? "Follow-ups are paused"
+              : run?.state === "needs_review"
+                ? "The agent needs a quick review"
+                : run?.state === "preparing"
+                  ? "The agent is reading the reports"
+                  : run?.state === "active"
+                    ? "The agent is following up"
+                    : "Let’s move this forward"
+  const explanation =
+    issue.status === "verified"
+      ? "The repair was reviewed using resident observations. The full history stays available."
+      : issue.status === "awaiting_verification"
+        ? "The work has been reported as complete. A nearby resident can help check the result."
+        : issue.status === "disputed"
+          ? "Resident observations show more work is needed. The case remains open."
+          : run?.state === "awaiting_configuration"
+            ? "Reports and questions are prepared. A demo phone needs to be connected before the first call."
+            : run?.state === "paused"
+              ? "The history is saved. Resume when you are ready for the next call."
+              : run?.state === "needs_review"
+                ? "Open the agent dashboard to review the last attempt and decide the next step."
+                : run?.state === "preparing"
+                  ? "It is bringing reports, earlier conversations and promised dates together."
+                  : run?.state === "active"
+                    ? "Calls and responses will appear here. A reported repair stays open until residents check it."
+                    : "Start a follow-up so the agent can prepare questions and track the response."
+  const friendlyError = error.includes("BOLNA_DEMO_PHONE")
+    ? "A demo phone still needs to be connected. You can continue reading this issue while the call setup is completed."
+    : error
   return (
-    <section className="space-y-5 p-4 pb-8">
-      <div className="space-y-3">
-        <div className="flex flex-wrap gap-2">
+    <section className="space-y-6 p-5 pb-8">
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">
             <LocalizedText text={CATEGORIES[issue.category].label} />
           </Badge>
-          {issue.isDemo && (
-            <Badge variant="secondary">
-              <LocalizedText text="Fictional demo" />
-            </Badge>
-          )}
-          <StatusBadge status={issue.status} />
         </div>
-        <h1 className="text-xl font-semibold tracking-tight">
+        <h1 className="text-xl leading-snug font-semibold tracking-tight">
           <LocalizedText text={issue.title} />
         </h1>
-        <p className="text-xs text-muted-foreground">
-          <LocalizedText text={issue.locality} /> ·{" "}
-          <LocalizedText text={issue.landmark} />
+        <p className="flex items-start gap-1.5 text-xs leading-relaxed text-muted-foreground">
+          <MapPin className="mt-0.5 size-3.5 shrink-0" />
+          <span>
+            <LocalizedText text={issue.locality} /> ·{" "}
+            <LocalizedText text={issue.landmark} />
+          </span>
         </p>
+        <StatusBadge status={issue.status} />
         <p className="text-sm leading-relaxed text-muted-foreground">
           <LocalizedText text={issue.description} />
         </p>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="flex items-center gap-1.5 text-sm">
-            <Users className="size-4" />
-            {issue.complaintCount}
-            <LocalizedText text="complaints" />
+        <div className="flex flex-wrap items-center justify-between gap-3 border-y py-3">
+          <span className="flex items-center gap-2 text-xs">
+            <Users className="size-4 text-muted-foreground" />
+            <span className="font-semibold tabular-nums">
+              {issue.complaintCount}
+            </span>
+            <LocalizedText
+              text={
+                issue.complaintCount === 1
+                  ? "resident report"
+                  : "resident reports"
+              }
+            />
           </span>
           {onSupport && (
-            <Button size="sm" variant="outline" onClick={onSupport}>
+            <Button size="sm" variant="ghost" onClick={onSupport}>
               <LocalizedText text="I’m affected too" />
               <ArrowUpRight />
             </Button>
           )}
         </div>
+        <IssueJourney status={issue.status} hasRun={!!run} />
       </div>
-      <div className="flex flex-wrap gap-2">
-        {onVoice && (
-          <Button onClick={onVoice}>
-            <Mic />
-            <LocalizedText text="Talk about this issue" />
-          </Button>
-        )}
-        {issue.status !== "verified" &&
-          (!run ? (
+      <div className="overflow-hidden rounded-xl border bg-muted/25">
+        <div className="space-y-3 p-4">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <Sparkles className="size-3.5" />
+            <LocalizedText text="What happens next" />
+            {runningActivity && (
+              <span className="ml-auto size-1.5 animate-pulse rounded-full bg-blue-500" />
+            )}
+          </div>
+          <h2 className="text-sm font-semibold">
+            <LocalizedText text={headline} />
+          </h2>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            <LocalizedText text={explanation} />
+          </p>
+          {data.nextFollowUp && (
+            <p className="flex items-center gap-2 text-xs">
+              <CalendarClock className="size-3.5 shrink-0 text-muted-foreground" />
+              <LocalizedText text="Next follow-up" />:{" "}
+              {formatDate(data.nextFollowUp)}
+            </p>
+          )}
+          {issue.status === "awaiting_verification" ? (
             <Button
-              disabled={busy || issue.status === "awaiting_verification"}
-              onClick={async () => {
-                requestId.current ??= crypto.randomUUID()
-                if (
-                  await mutate(
-                    "/api/voice/runs",
-                    { issueId, requestId: requestId.current },
-                    "Follow-up started. The agent is preparing the case brief."
-                  )
-                )
-                  requestId.current = null
-              }}
+              size="sm"
+              className="w-full"
+              onClick={() => openTab("review")}
             >
-              <Play />
-              <LocalizedText text="Start follow-up" />
+              <CheckCircle2 />
+              <LocalizedText text="Check the repair" />
             </Button>
           ) : (
-            <>
-              <Badge variant="outline">
-                <LocalizedText text="Run" />
-                <LocalizedText text={run.state} />
-              </Badge>
+            issue.status !== "verified" &&
+            (!run ? (
+              <Button
+                size="sm"
+                className="w-full"
+                disabled={busy}
+                onClick={async () => {
+                  requestId.current ??= crypto.randomUUID()
+                  if (
+                    await mutate(
+                      "/api/voice/runs",
+                      { issueId, requestId: requestId.current },
+                      "Follow-up started. The agent is preparing the call plan."
+                    )
+                  )
+                    requestId.current = null
+                }}
+              >
+                <Play />
+                <LocalizedText text="Start follow-up" />
+              </Button>
+            ) : run.state === "awaiting_configuration" ? (
               <Button
                 size="sm"
                 variant="outline"
+                className="w-full"
+                nativeButton={false}
+                render={<Link href="/dashboard" />}
+              >
+                <FileText />
+                <LocalizedText text="View follow-up plan" />
+              </Button>
+            ) : run.state === "paused" ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full"
                 disabled={busy}
                 onClick={() =>
                   void mutate(
                     "/api/voice/runs",
-                    {
-                      runId: run.id,
-                      action: ["paused", "awaiting_configuration"].includes(
-                        run.state
-                      )
-                        ? "resume"
-                        : "pause",
-                    },
-                    ["paused", "awaiting_configuration"].includes(run.state)
-                      ? "Run resumed."
-                      : "Pending calls paused."
+                    { runId: run.id, action: "resume" },
+                    "Follow-ups resumed."
                   )
                 }
               >
-                {["paused", "awaiting_configuration"].includes(run.state) ? (
-                  <Play />
-                ) : (
-                  <Pause />
-                )}
-                <LocalizedText
-                  text={
-                    run.state === "awaiting_configuration"
-                      ? "Connect recipient & resume"
-                      : run.state === "paused"
-                        ? "Resume"
-                        : "Pause"
-                  }
-                />
+                <Play />
+                <LocalizedText text="Resume follow-ups" />
               </Button>
-              {run.state === "active" && (
+            ) : (
+              <div className="flex gap-2">
                 <Button
                   size="sm"
                   variant="outline"
+                  className="flex-1"
                   disabled={busy}
                   onClick={() =>
                     void mutate(
                       "/api/voice/runs",
-                      { runId: run.id, action: "follow_up_now" },
-                      "Next demo follow-up queued."
+                      { runId: run.id, action: "pause" },
+                      "Pending calls paused."
                     )
                   }
                 >
-                  <LocalizedText text="Follow up now" />
+                  <Pause />
+                  <LocalizedText text="Pause" />
                 </Button>
-              )}
-            </>
-          ))}
-        <Button
-          variant="outline"
-          size="sm"
-          nativeButton={false}
-          render={
-            <a
-              href={`/api/issues/${encodeURIComponent(issueId)}/dossier?format=md`}
-            />
-          }
-        >
-          <Download />
-          <LocalizedText text="Dossier" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          nativeButton={false}
-          render={
-            <a
-              href={`/api/issues/${encodeURIComponent(issueId)}/dossier?format=json`}
-            />
-          }
-        >
-          <LocalizedText text="JSON · v" />
-          {data.version}
-        </Button>
-      </div>
-      {run?.state === "awaiting_configuration" && (
-        <p className="rounded-lg border p-3 text-xs text-muted-foreground">
-          <LocalizedText text="Case brief prepared. Phone follow-up is waiting for a consenting demo recipient. Add the local phone configuration, then resume this run. No call has been placed." />
-        </p>
-      )}
-      <details className="text-xs text-muted-foreground">
-        <summary className="cursor-pointer">
-          <LocalizedText text="Evidence file history ·" />
-          {data.versions.length}
-          <LocalizedText text="captured versions" />
-        </summary>
-        <div className="mt-2 space-y-2">
-          {data.versions.map((version) => (
-            <a
-              key={version.version}
-              className="block underline underline-offset-4"
-              href={`/api/issues/${encodeURIComponent(issueId)}/dossier?version=${version.version}&format=md`}
-            >
-              <LocalizedText text="Version" />
-              {version.version} · {formatDate(version.createdAt)}
-            </a>
-          ))}
+                {run.state === "active" && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    disabled={busy}
+                    onClick={() =>
+                      void mutate(
+                        "/api/voice/runs",
+                        { runId: run.id, action: "follow_up_now" },
+                        "Next follow-up queued."
+                      )
+                    }
+                  >
+                    <Phone />
+                    <LocalizedText text="Follow up now" />
+                  </Button>
+                )}
+              </div>
+            ))
+          )}
         </div>
-      </details>
-      <div className="space-y-2 rounded-xl border p-3 text-xs">
-        <p className="flex items-center gap-1.5 font-medium">
-          <Building2 className="size-4" />
-          <LocalizedText text="Responsibility" />
-        </p>
-        {data.responsibility ? (
-          <Link
-            className="underline underline-offset-4"
-            href={`/leaderboard?profile=${encodeURIComponent(data.responsibility.id)}`}
-          >
-            <LocalizedText text={data.responsibility.name} />
-            <LocalizedText
-              text={data.responsibility.isDemo ? " · demo office" : ""}
-            />
-          </Link>
-        ) : (
-          <p className="text-muted-foreground">
-            <LocalizedText text="Office assignment requires review." />
-          </p>
-        )}
-        <p className="flex items-start gap-1.5 text-muted-foreground">
-          <CalendarClock className="size-3.5 shrink-0" />
-          <LocalizedText
-            text={
-              data.nextFollowUp
-                ? `Next review/follow-up: ${formatDate(data.nextFollowUp)}`
-                : "No next follow-up scheduled."
-            }
-          />
-        </p>
+        <div className="flex items-start gap-2 border-t bg-background/60 px-4 py-3">
+          <Building2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+          <div className="min-w-0 space-y-1">
+            <p className="text-[10px] text-muted-foreground">
+              <LocalizedText text="Who we’re following up with" />
+            </p>
+            {data.responsibility ? (
+              <Link
+                className="block text-xs font-medium underline-offset-4 hover:underline"
+                href={`/leaderboard?profile=${encodeURIComponent(data.responsibility.id)}`}
+              >
+                <LocalizedText text={data.responsibility.name} />
+                {data.responsibility.isDemo && (
+                  <span className="ml-1 text-muted-foreground">
+                    · <LocalizedText text="demo contact" />
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <p className="text-xs">
+                <LocalizedText text="Finding the right office" />
+              </p>
+            )}
+          </div>
+        </div>
       </div>
-      {error && (
-        <p role="alert" className="text-sm text-destructive">
-          <LocalizedText text={error} />
-        </p>
+      {onVoice && (
+        <Button
+          onClick={onVoice}
+          variant="outline"
+          className="h-11 w-full justify-between"
+        >
+          <span className="flex items-center gap-2">
+            <Mic />
+            <LocalizedText text="Ask Pramanik about this issue" />
+          </span>
+          <ArrowUpRight className="size-3.5 text-muted-foreground" />
+        </Button>
       )}
-      {notice && (
-        <p role="status" className="text-sm">
-          {notice}
-        </p>
+      {nextPromise && (
+        <div className="flex gap-3 rounded-xl border p-3">
+          <CalendarClock className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+          <div className="space-y-1">
+            <p className="text-[10px] font-medium text-muted-foreground">
+              <LocalizedText text="Latest promise" />
+            </p>
+            <p className="text-xs leading-relaxed">
+              <LocalizedText text={nextPromise.action} />
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {formatDate(nextPromise.dueAt)}
+            </p>
+          </div>
+        </div>
       )}
-      <section className="space-y-3 rounded-xl border p-3">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-medium">
-            <LocalizedText text="Agent actions" />
-          </h2>
+      {friendlyError && (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-500/25 bg-amber-500/5 p-3 text-xs leading-relaxed"
+        >
+          <LocalizedText text={friendlyError} />
           <Link
             href="/dashboard"
-            className="text-xs underline underline-offset-4"
+            className="mt-2 block font-medium underline underline-offset-4"
           >
-            <LocalizedText text="Public dashboard" />
+            <LocalizedText text="Open agent dashboard" />
           </Link>
         </div>
-        <AgentActivityFeed activities={activities} compact />
-      </section>
-      <Tabs defaultValue={initialTab}>
-        <TabsList className="flex h-auto w-full flex-wrap">
-          <TabsTrigger value="timeline">
-            <LocalizedText text="Timeline" />
+      )}
+      {notice && (
+        <p
+          role="status"
+          className="flex items-start gap-2 text-xs leading-relaxed"
+        >
+          <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <LocalizedText text={notice} />
+        </p>
+      )}
+      <div ref={tabsAnchor} className="scroll-mt-4" />
+      <Tabs value={tab} onValueChange={(value) => setTab(String(value))}>
+        <TabsList
+          variant="line"
+          className="grid w-full grid-cols-3 border-b pb-2"
+        >
+          <TabsTrigger value="timeline" className="gap-1 px-1 text-xs">
+            <MessageCircle className="size-3.5" />
+            <LocalizedText text="Updates" />
           </TabsTrigger>
-          <TabsTrigger value="evidence">
-            <LocalizedText text="Evidence" />
+          <TabsTrigger value="evidence" className="gap-1 px-1 text-xs">
+            <ImageIcon className="size-3.5" />
+            <LocalizedText text="Photos" />
           </TabsTrigger>
-          <TabsTrigger value="calls">
+          <TabsTrigger value="calls" className="gap-1 px-1 text-xs">
+            <Phone className="size-3.5" />
             <LocalizedText text="Calls" />
-          </TabsTrigger>
-          <TabsTrigger value="review">
-            <LocalizedText text="Resident review" />
-          </TabsTrigger>
-          <TabsTrigger value="escalation">
-            <LocalizedText text="Escalation" />
+            {data.calls.length > 0 && (
+              <span className="text-[10px] text-muted-foreground">
+                {data.calls.length}
+              </span>
+            )}
           </TabsTrigger>
         </TabsList>
+        {(tab === "review" || tab === "escalation") && (
+          <div className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2">
+            <p className="text-xs font-medium">
+              <LocalizedText
+                text={
+                  tab === "review"
+                    ? "Check the repair"
+                    : "Ask for further action"
+                }
+              />
+            </p>
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={() => openTab("timeline")}
+            >
+              <LocalizedText text="Back to updates" />
+            </Button>
+          </div>
+        )}
         <TabsContent value="timeline">
           <div className="space-y-5 pt-4">
-            {[...data.timeline].reverse().map((entry) => (
-              <article key={entry.id} className="space-y-1 border-l-2 pl-3">
-                <p className="text-xs text-muted-foreground">
-                  {formatDate(entry.createdAt)}
-                </p>
-                <h3 className="text-sm font-medium">
-                  <LocalizedText text={entry.title} />
-                </h3>
-                <p className="text-xs leading-relaxed whitespace-pre-wrap text-muted-foreground">
-                  <LocalizedText text={entry.description} />
-                </p>
-                <p className="text-[11px] break-words text-muted-foreground">
-                  <LocalizedText text={entry.source} />
-                </p>
-              </article>
-            ))}
+            {!events.length && (
+              <p className="text-xs text-muted-foreground">
+                <LocalizedText text="Updates will appear here as the agent follows up." />
+              </p>
+            )}
+            {events.map((entry, index) => {
+              const Icon = ["call", "call_outcome", "voice_update"].includes(
+                entry.kind
+              )
+                ? Phone
+                : entry.kind === "commitment"
+                  ? CalendarClock
+                  : ["verification", "review"].includes(entry.kind)
+                    ? CheckCircle2
+                    : MessageCircle
+              return (
+                <article key={entry.id} className="relative flex gap-3">
+                  {index < events.length - 1 && (
+                    <span
+                      aria-hidden
+                      className="absolute top-8 bottom-[-20px] left-3.5 w-px bg-border"
+                    />
+                  )}
+                  <span className="relative z-10 mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border bg-background">
+                    <Icon className="size-3 text-muted-foreground" />
+                  </span>
+                  <div className="min-w-0 flex-1 space-y-2 pb-1">
+                    <p className="text-[10px] text-muted-foreground">
+                      {formatDate(entry.createdAt)}
+                    </p>
+                    <h3 className="text-sm leading-snug font-medium">
+                      <LocalizedText text={entry.title} />
+                    </h3>
+                    <details className="group text-xs leading-relaxed">
+                      <summary className="cursor-pointer list-none text-muted-foreground">
+                        <span className="line-clamp-2 group-open:hidden">
+                          <LocalizedText text={entry.description} />
+                        </span>
+                        <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-foreground">
+                          <LocalizedText text="Read update" />
+                          <ChevronDown className="size-3 transition-transform group-open:rotate-180" />
+                        </span>
+                      </summary>
+                      <p className="mt-2 whitespace-pre-wrap text-muted-foreground">
+                        <LocalizedText text={entry.description} />
+                      </p>
+                      <p className="mt-2 text-[10px] text-muted-foreground">
+                        <LocalizedText text={entry.source} />
+                      </p>
+                    </details>
+                  </div>
+                </article>
+              )
+            })}
+            {allEvents.length > events.length && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => setShowAllEvents(true)}
+              >
+                <LocalizedText text="Show full history" />
+                <ChevronDown />
+              </Button>
+            )}
+            {showAllEvents && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => setShowAllEvents(false)}
+              >
+                <LocalizedText text="Show key updates" />
+              </Button>
+            )}
           </div>
         </TabsContent>
         <TabsContent value="evidence">
           <div className="space-y-4 pt-4">
+            {!data.evidence.length && (
+              <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed p-6 text-center">
+                <ImageIcon className="size-6 text-muted-foreground" />
+                <p className="text-sm font-medium">
+                  <LocalizedText text="No photos yet" />
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  <LocalizedText text="A photo helps everyone understand the problem and check the repair later." />
+                </p>
+              </div>
+            )}
             {data.evidence.map((item) => (
-              <figure key={item.id}>
+              <figure
+                key={item.id}
+                className="overflow-hidden rounded-xl border"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.url}
                   alt={item.caption}
-                  className="w-full rounded-lg border"
+                  className="max-h-60 w-full bg-muted/30 object-contain"
                 />
-                <figcaption className="mt-2 text-xs text-muted-foreground">
-                  <LocalizedText
-                    text={
-                      item.phase === "verification"
-                        ? "After / resident check"
-                        : "Before / report"
-                    }
-                  />{" "}
-                  · <LocalizedText text={item.caption} /> ·{" "}
-                  {formatDate(item.createdAt)}
-                </figcaption>
-                {item.location && (
-                  <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-                    <Badge variant="outline">
+                <figcaption className="space-y-2 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant="secondary">
                       <LocalizedText
                         text={
-                          item.location.proximity === "near"
-                            ? "Nearby device observation"
-                            : item.location.proximity.replaceAll("_", " ")
+                          item.phase === "verification"
+                            ? "After · resident check"
+                            : "Before · reported issue"
                         }
                       />
                     </Badge>
-                    <p>
-                      <LocalizedText text={item.location.distanceMeters} />
-                      <LocalizedText text="m from issue pin · ±" />
-                      <LocalizedText text={item.location.accuracy} />
-                      <LocalizedText text="m accuracy ·" />{" "}
-                      {formatDate(item.location.observedAt)}
-                    </p>
-                    <p>
-                      <LocalizedText text="Device location accompanies the upload; it does not establish the photo’s capture location or authenticity." />
-                    </p>
+                    <span className="text-[10px] text-muted-foreground">
+                      {formatDate(item.createdAt)}
+                    </span>
                   </div>
-                )}
-                {item.assessment ? (
-                  <div className="mt-2 space-y-1 rounded-lg border p-3 text-xs">
-                    <p className="font-medium">
-                      <LocalizedText text="AI:" />
-                      {item.assessment.finding.replaceAll("_", " ")}
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    <LocalizedText text={item.caption} />
+                  </p>
+                  {item.assessment && (
+                    <div className="rounded-lg bg-muted/40 p-3 text-xs">
+                      <p className="mb-1 flex items-center gap-1.5 font-medium">
+                        <Sparkles className="size-3" />
+                        <LocalizedText
+                          text={
+                            item.assessment.finding === "appears_fixed"
+                              ? "The photo suggests a repair"
+                              : item.assessment.finding === "problem_visible"
+                                ? "The problem is still visible"
+                                : "A closer check is needed"
+                          }
+                        />
+                      </p>
+                      <p className="leading-relaxed text-muted-foreground">
+                        <LocalizedText text={item.assessment.explanation} />
+                      </p>
+                      <p className="mt-2 text-[10px] text-muted-foreground">
+                        <LocalizedText text="AI guidance · a resident still needs to confirm." />
+                      </p>
+                    </div>
+                  )}
+                  {item.location?.source === "demo" && (
+                    <Badge variant="outline">
+                      <LocalizedText text="Simulated location · demo only" />
+                    </Badge>
+                  )}
+                  {!item.assessment && item.phase === "verification" && (
+                    <p className="text-xs text-muted-foreground">
+                      <LocalizedText text="The agent is waiting to review this photo." />
                     </p>
-                    <p>
-                      <LocalizedText text={item.assessment.explanation} />
-                    </p>
-                    <p className="text-muted-foreground">
-                      <LocalizedText text={item.assessment.limitations} />
-                    </p>
-                    <p className="text-muted-foreground">
-                      <LocalizedText text="Scene:" />
-                      {item.assessment.sameScene.replaceAll("_", " ")} ·{" "}
-                      <LocalizedText text={item.assessment.promptVersion} />
-                    </p>
-                  </div>
-                ) : (
-                  item.phase === "verification" && (
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      <LocalizedText text="Photo assessment pending. Its job appears in Operations." />
-                    </p>
-                  )
-                )}
+                  )}
+                  {(item.location || item.assessment) && (
+                    <details className="text-[10px] text-muted-foreground">
+                      <summary className="cursor-pointer">
+                        <LocalizedText text="Location & photo details" />
+                      </summary>
+                      <div className="mt-2 space-y-2 leading-relaxed">
+                        {item.location && (
+                          <>
+                            <p>
+                              {Math.round(item.location.distanceMeters)}{" "}
+                              <LocalizedText text="metres from the issue pin" />{" "}
+                              · ±{Math.round(item.location.accuracy)}m
+                            </p>
+                            <p>
+                              <LocalizedText text="This is the device’s reported location when uploading, not proof of where the photo was taken." />
+                            </p>
+                          </>
+                        )}
+                        {item.assessment && (
+                          <>
+                            <p>
+                              <LocalizedText
+                                text={item.assessment.limitations}
+                              />
+                            </p>
+                            <p>
+                              <LocalizedText text="Scene comparison" />:{" "}
+                              <LocalizedText
+                                text={item.assessment.sameScene.replaceAll(
+                                  "_",
+                                  " "
+                                )}
+                              />
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </details>
+                  )}
+                </figcaption>
               </figure>
             ))}
+            {data.complaints.length > 0 && (
+              <h3 className="pt-2 text-sm font-medium">
+                <LocalizedText text="What residents reported" />
+              </h3>
+            )}
             {data.complaints.map(
               (complaint) =>
                 complaint.description && (
@@ -531,11 +750,11 @@ export function IssueDossier({
             {data.gaps.length > 0 && (
               <div className="space-y-2 rounded-lg border p-3 text-xs">
                 <p className="font-medium">
-                  <LocalizedText text="Still to establish" />
+                  <LocalizedText text="What’s still needed" />
                 </p>
                 {data.gaps.map((gap) => (
                   <p key={gap} className="text-muted-foreground">
-                    {gap}
+                    <LocalizedText text={gap} />
                   </p>
                 ))}
               </div>
@@ -573,7 +792,9 @@ export function IssueDossier({
                     </p>
                   </div>
                   <Badge variant="secondary">
-                    <LocalizedText text={call.status} />
+                    <LocalizedText
+                      text={callLabels[call.status] ?? call.status}
+                    />
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -583,7 +804,7 @@ export function IssueDossier({
                 </p>
                 {call.nextAction && (
                   <p className="text-xs">
-                    <LocalizedText text="Next:" />
+                    <LocalizedText text="Next step:" />{" "}
                     <LocalizedText text={call.nextAction} />
                   </p>
                 )}
@@ -592,18 +813,26 @@ export function IssueDossier({
                     href={`/leaderboard?profile=${encodeURIComponent(call.person.id)}`}
                     className="text-xs underline underline-offset-4"
                   >
-                    <LocalizedText text="Responsibility profile" />
+                    <LocalizedText text="View service record" />
                     <LocalizedText text={call.person.isDemo ? " · demo" : ""} />
                   </Link>
                 )}
                 {call.transcript && (
                   <details className="text-xs">
                     <summary className="cursor-pointer font-medium">
-                      <LocalizedText text="Published transcript" />
+                      <LocalizedText text="Read conversation" />
                     </summary>
                     <p className="mt-2 leading-relaxed whitespace-pre-wrap text-muted-foreground">
                       <LocalizedText text={call.transcript} />
                     </p>
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-muted-foreground">
+                        <LocalizedText text="Original wording" />
+                      </summary>
+                      <p className="mt-2 leading-relaxed whitespace-pre-wrap">
+                        {call.transcript}
+                      </p>
+                    </details>
                   </details>
                 )}
                 {call.recordingUrl && (
@@ -617,7 +846,7 @@ export function IssueDossier({
           <div className="space-y-4 pt-4">
             {!data.verification ? (
               <p className="text-sm text-muted-foreground">
-                <LocalizedText text="A completion claim will open a resident review." />
+                <LocalizedText text="Once the work is reported as complete, you can add a photo and tell us whether it is really fixed." />
               </p>
             ) : (
               <>
@@ -867,27 +1096,117 @@ export function IssueDossier({
           />
         </TabsContent>
       </Tabs>
-      {data.commitments.length > 0 && (
-        <section className="space-y-2 border-t pt-4">
-          <h2 className="text-sm font-medium">
-            <LocalizedText text="Recorded promises" />
-          </h2>
-          {data.commitments.map((promise) => (
-            <article
-              key={promise.id}
-              className="space-y-1 rounded-lg border p-3 text-xs"
+      <div className="space-y-2 border-t pt-4">
+        <Button
+          variant="ghost"
+          className="h-auto w-full justify-between px-2 py-2 text-xs"
+          onClick={() => openTab("review")}
+        >
+          <span className="flex items-center gap-2">
+            <CheckCircle2 className="size-3.5" />
+            <LocalizedText text="Check the repair" />
+          </span>
+          <ArrowUpRight className="size-3" />
+        </Button>
+        <Button
+          variant="ghost"
+          className="h-auto w-full justify-between px-2 py-2 text-xs"
+          onClick={() => openTab("escalation")}
+        >
+          <span className="flex items-center gap-2">
+            <FileText className="size-3.5" />
+            <LocalizedText text="No progress? Ask for further action" />
+          </span>
+          <ArrowUpRight className="size-3" />
+        </Button>
+      </div>
+      <details className="group rounded-xl border text-xs">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 p-3 font-medium">
+          <span className="flex items-center gap-2">
+            <FileText className="size-3.5 text-muted-foreground" />
+            <LocalizedText text="Full record & agent activity" />
+          </span>
+          <ChevronDown className="size-3.5 text-muted-foreground transition-transform group-open:rotate-180" />
+        </summary>
+        <div className="space-y-5 border-t p-3">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              nativeButton={false}
+              render={
+                <a
+                  href={`/api/issues/${encodeURIComponent(issueId)}/dossier?format=md`}
+                />
+              }
             >
-              <p>
-                <LocalizedText text={promise.action} />
+              <Download />
+              <LocalizedText text="Download full record" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              nativeButton={false}
+              render={
+                <a
+                  href={`/api/issues/${encodeURIComponent(issueId)}/dossier?format=json`}
+                />
+              }
+            >
+              <LocalizedText text="Export data (JSON)" />
+            </Button>
+          </div>
+          <section className="space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-medium">
+                <LocalizedText text="Agent activity" />
               </p>
-              <p className="text-muted-foreground">
-                {formatDate(promise.dueAt)} ·{" "}
-                <LocalizedText text={promise.status} />
+              <Link
+                className="text-[10px] underline underline-offset-4"
+                href="/dashboard"
+              >
+                <LocalizedText text="See dashboard" />
+              </Link>
+            </div>
+            <AgentActivityFeed activities={activities} compact />
+          </section>
+          {data.commitments.length > 0 && (
+            <section className="space-y-2">
+              <p className="font-medium">
+                <LocalizedText text="All recorded promises" />
               </p>
-            </article>
-          ))}
-        </section>
-      )}
+              {data.commitments.map((promise) => (
+                <div key={promise.id} className="space-y-1 border-l pl-3">
+                  <p>
+                    <LocalizedText text={promise.action} />
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {formatDate(promise.dueAt)} ·{" "}
+                    <LocalizedText text={promise.status} />
+                  </p>
+                </div>
+              ))}
+            </section>
+          )}
+          <details>
+            <summary className="cursor-pointer text-muted-foreground">
+              <LocalizedText text="Earlier versions" /> ({data.versions.length})
+            </summary>
+            <div className="mt-2 space-y-2">
+              {data.versions.map((version) => (
+                <a
+                  key={version.version}
+                  className="block text-[10px] underline underline-offset-4"
+                  href={`/api/issues/${encodeURIComponent(issueId)}/dossier?version=${version.version}&format=md`}
+                >
+                  <LocalizedText text="Version" /> {version.version} ·{" "}
+                  {formatDate(version.createdAt)}
+                </a>
+              ))}
+            </div>
+          </details>
+        </div>
+      </details>
       {operations && (
         <section className="space-y-3 border-t pt-4">
           <h2 className="text-sm font-medium">

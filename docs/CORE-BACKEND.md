@@ -4,8 +4,9 @@
 
 ## What exists
 
-- SQLite/Drizzle, 29 tables, four migrations; one fixed Yash user.
-- Bolna official browser SDK, configured GPT Realtime 2.1 / Marin, twelve tools.
+- SQLite/Drizzle, 30 tables, five migrations; one fixed Yash user.
+- Citizen voice: Sarvam transcription/speech + GPT reasoning; no browser API keys.
+- Stakeholder voice: Bolna outbound API, GPT Realtime 2.1 / Marin, twelve tools.
 - User-started issue/locality runs, case briefs, scoped writes, pause/resume.
 - Persistent calls, transcripts, summaries, promises, deadlines, jobs and tool history.
 - Shared public dossiers, interactive Kanban, responsibility profiles/leaderboard.
@@ -102,3 +103,14 @@ npm run worker
 - Intake status now includes inference and actions; existing-case session accepts an optional language.
 - Pending-recipient runs prepare a brief first; configured calling remains separate.
 - [Current verification sequence](AGENT-BACKEND-HANDOFF.md).
+
+## Citizen speech and display languages
+
+- `POST /api/voice/citizen` creates an intake or selected-case conversation.
+- `POST /api/voice/citizen/:id/turn` accepts one audio turn; duplicate completed turn IDs replay the saved result.
+- `GET /api/voice/citizen/:id` returns transcript, inferred draft and observable actions.
+- `GET /api/voice/citizen/:id/speech?turn=...` streams Sarvam audio for a saved answer.
+- `POST /api/voice/citizen/:id` ends the conversation; the editable draft is retained.
+- `.env.local`: `SARVAM_API_KEY` plus the configured `OPENAI_API_KEY`.
+- `POST /api/translations` caches Marathi/Hindi/English display translations; canonical evidence remains unchanged.
+- No new dependency. Short audio turns; not full-duplex or live word-level transcription.

@@ -1,15 +1,28 @@
 import Database from "better-sqlite3"
 import { drizzle } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator"
-import { mkdirSync, readFileSync } from "node:fs"
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs"
 import { createHash } from "node:crypto"
 import { dirname, resolve } from "node:path"
 import * as schema from "./schema"
 
 function connect() {
   const filename =
-    process.env.DATABASE_PATH ?? resolve(process.cwd(), "data/pramanik.sqlite")
+    process.env.DATABASE_PATH ??
+    (process.env.VERCEL
+      ? "/tmp/pramanik/pramanik.sqlite"
+      : resolve(process.cwd(), "data/pramanik.sqlite"))
   if (filename !== ":memory:") mkdirSync(dirname(filename), { recursive: true })
+  // Vercel functions have a read-only bundle; each instance gets a writable copy.
+  const bundled = resolve(process.cwd(), "data/demo.sqlite")
+  if (
+    process.env.VERCEL &&
+    filename !== ":memory:" &&
+    !existsSync(filename) &&
+    existsSync(bundled)
+  ) {
+    copyFileSync(bundled, filename)
+  }
   const sqlite = new Database(filename)
   sqlite.pragma("journal_mode = WAL")
   sqlite.pragma("foreign_keys = ON")

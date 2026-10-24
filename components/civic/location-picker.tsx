@@ -111,13 +111,7 @@ export function LocationPicker({
   return (
     <div className="relative h-64 overflow-hidden rounded-xl border bg-muted md:h-80">
       <PickerBoundary>
-        <Map
-          theme="dark"
-          center={[lng, lat]}
-          zoom={14}
-          minZoom={9}
-          maxZoom={19}
-        >
+        <Map center={[lng, lat]} zoom={14} minZoom={9} maxZoom={19}>
           <MapControls position="top-right" />
           <PickerBehavior
             localityId={localityId}

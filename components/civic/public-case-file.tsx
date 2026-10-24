@@ -59,18 +59,18 @@ function PublicConversation({ call }: { call: PublicCaseCall }) {
           </h3>
           <p className="text-xs text-muted-foreground">
             <LocalizedText text={call.person?.role || "Role not recorded"} />
-            {call.person?.isDemo && (
-              <>
-                {" "}
-                · <LocalizedText text="Demo participant" />
-              </>
-            )}
           </p>
           <p className="text-[11px] text-muted-foreground">
             {formatDate(call.createdAt)} ·{" "}
             <LocalizedText
               text={
-                call.phoneAttempt ? "Phone follow-up" : "Browser conversation"
+                call.scriptedDemo
+                  ? audio
+                    ? "Scripted sample · synthetic voices"
+                    : "Scripted sample"
+                  : call.phoneAttempt
+                    ? "Phone follow-up"
+                    : "Browser conversation"
               }
             />
           </p>
@@ -96,6 +96,13 @@ function PublicConversation({ call }: { call: PublicCaseCall }) {
             <LocalizedText text="Listen to the published conversation" />
           </p>
           <audio controls preload="none" src={audio} className="w-full" />
+          <a
+            href={`${audio}?download=1`}
+            download
+            className="text-xs underline underline-offset-4"
+          >
+            Download audio
+          </a>
         </div>
       ) : (
         <p className="text-xs text-muted-foreground">
@@ -198,7 +205,7 @@ function PublicConversation({ call }: { call: PublicCaseCall }) {
           <LocalizedText text={call.nextAction} />
         </p>
       )}
-      {call.person && call.phoneAttempt && (
+      {call.person && (call.phoneAttempt || call.scriptedDemo) && (
         <Link
           href={`/leaderboard?profile=${encodeURIComponent(call.person.id)}`}
           className="inline-flex items-center gap-1 text-xs underline underline-offset-4"
@@ -295,11 +302,6 @@ export function PublicCaseFile({
                   {data.issue.complaintCount}{" "}
                   <LocalizedText text="resident reports" />
                 </Badge>
-                {data.issue.isDemo && (
-                  <Badge variant="outline">
-                    <LocalizedText text="Fictional demo case" />
-                  </Badge>
-                )}
               </div>
               <span className="text-[10px] text-muted-foreground">
                 <LocalizedText text="Updated" /> {formatDate(data.capturedAt)}
@@ -531,9 +533,12 @@ export function PublicCaseFile({
                             />{" "}
                             · {formatDate(item.createdAt)}
                           </p>
-                          {/^data:image\/(png|jpeg|webp);base64,/.test(
+                          {(/^data:image\/(png|jpeg|webp);base64,/.test(
                             item.url
-                          ) && (
+                          ) ||
+                            /^\/demo-office\/evidence\/[a-z-]+\.png$/.test(
+                              item.url
+                            )) && (
                             <Image
                               src={item.url}
                               alt={

@@ -2,6 +2,7 @@ import { and, eq, desc } from "drizzle-orm"
 import * as s from "@/lib/db/schema"
 import { snapshot, store } from "@/lib/civic/repository"
 import { publicText } from "@/lib/civic/dossier"
+import { isScriptedDemo } from "@/lib/civic/demo-office-data"
 
 export type PublicAction = {
   id: string
@@ -114,7 +115,9 @@ export function publicActionPlan() {
       ["initiating", "queued", "ringing", "in-progress"].includes(call.status)
     )
     const finished = relatedCalls.filter(
-      (call) => call.status === "completed" && call.executionId
+      (call) =>
+        call.status === "completed" &&
+        (call.executionId || isScriptedDemo(call.outcome))
     )
     const queued = jobs.filter(
       (job) =>

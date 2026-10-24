@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useCallback, useEffect, useState } from "react"
 import { ArrowUpRight, Loader2, Pause, Play, RefreshCw } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -28,6 +29,7 @@ import { jobLabels, callLabels } from "@/lib/voice/presentation"
 import { AgentActivityFeed } from "./agent-activity-feed"
 import { StatusBadge } from "./status-badge"
 import { PublicCaseFile } from "./public-case-file"
+import { AgentOffice } from "./agent-office"
 
 const columns = [
   { id: "planned", title: "Next steps" },
@@ -114,13 +116,14 @@ export function PublicAgentDashboard() {
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold tracking-tight">
-              <LocalizedText text="Agent dashboard" />
+              <LocalizedText text="The public agent office" />
             </h1>
             <p className="text-sm text-muted-foreground">
               <LocalizedText text="Public follow-through: what the agent read, planned, called and recorded." />
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <ThemeSwitcher />
             <LanguageSwitcher />
             <Button
               variant="outline"
@@ -159,6 +162,7 @@ export function PublicAgentDashboard() {
           </p>
         ) : (
           <>
+            <AgentOffice data={data} onOpenCase={setSelectedIssue} />
             <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {[
                 ["Phone attempts", data.metrics.phoneAttempts],
@@ -485,9 +489,11 @@ export function PublicAgentDashboard() {
                           <p className="text-xs text-muted-foreground">
                             <LocalizedText
                               text={
-                                item.kind === "phone"
-                                  ? "Stakeholder phone call"
-                                  : "Browser conversation"
+                                item.kind === "scripted_demo"
+                                  ? "Scripted demonstration · synthetic voices"
+                                  : item.kind === "phone"
+                                    ? "Stakeholder phone call"
+                                    : "Browser conversation"
                               }
                             />{" "}
                             · {callLabels[item.status] ?? item.status} ·{" "}
@@ -554,9 +560,6 @@ export function PublicAgentDashboard() {
                           {localityName(issue.localityId)} ·{" "}
                           {issue.complaintCount}
                           <LocalizedText text="complaints" />
-                          <LocalizedText
-                            text={issue.isDemo ? " · fictional demo" : ""}
-                          />
                         </p>
                         <p className="text-xs text-muted-foreground">
                           <LocalizedText text={issue.latestUpdate} />

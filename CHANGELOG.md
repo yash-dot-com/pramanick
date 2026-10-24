@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-24 — Parallel public agent office and narrated cases
+
+- Added a real coordinator with three concurrent, source-checked specialist agents inside the existing preparation job. Persisted assignments, outputs, failures and handoffs drive the public office view.
+- Added two fictional officers and four complete case histories, with eight playable/downloadable synthetic conversations, original transcripts, readable summaries, promises, resident verification and labeled illustrations.
+- Kept scripted examples separate from actual phone counts and provider performance records. Added a separate demonstration view to the responsibility leaderboard.
+- Preserved the existing queue, recipient checks and real recording publication behavior; no new dependencies.
+- Verified the live model-backed coordinator in an isolated database without dialing, 25 focused tests, type checking and browser audio playback. Production build verification is recorded in the task result.
+
+## 2026-10-24 — Clearer issue sidebar, theme controls and citizen speech
+
+- Added a persistent light/dark/device toggle using existing shadcn tokens; maps and pickers follow the theme.
+- Reorganized the sidebar into issue overview, progress, next step, and Updates/Photos/Calls; folded exports, versions and raw agent work into Full record.
+- Replaced technical public copy with plain-language labels; added visual timeline icons, photo summaries and contextual resident-check actions.
+- Added Sarvam speech recognition and streamed speech with GPT reasoning for citizen intake and case questions, visible inferred facts and actual server activity.
+- Added cached Marathi/Hindi/English display translation without replacing source evidence.
+- Agent action-plan cards reflect prepared questions, saved jobs, calls and resident-check state; locality Start demo resumes eligible paused work.
+- Published recordings are served through the existing consent-aware app route.
+- Fixed legacy citizen outcome extraction attempting a stakeholder context switch.
+- No dependencies added. Formatted edited sources; runtime verification remains with the user.
+
 ## 2026-10-24 — Public civic office requirements and case files
 
 - Recorded the requested public office model: coordinator, specialist coordination, autonomous follow-through, shared memory, evidence and continuing response assessment. The current worker remains serial; real parallel orchestration, contact approval and publication choices are pending clarification.
