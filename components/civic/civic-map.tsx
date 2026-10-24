@@ -232,10 +232,10 @@ export function CivicMap({
                       aria-label={`${issue.title} · ${CATEGORIES[issue.category].label} · ${presentation.label} · ${issue.complaintCount} resident reports`}
                       aria-pressed={selected}
                       title={`${presentation.label} · ${issue.complaintCount} resident reports`}
-                      className={`relative flex size-9 items-center justify-center rounded-xl border border-white/60 text-white outline-none focus-visible:ring-4 focus-visible:ring-ring/40 ${selected ? "ring-[3px] ring-primary ring-offset-2 ring-offset-background" : ""}`}
+                      className={`relative flex size-9 items-center justify-center rounded-xl border border-white/60 text-white outline-none focus-visible:ring-4 focus-visible:ring-ring/40 dark:border-white/25 ${selected ? "ring-[3px] ring-primary ring-offset-2 ring-offset-background" : ""}`}
                       style={{
                         background: `linear-gradient(160deg, ${presentation.from}, ${presentation.to})`,
-                      color: presentation.ink || "#ffffff",
+                        color: presentation.ink || "#ffffff",
                         boxShadow:
                           "inset 0 1px 0 #ffffff66, inset 0 -1px 0 #00000012, 0 2px 5px #10182830",
                       }}
@@ -247,13 +247,13 @@ export function CivicMap({
                       />
                       <span
                         aria-hidden="true"
-                        className="absolute -right-1 -bottom-1 flex size-3.5 items-center justify-center rounded-full border border-white/80 bg-white text-zinc-700 shadow-sm"
+                        className="absolute -right-1 -bottom-1 flex size-3.5 items-center justify-center rounded-full border border-white/80 bg-white text-zinc-700 shadow-sm dark:border-slate-500 dark:bg-slate-900 dark:text-slate-100"
                       >
                         <StateIcon className="size-2.5" strokeWidth={2.5} />
                       </span>
                       <span
                         aria-hidden="true"
-                        className="absolute -top-2 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border border-zinc-200 bg-white px-1 text-[9px] leading-none font-semibold text-zinc-800 shadow-sm"
+                        className="absolute -top-2 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border border-zinc-200 bg-white px-1 text-[9px] leading-none font-semibold text-zinc-800 shadow-sm dark:border-slate-500 dark:bg-slate-900 dark:text-slate-100"
                       >
                         {issue.complaintCount > 99
                           ? "99+"
@@ -345,7 +345,10 @@ export function CivicMap({
               >
                 <span
                   className="flex size-4 items-center justify-center rounded-md text-white"
-                  style={{ background: presentation.to, color: presentation.ink || "#ffffff" }}
+                  style={{
+                    background: presentation.to,
+                    color: presentation.ink || "#ffffff",
+                  }}
                 >
                   <Icon className="size-2.5" />
                 </span>

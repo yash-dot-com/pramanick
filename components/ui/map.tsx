@@ -50,6 +50,46 @@ const defaultStyles = {
   light: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
 }
 
+function applyReadableDarkStyle(map: MapLibreGL.Map) {
+  // Keep basemap geometry and zoom behaviour; lift the dark palette so street
+  // names, road edges and building footprints remain useful behind case pins.
+  for (const layer of map.getStyle()?.layers ?? []) {
+    if (layer.type === "background") {
+      map.setPaintProperty(layer.id, "background-color", "#121a26")
+    } else if (
+      layer.type === "symbol" &&
+      layer.layout?.["text-field"] != null
+    ) {
+      map.setPaintProperty(
+        layer.id,
+        "text-color",
+        /place|settlement|city/i.test(layer.id) ? "#edf2f9" : "#c4cedc"
+      )
+      map.setPaintProperty(layer.id, "text-halo-color", "#121a26")
+      map.setPaintProperty(layer.id, "text-halo-width", 1.3)
+      map.setPaintProperty(layer.id, "text-opacity", 1)
+    } else if (layer.type === "fill" && /building/i.test(layer.id)) {
+      map.setPaintProperty(layer.id, "fill-color", "#293546")
+      map.setPaintProperty(layer.id, "fill-outline-color", "#354255")
+    } else if (layer.type === "fill" && /water/i.test(layer.id)) {
+      map.setPaintProperty(layer.id, "fill-color", "#193b52")
+    } else if (
+      layer.type === "line" &&
+      /road|bridge|highway|tunnel/i.test(layer.id)
+    ) {
+      map.setPaintProperty(
+        layer.id,
+        "line-color",
+        /casing|outline/i.test(layer.id)
+          ? "#182231"
+          : /motorway|trunk|primary/i.test(layer.id)
+            ? "#6b7a90"
+            : "#48586e"
+      )
+    }
+  }
+}
+
 // A tile-less, dependency-free style with a transparent background. Use it for
 // data visualizations (choropleths, world arcs, dot maps) where you draw your
 // own layers and don't need a street basemap. The easiest way to opt in is the
@@ -348,6 +388,8 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
         // Track load state
         instance.on("load", () => setIsLoaded(true))
         instance.on("style.load", () => {
+          if (currentStyleRef.current === defaultStyles.dark)
+            applyReadableDarkStyle(instance)
           styleSwapInFlightRef.current = false
           setIsStyleLoaded(true)
         })
