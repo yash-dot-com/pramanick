@@ -5,10 +5,15 @@ import { LocalizedText } from "@/components/language-provider"
 import { Component, useEffect, useState, type ReactNode } from "react"
 import {
   Building2,
+  Check,
+  Clock3,
   CloudOff,
   Droplets,
   Lightbulb,
   MapPin,
+  MessageCircle,
+  Flag,
+  TriangleAlert,
   Route,
   Waves,
 } from "lucide-react"
@@ -31,12 +36,21 @@ import {
   type Office,
 } from "@/lib/civic/model"
 import { StatusBadge } from "./status-badge"
+import { caseStatus } from "@/lib/civic/status-presentation"
 
 const icons = {
   roads: Route,
   water: Droplets,
   drainage: Waves,
   lighting: Lightbulb,
+}
+const statusIcons = {
+  reported: Flag,
+  assigned: Building2,
+  following_up: MessageCircle,
+  awaiting_verification: Clock3,
+  verified: Check,
+  disputed: TriangleAlert,
 }
 class MapBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
@@ -200,62 +214,89 @@ export function CivicMap({
               onPoint={onPoint}
               onUnavailable={() => setForceOffline(true)}
             />
-            {issues.map((issue) => (
-              <MapMarker
-                key={issue.id}
-                anchor="bottom"
-                longitude={issue.lng}
-                latitude={issue.lat}
-                onClick={() => onSelect(issue.id)}
-              >
-                <MarkerContent>
-                  <button
-                    aria-label={`Open issue: ${issue.title} · ${issue.status === "verified" ? "resident verified" : issue.status === "awaiting_verification" ? "completion claimed, awaiting review" : "unresolved"}`}
-                    className={`relative mb-1 flex size-10 -rotate-45 items-center justify-center rounded-[50%_50%_50%_8%] border border-zinc-300 bg-zinc-100 text-zinc-950 shadow-md outline-none focus-visible:ring-4 focus-visible:ring-ring ${selectedId === issue.id ? "ring-4 ring-ring/60" : "hover:bg-white"}`}
-                  >
-                    <MapPin className="size-5 rotate-45" />
-                    <span
-                      aria-hidden="true"
-                      className={`absolute top-0 left-0 size-3 rotate-45 rounded-full border-2 border-zinc-100 ${issue.status === "verified" ? "bg-emerald-500" : issue.status === "awaiting_verification" ? "bg-amber-400" : "bg-red-500"}`}
-                    />
-                    <span className="absolute -top-2 -right-2 rotate-45 rounded-full border bg-background px-1.5 text-[10px] text-foreground">
-                      {issue.complaintCount}
-                    </span>
-                  </button>
-                </MarkerContent>
-                <MarkerTooltip offset={56}>
-                  <div className="max-w-72 min-w-56 space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      <LocalizedText text={CATEGORIES[issue.category].label} />{" "}
-                      · {localityName(issue.localityId)}
-                    </p>
-                    <p className="text-sm font-medium">
-                      <LocalizedText text={issue.title} />
-                    </p>
-                    <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-                      <span>
-                        {issue.complaintCount}
-                        <LocalizedText text="complaints" />
-                      </span>
-                      <StatusBadge status={issue.status} />
-                    </div>
-                    <p className="line-clamp-2 text-xs text-muted-foreground">
-                      <LocalizedText
-                        text={
-                          issue.events[0]?.title ?? "Reported by a resident"
-                        }
+            {issues.map((issue) => {
+              const CategoryIcon = icons[issue.category]
+              const StateIcon = statusIcons[issue.status]
+              const presentation = caseStatus[issue.status]
+              const selected = selectedId === issue.id
+              return (
+                <MapMarker
+                  key={issue.id}
+                  anchor="center"
+                  longitude={issue.lng}
+                  latitude={issue.lat}
+                  onClick={() => onSelect(issue.id)}
+                >
+                  <MarkerContent>
+                    <button
+                      aria-label={`${issue.title} · ${CATEGORIES[issue.category].label} · ${presentation.label} · ${issue.complaintCount} resident reports`}
+                      aria-pressed={selected}
+                      title={`${presentation.label} · ${issue.complaintCount} resident reports`}
+                      className={`relative flex size-9 items-center justify-center rounded-xl border border-white/60 text-white outline-none focus-visible:ring-4 focus-visible:ring-ring/40 ${selected ? "ring-[3px] ring-primary ring-offset-2 ring-offset-background" : ""}`}
+                      style={{
+                        background: `linear-gradient(160deg, ${presentation.from}, ${presentation.to})`,
+                      color: presentation.ink || "#ffffff",
+                        boxShadow:
+                          "inset 0 1px 0 #ffffff66, inset 0 -1px 0 #00000012, 0 2px 5px #10182830",
+                      }}
+                    >
+                      <CategoryIcon
+                        className="size-[18px]"
+                        strokeWidth={2}
+                        aria-hidden="true"
                       />
-                    </p>
-                    {issue.nextFollowUp && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -right-1 -bottom-1 flex size-3.5 items-center justify-center rounded-full border border-white/80 bg-white text-zinc-700 shadow-sm"
+                      >
+                        <StateIcon className="size-2.5" strokeWidth={2.5} />
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="absolute -top-2 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border border-zinc-200 bg-white px-1 text-[9px] leading-none font-semibold text-zinc-800 shadow-sm"
+                      >
+                        {issue.complaintCount > 99
+                          ? "99+"
+                          : issue.complaintCount}
+                      </span>
+                    </button>
+                  </MarkerContent>
+                  <MarkerTooltip offset={30}>
+                    <div className="max-w-72 min-w-56 space-y-2">
                       <p className="text-xs text-muted-foreground">
-                        <LocalizedText text="Next:" />
-                        {formatDate(issue.nextFollowUp)}
+                        <LocalizedText
+                          text={CATEGORIES[issue.category].label}
+                        />{" "}
+                        · {localityName(issue.localityId)}
                       </p>
-                    )}
-                  </div>
-                </MarkerTooltip>
-              </MapMarker>
-            ))}
+                      <p className="text-sm font-medium">
+                        <LocalizedText text={issue.title} />
+                      </p>
+                      <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                        <span>
+                          {issue.complaintCount}
+                          <LocalizedText text="complaints" />
+                        </span>
+                        <StatusBadge status={issue.status} />
+                      </div>
+                      <p className="line-clamp-2 text-xs text-muted-foreground">
+                        <LocalizedText
+                          text={
+                            issue.events[0]?.title ?? "Reported by a resident"
+                          }
+                        />
+                      </p>
+                      {issue.nextFollowUp && (
+                        <p className="text-xs text-muted-foreground">
+                          <LocalizedText text="Next:" />
+                          {formatDate(issue.nextFollowUp)}
+                        </p>
+                      )}
+                    </div>
+                  </MarkerTooltip>
+                </MapMarker>
+              )
+            })}
             {offices
               .filter((office) => office.lat != null && office.lng != null)
               .map((office) => (
@@ -284,20 +325,36 @@ export function CivicMap({
         </MapBoundary>
       )}
       <div className="map-edge-depth" aria-hidden="true" />
-      <div className="absolute right-16 bottom-3 z-10 flex flex-wrap gap-3 rounded-lg border bg-background/95 px-3 py-2 text-[10px] text-muted-foreground shadow-sm">
-        <span className="flex items-center gap-1">
-          <i className="size-2 rounded-full bg-red-500" />
-          <LocalizedText text="Open / disputed" />
-        </span>
-        <span className="flex items-center gap-1">
-          <i className="size-2 rounded-full bg-amber-400" />
-          <LocalizedText text="Claimed fixed" />
-        </span>
-        <span className="flex items-center gap-1">
-          <i className="size-2 rounded-full bg-emerald-500" />
-          <LocalizedText text="Resident verified" />
-        </span>
-      </div>
+      <details
+        open
+        className="absolute right-16 bottom-3 z-10 max-w-[calc(100%-5rem)] rounded-xl border bg-background/95 px-3 py-2 text-[10px] shadow-[var(--surface-shadow)] backdrop-blur-sm"
+      >
+        <summary className="cursor-pointer font-medium">
+          <LocalizedText text="Map key" />
+          <span className="ml-3 font-normal text-muted-foreground">
+            <LocalizedText text="Numbers = resident reports" />
+          </span>
+        </summary>
+        <div className="mt-2.5 grid grid-cols-2 gap-x-5 gap-y-2">
+          {Object.entries(caseStatus).map(([status, presentation]) => {
+            const Icon = statusIcons[status as keyof typeof statusIcons]
+            return (
+              <span
+                key={status}
+                className="flex items-center gap-1.5 text-muted-foreground"
+              >
+                <span
+                  className="flex size-4 items-center justify-center rounded-md text-white"
+                  style={{ background: presentation.to, color: presentation.ink || "#ffffff" }}
+                >
+                  <Icon className="size-2.5" />
+                </span>
+                <LocalizedText text={presentation.label} />
+              </span>
+            )
+          })}
+        </div>
+      </details>
       <Button
         className="absolute bottom-3 left-3 z-10"
         variant="outline"

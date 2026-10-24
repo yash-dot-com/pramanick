@@ -14,6 +14,7 @@ export function publicAgentDashboard() {
   const contacts = db.select().from(s.contacts).all()
   const calls = db.select().from(s.calls).orderBy(desc(s.calls.createdAt)).all()
   const links = db.select().from(s.callIssues).all()
+  const plans = db.select().from(s.caseworkPlans).all()
   const publicCalls = calls.slice(0, 100).map((call) => {
     const person = contacts.find((item) => item.id === call.contactId)
     return {
@@ -164,6 +165,21 @@ export function publicAgentDashboard() {
       error: publicText(job.error),
     })),
     calls: publicCalls,
+    updates: civic.issues
+      .flatMap((issue) =>
+        issue.events.map((event) => ({
+          id: event.id,
+          issueId: issue.id,
+          issueTitle: publicText(issue.title),
+          localityId: issue.localityId,
+          title: publicText(event.title),
+          description: publicText(event.description),
+          createdAt: event.createdAt,
+          isDemo: issue.isDemo,
+        }))
+      )
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .slice(0, 60),
     issues: civic.issues.map((issue) => ({
       id: issue.id,
       title: publicText(issue.title),
@@ -171,6 +187,35 @@ export function publicAgentDashboard() {
       status: issue.status,
       isDemo: issue.isDemo,
       complaintCount: issue.complaintCount,
+      description: publicText(issue.description),
+      landmark: publicText(issue.landmark),
+      updatedAt: issue.updatedAt,
+      person:
+        contacts.find(
+          (contact) =>
+            contact.officeId === issue.officeId && contact.displayName
+        )?.displayName ?? null,
+      office:
+        civic.offices.find((office) => office.id === issue.officeId)?.name ??
+        null,
+      nextAction: publicText(
+        plans.find((plan) => plan.issueId === issue.id)?.nextAction
+      ),
+      callCount: issue.calls.length,
+      audioCount: calls.filter(
+        (call) =>
+          issue.calls.some((linked) => linked.id === call.id) &&
+          call.recordingUrl &&
+          contacts.some(
+            (contact) =>
+              contact.id === call.contactId &&
+              contact.publicationConsent &&
+              contact.recordingConsent
+          )
+      ).length,
+      promise:
+        issue.commitments.find((promise) => promise.status !== "fulfilled") ??
+        null,
       nextFollowUp: issue.nextFollowUp,
       latestUpdate: publicText(issue.events[0]?.title),
     })),

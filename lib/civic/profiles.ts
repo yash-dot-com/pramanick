@@ -1,7 +1,6 @@
 import { snapshot, store } from "./repository"
 import { publicText } from "./dossier"
 import * as s from "@/lib/db/schema"
-import { demoContact } from "@/lib/voice/contact"
 import { isScriptedDemo } from "./demo-office-data"
 
 const terminal = new Set([
@@ -27,7 +26,6 @@ function ratio(numerator: number, denominator: number) {
 }
 
 export function responsibilityProfiles() {
-  demoContact(false)
   const { db } = store()
   const civic = snapshot()
   const contacts = db.select().from(s.contacts).all()

@@ -730,7 +730,7 @@ function MarkerPopup({
     <div
       className={cn(
         "relative max-w-62 rounded-md border bg-popover p-3 text-popover-foreground shadow-md",
-        "animate-in duration-200 ease-out fade-in-0 zoom-in-95",
+        "animate-in duration-200 ease-out fade-in-0",
         className
       )}
     >
@@ -1145,7 +1145,7 @@ function MapPopup({
     <div
       className={cn(
         "relative max-w-62 rounded-md border bg-popover p-3 text-popover-foreground shadow-md",
-        "animate-in duration-200 ease-out fade-in-0 zoom-in-95",
+        "animate-in duration-200 ease-out fade-in-0",
         className
       )}
     >

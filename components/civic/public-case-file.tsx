@@ -95,7 +95,7 @@ function PublicConversation({ call }: { call: PublicCaseCall }) {
             <Headphones className="size-3.5" />
             <LocalizedText text="Listen to the published conversation" />
           </p>
-          <audio controls preload="none" src={audio} className="w-full" />
+          <audio controls preload="metadata" src={audio} className="w-full" />
           <a
             href={`${audio}?download=1`}
             download
@@ -220,9 +220,11 @@ function PublicConversation({ call }: { call: PublicCaseCall }) {
 
 export function PublicCaseFile({
   issueId,
+  initialTab = "timeline",
   onClose,
 }: {
   issueId: string
+  initialTab?: "timeline" | "conversations"
   onClose: () => void
 }) {
   const [data, setData] = useState<PublicCaseData | null>(null)
@@ -264,6 +266,9 @@ export function PublicCaseFile({
     }
   }, [issueId])
   const timeline = data ? publicCaseTimeline(data) : []
+  const promisedCheck = data?.commitments
+    .filter((item) => item.status !== "fulfilled" && item.dueAt)
+    .sort((a, b) => a.dueAt!.localeCompare(b.dueAt!))[0]
   return (
     <Dialog
       open
@@ -363,16 +368,26 @@ export function PublicCaseFile({
                     text={
                       data.nextFollowUp
                         ? formatDate(data.nextFollowUp)
-                        : "No next date has been scheduled"
+                        : promisedCheck?.dueAt
+                          ? `Promise deadline: ${formatDate(promisedCheck.dueAt)}`
+                          : "No next date has been scheduled"
                     }
                   />
                 </p>
                 <p className="text-[10px] text-muted-foreground">
-                  <LocalizedText text="A scheduled follow-up is not a promise that the repair is complete." />
+                  <LocalizedText
+                    text={
+                      data.nextFollowUp
+                        ? "The case stays open until the repair is checked."
+                        : promisedCheck
+                          ? "This is the recorded promise. Check the history to see whether it was kept."
+                          : "The case history and recorded plan remain available below."
+                    }
+                  />
                 </p>
               </section>
             </div>
-            <Tabs defaultValue="timeline">
+            <Tabs defaultValue={initialTab}>
               <TabsList className="h-auto flex-wrap">
                 <TabsTrigger value="timeline">
                   <LocalizedText text="Full history" />

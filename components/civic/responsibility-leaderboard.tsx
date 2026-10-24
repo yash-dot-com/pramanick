@@ -1,17 +1,15 @@
 "use client"
 
 import {
-  LanguageSwitcher,
   LocalizedText,
   useTranslatedText,
 } from "@/components/language-provider"
 
 import Link from "next/link"
-import { ThemeSwitcher } from "@/components/theme-switcher"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { ArrowLeft, ArrowUpRight, Search, Trophy } from "lucide-react"
+import { ArrowUpRight, Search, Trophy } from "lucide-react"
+import { PublicNavigation } from "./public-navigation"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
@@ -62,35 +60,41 @@ export function ResponsibilityLeaderboard() {
   const [error, setError] = useState("")
   const [query, setQuery] = useState("")
   const [kind, setKind] = useState("person")
-  const [recordSet, setRecordSet] = useState("scripted_demo")
+  const [recordSet, setRecordSet] = useState("auto")
   const [metric, setMetric] = useState<Metric>("verifiedFixRate")
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(() =>
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("profile")
+  )
   const refresh = useCallback(async () => {
     const response = await fetch("/api/profiles", { cache: "no-store" })
     const result = await response.json()
     if (!response.ok) throw new Error(result.error)
     setData(result)
+    setError("")
   }, [])
   useEffect(() => {
-    const profile = new URLSearchParams(window.location.search).get("profile")
     const read = () => {
       if (document.visibilityState !== "hidden")
         void refresh().catch((error) => setError(error.message))
     }
-    void refresh()
-      .then(() => {
-        if (profile) setSelectedId(profile)
-      })
-      .catch((error) => setError(error.message))
+    read()
     const timer = setInterval(read, 10000)
     return () => clearInterval(timer)
   }, [refresh])
+  const shownRecordSet =
+    recordSet === "auto"
+      ? data?.profiles.some((profile) => profile.dataMode === "scripted_demo")
+        ? "scripted_demo"
+        : "provider_records"
+      : recordSet
   const profiles = useMemo(
     () =>
       (data?.profiles ?? [])
         .filter(
           (profile) =>
-            profile.dataMode === recordSet &&
+            profile.dataMode === shownRecordSet &&
             profile.kind === kind &&
             `${profile.name} ${profile.role} ${profile.officeName}`
               .toLowerCase()
@@ -103,7 +107,7 @@ export function ResponsibilityLeaderboard() {
           if (bv === null) return -1
           return metric === "medianResolutionHours" ? av - bv : bv - av
         }),
-    [data, kind, metric, query, recordSet]
+    [data, kind, metric, query, shownRecordSet]
   )
   const selected = data?.profiles.find((profile) => profile.id === selectedId)
   const open = (profile: ResponsibilityProfile) => {
@@ -116,56 +120,28 @@ export function ResponsibilityLeaderboard() {
   }
   return (
     <main className="min-h-dvh bg-background text-foreground">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            nativeButton={false}
-            render={<Link href="/app" />}
-            aria-label="Back to map"
-          >
-            <ArrowLeft />
-          </Button>
-          <h1 className="text-lg font-semibold">
-            <LocalizedText text="Public service record" />
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeSwitcher />
-          <LanguageSwitcher />
-          <Button
-            variant="outline"
-            size="sm"
-            nativeButton={false}
-            render={<Link href="/operations" />}
-          >
-            <LocalizedText text="Agent workspace" />
-            <ArrowUpRight />
-          </Button>
-        </div>
-      </header>
+      <PublicNavigation current="leaderboard" />
       <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-6">
         <div className="space-y-2">
-          <h2 className="flex items-center gap-2 text-xl font-semibold">
+          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
             <Trophy className="size-5" />
-            <LocalizedText text="Responsibility leaderboard" />
-          </h2>
+            <LocalizedText text="The public service record" />
+          </h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            <LocalizedText text="Compare documented responses, promises, and resident-verified outcomes. Every measure links to its cases. Demo profiles are labeled." />
+            <LocalizedText text="Compare documented responses, promises, and resident-verified outcomes. Every measure links to its supporting cases." />
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
           <select
             aria-label="Record source"
-            value={recordSet}
+            value={shownRecordSet}
             onChange={(event) => setRecordSet(event.target.value)}
             className="rounded-lg border bg-background px-3 py-2 text-xs"
           >
-            <option value="scripted_demo">Fictional demonstration</option>
-            <option value="provider_records">
-              Provider & directory records
-            </option>
+            {data?.profiles.some(
+              (profile) => profile.dataMode === "scripted_demo"
+            ) && <option value="scripted_demo">Sample records</option>}
+            <option value="provider_records">Public records</option>
           </select>
           <Select
             value={kind}
@@ -174,7 +150,11 @@ export function ResponsibilityLeaderboard() {
             }}
           >
             <SelectTrigger className="w-44" aria-label="Profile type">
-              <SelectValue />
+              <SelectValue>
+                <LocalizedText
+                  text={kind === "person" ? "People" : "Offices"}
+                />
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="person">
@@ -195,7 +175,9 @@ export function ResponsibilityLeaderboard() {
               className="w-64"
               aria-label="Sort by service measure"
             >
-              <SelectValue />
+              <SelectValue>
+                <LocalizedText text={metrics[metric]} />
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {Object.entries(metrics).map(([key, label]) => (
@@ -216,10 +198,9 @@ export function ResponsibilityLeaderboard() {
             />
           </div>
         </div>
-        {recordSet === "scripted_demo" && (
-          <p className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-900 dark:text-amber-200">
-            These sample measures come from fictional cases and scripted
-            conversations. Open a person to inspect the promises, delays and
+        {shownRecordSet === "scripted_demo" && (
+          <p className="text-xs text-muted-foreground">
+            Sample records. Open a person to see the cases, conversations and
             resident checks behind each number.
           </p>
         )}
@@ -228,7 +209,7 @@ export function ResponsibilityLeaderboard() {
             <LocalizedText text={error} />
           </p>
         )}
-        {!data && (
+        {!data && !error && (
           <p className="text-sm text-muted-foreground">
             <LocalizedText text="Loading public records…" />
           </p>

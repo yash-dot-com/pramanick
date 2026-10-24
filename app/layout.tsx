@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { LanguageProvider } from "@/components/language-provider"
 import { cn } from "@/lib/utils"
+import { instrumentSerif } from "@/lib/fonts"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -26,16 +28,19 @@ export default function RootLayout({
         "antialiased",
         fontMono.variable,
         "font-sans",
-        inter.variable
+        inter.variable,
+        instrumentSerif.variable
       )}
     >
       <body>
         <ThemeProvider defaultTheme="light" storageKey="pramanik-theme">
           <LanguageProvider>
             <TooltipProvider>{children}</TooltipProvider>
-            <div className="pointer-events-none fixed right-3 bottom-3 z-50 rounded-full border bg-background/90 px-3 py-1 text-[10px] text-muted-foreground shadow-sm backdrop-blur">
-              Demo workspace
-            </div>
+            {DEMO_MODE && (
+              <div className="pointer-events-none fixed right-3 bottom-3 z-50 rounded-full border bg-background/90 px-3 py-1 text-[10px] text-muted-foreground shadow-sm backdrop-blur">
+                Demo workspace
+              </div>
+            )}
           </LanguageProvider>
         </ThemeProvider>
       </body>
