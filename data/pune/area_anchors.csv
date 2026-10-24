@@ -1,0 +1,7 @@
+﻿area_id,area_name,anchor_type,latitude,longitude,government,source_url,precision,google_maps_url
+kothrud,Kothrud,locality,18.50388889,73.8075,PMC,https://www.mindat.org/maps.php?id=435506,APPROX_LOCALITY_REFERENCE,https://www.google.com/maps/search/?api=1&query=Kothrud%20Pune%20Maharashtra
+pcmc,PCMC,PCMC metro station,18.62932,73.80329,PCMC + Maha Metro,https://mapcarta.com/N10214268972,OSM_STATION_ANCHOR_NOT_CORPORATION_BOUNDARY,https://www.google.com/maps/search/?api=1&query=PCMC%20Pune%20Maharashtra
+district-court,District Court,metro station not courthouse,18.52679,73.8569,PMC + Maha Metro,https://mapcarta.com/N11097510274,OSM_STATION_ANCHOR,https://www.google.com/maps/search/?api=1&query=District%20Court%20Pune%20Maharashtra
+vanaz,Vanaz,metro station,18.50719,73.8052,PMC + Maha Metro,https://mapcarta.com/N9599243853,OSM_STATION_ANCHOR,https://www.google.com/maps/search/?api=1&query=Vanaz%20Pune%20Maharashtra
+ramwadi,Ramwadi,metro station,18.55703,73.90856,PMC + Maha Metro,https://mapcarta.com/N11699340657,OSM_STATION_ANCHOR,https://www.google.com/maps/search/?api=1&query=Ramwadi%20Pune%20Maharashtra
+viman-nagar,Viman Nagar,locality,18.57039,73.91333,PMC,https://mapcarta.com/27061478,OSM_LOCALITY_ANCHOR_NOT_WARD_BOUNDARY,https://www.google.com/maps/search/?api=1&query=Viman%20Nagar%20Pune%20Maharashtra

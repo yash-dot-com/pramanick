@@ -1,0 +1,238 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.8075,
+          18.50388889
+        ]
+      },
+      "properties": {
+        "area_id": "kothrud",
+        "area_name": "Kothrud",
+        "anchor_type": "locality",
+        "government": "PMC",
+        "source_url": "https://www.mindat.org/maps.php?id=435506",
+        "precision": "APPROX_LOCALITY_REFERENCE",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Kothrud%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.80329,
+          18.62932
+        ]
+      },
+      "properties": {
+        "area_id": "pcmc",
+        "area_name": "PCMC",
+        "anchor_type": "PCMC metro station",
+        "government": "PCMC + Maha Metro",
+        "source_url": "https://mapcarta.com/N10214268972",
+        "precision": "OSM_STATION_ANCHOR_NOT_CORPORATION_BOUNDARY",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=PCMC%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.8569,
+          18.52679
+        ]
+      },
+      "properties": {
+        "area_id": "district-court",
+        "area_name": "District Court",
+        "anchor_type": "metro station not courthouse",
+        "government": "PMC + Maha Metro",
+        "source_url": "https://mapcarta.com/N11097510274",
+        "precision": "OSM_STATION_ANCHOR",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=District%20Court%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.8052,
+          18.50719
+        ]
+      },
+      "properties": {
+        "area_id": "vanaz",
+        "area_name": "Vanaz",
+        "anchor_type": "metro station",
+        "government": "PMC + Maha Metro",
+        "source_url": "https://mapcarta.com/N9599243853",
+        "precision": "OSM_STATION_ANCHOR",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Vanaz%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.90856,
+          18.55703
+        ]
+      },
+      "properties": {
+        "area_id": "ramwadi",
+        "area_name": "Ramwadi",
+        "anchor_type": "metro station",
+        "government": "PMC + Maha Metro",
+        "source_url": "https://mapcarta.com/N11699340657",
+        "precision": "OSM_STATION_ANCHOR",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Ramwadi%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.91333,
+          18.57039
+        ]
+      },
+      "properties": {
+        "area_id": "viman-nagar",
+        "area_name": "Viman Nagar",
+        "anchor_type": "locality",
+        "government": "PMC",
+        "source_url": "https://mapcarta.com/27061478",
+        "precision": "OSM_LOCALITY_ANCHOR_NOT_WARD_BOUNDARY",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Viman%20Nagar%20Pune%20Maharashtra"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.853071,
+          18.5238084
+        ]
+      },
+      "properties": {
+        "contact_id": "PMC-HQ",
+        "name": "Municipal Corporation Headquarters",
+        "kind": "office",
+        "coordinate_status": "OFFICIAL_PUBLISHED",
+        "area_tags": "Kothrud;District Court;Vanaz;Ramwadi;Viman Nagar"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.80934,
+          18.50121
+        ]
+      },
+      "properties": {
+        "contact_id": "PMC-KOTHRUD",
+        "name": "Kothrud–Bavdhan Ward Office",
+        "kind": "office",
+        "coordinate_status": "CHECK_CURRENT_PHONE_AND_WARD_BOUNDARY",
+        "area_tags": "Kothrud;Vanaz"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.8459956,
+          18.5246462
+        ]
+      },
+      "properties": {
+        "contact_id": "PMC-GHOLE",
+        "name": "Shivajinagar–Ghole Road Ward Office",
+        "kind": "office",
+        "coordinate_status": "CHECK_CURRENT_PHONE_AND_WARD_BOUNDARY",
+        "area_tags": "District Court"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.907478,
+          18.557033
+        ]
+      },
+      "properties": {
+        "contact_id": "PMC-NAGAR",
+        "name": "Nagar Road–Wadgaon Sheri Ward Office",
+        "kind": "office",
+        "coordinate_status": "CHECK_CURRENT_PHONE_AND_WARD_BOUNDARY",
+        "area_tags": "Ramwadi;Viman Nagar"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.80463,
+          18.62841
+        ]
+      },
+      "properties": {
+        "contact_id": "PCMC-HQ",
+        "name": "PCMC municipal headquarters",
+        "kind": "office",
+        "coordinate_status": "OFFICIAL_PUBLISHED",
+        "area_tags": "PCMC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.8569,
+          18.52679
+        ]
+      },
+      "properties": {
+        "contact_id": "METRO-HQ",
+        "name": "Pune Metro Bhavan",
+        "kind": "office",
+        "coordinate_status": "OFFICIAL_PUBLISHED",
+        "area_tags": "Kothrud;PCMC;District Court;Vanaz;Ramwadi;Viman Nagar"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.85544,
+          18.52789
+        ]
+      },
+      "properties": {
+        "contact_id": "DISTRICT-COURT-DLSA",
+        "name": "District Legal Services Authority, Pune",
+        "kind": "office",
+        "coordinate_status": "OFFICIAL_PUBLISHED",
+        "area_tags": "District Court"
+      }
+    }
+  ]
+}

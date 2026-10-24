@@ -1,0 +1,31 @@
+﻿area_name,issue_type,candidate_owner_type,confirmation_needed,routing_confidence,auto_dial_allowed
+Kothrud,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+Kothrud,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+Kothrud,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+Kothrud,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+Kothrud,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO
+PCMC,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+PCMC,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+PCMC,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+PCMC,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+PCMC,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO
+District Court,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+District Court,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+District Court,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+District Court,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+District Court,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO
+Vanaz,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+Vanaz,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+Vanaz,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+Vanaz,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+Vanaz,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO
+Ramwadi,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+Ramwadi,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+Ramwadi,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+Ramwadi,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+Ramwadi,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO
+Viman Nagar,pothole,Municipal roads / relevant road asset owner,"Depends on municipal ward and road ownership (state highway, metro land, etc.)",CATEGORY_ONLY,NO
+Viman Nagar,broken_streetlight,Municipal electrical / asset operator,Streetlights on metro premises may be operated by Maha Metro,CATEGORY_ONLY,NO
+Viman Nagar,sewage_overflow,Municipal drainage / sewerage,Need identify sewage vs stormwater and public vs private line,CATEGORY_ONLY,NO
+Viman Nagar,garbage,Municipal health / sanitation,Within public right-of-way and municipal service boundary,CATEGORY_ONLY,NO
+Viman Nagar,metro_station_problem,Maha Metro customer care and facilities,Only inside/managed by Metro; not surrounding roads,CATEGORY_ONLY,NO

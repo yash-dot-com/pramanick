@@ -1,5 +1,7 @@
 # Next.js template
 
+Pramanik's current backend setup, API payloads, and quick user checks are in [docs/CORE-BACKEND.md](docs/CORE-BACKEND.md).
+
 This is a Next.js template with shadcn/ui.
 
 ## Adding components

@@ -37,3 +37,12 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local civic database and SQLite journal files
+/data/*.sqlite
+/data/*.sqlite-*
+/data/*.db
+/data/*.db-*
+!.env.example
+/data/private/
+/data/evidence/
