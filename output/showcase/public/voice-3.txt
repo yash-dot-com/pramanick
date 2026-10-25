@@ -1,0 +1,1 @@
+Our GPT Realtime voice agent calls the responsible contact, asks for a deadline, and records the commitment.

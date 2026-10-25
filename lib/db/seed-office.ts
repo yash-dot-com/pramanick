@@ -72,7 +72,7 @@ export function seedOfficeDemo(db: ReturnType<typeof database>["db"]) {
       const createdAt = at(issue.reportedHoursAgo)
       const updatedAt = at(
         issue.status === "verified"
-          ? 20
+          ? 25
           : issue.status === "disputed"
             ? 6
             : issue.calls.at(-1)!.hoursAgo
@@ -358,7 +358,7 @@ export function seedOfficeDemo(db: ReturnType<typeof database>["db"]) {
       if (issue.status === "verified")
         event(
           "verified",
-          20,
+          25,
           "Case moved to verified",
           "Two fictional residents independently confirmed the repaired entrance.",
           "status"
@@ -446,6 +446,38 @@ export function seedOfficeDemo(db: ReturnType<typeof database>["db"]) {
         .where(eq(s.issues.id, issue.id))
         .get()
       if (!row) continue
+      // Keep the verified road example internally consistent: verification was
+      // received one hour before the original deadline, not after it.
+      if (issue.id === "office-demo-pothole") {
+        const first = tx
+          .select()
+          .from(s.calls)
+          .where(eq(s.calls.id, demoId("road-first")))
+          .get()
+        if (first) {
+          const followupAt = new Date(
+            Date.parse(first.createdAt) + 46 * 3_600_000
+          ).toISOString()
+          const verifiedAt = new Date(
+            Date.parse(first.createdAt) + 47 * 3_600_000
+          ).toISOString()
+          tx.update(s.calls)
+            .set({ createdAt: followupAt, updatedAt: followupAt })
+            .where(eq(s.calls.id, demoId("road-followup")))
+            .run()
+          tx.update(s.issueEvents)
+            .set({ createdAt: verifiedAt })
+            .where(eq(s.issueEvents.id, demoId(`${issue.id}:event:verified`)))
+            .run()
+          for (let i = 0; i < 2; i++)
+            tx.update(s.surveyResponses)
+              .set({ createdAt: verifiedAt })
+              .where(
+                eq(s.surveyResponses.id, demoId(`${issue.id}:response:${i}`))
+              )
+              .run()
+        }
+      }
       for (const call of issue.calls)
         if (manifest[call.key]?.duration)
           tx.update(s.calls)

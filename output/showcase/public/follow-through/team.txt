@@ -1,0 +1,1 @@
+Specialist agents work at the same time. They check what residents reported, what happened before, and which office is responsible. A coordinator brings their findings together and plans the next step.

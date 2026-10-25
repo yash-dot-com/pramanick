@@ -1,0 +1,803 @@
+{
+  "version": 3,
+  "status": "Frame plan and isolated component studies; full film not assembled or rendered",
+  "fps": 30,
+  "width": 1280,
+  "height": 720,
+  "durationInFrames": 1800,
+  "frameConvention": "All global frame ranges are [from,to); component layers use a local frame starting at zero. Every animation uses speed=1.",
+  "fonts": {
+    "editorial": "Instrument Serif 400",
+    "labelsAndDialogue": "Inter 400/500",
+    "numbers": "JetBrains Mono (registry default)"
+  },
+  "scenes": [
+    {
+      "id": "backlog",
+      "from": 0,
+      "to": 120,
+      "title": "Reports grow. Verified fixes do not.",
+      "copy": "Reports keep coming.",
+      "narration": "The reports keep coming. But who follows through?",
+      "visual": "Two unboxed numbers on paper. Reports roll from 0 to 128; verified fixes remain 0. A visible label says “Illustrative backlog · not national statistics.” These are invented demonstration values, not a claim about India’s actual resolution rate.",
+      "layers": [
+        {
+          "component": "MaskRevealUp",
+          "from": 0,
+          "durationInFrames": 120,
+          "props": {
+            "text": "Reports keep coming.",
+            "fontSize": 64,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Top headline"
+        },
+        {
+          "component": "RollingNumber",
+          "from": 24,
+          "durationInFrames": 96,
+          "props": {
+            "from": 0,
+            "to": 128,
+            "fontSize": 120,
+            "color": "#0ea5e9"
+          },
+          "placement": "Left number, Reports"
+        },
+        {
+          "component": "RollingNumber",
+          "from": 28,
+          "durationInFrames": 92,
+          "props": {
+            "from": 0,
+            "to": 0,
+            "fontSize": 120,
+            "color": "#27272a"
+          },
+          "placement": "Right number, Verified fixes"
+        }
+      ],
+      "beats": [
+        {
+          "from": 0,
+          "to": 23,
+          "component": "MaskRevealUp",
+          "action": "Only the headline enters; let the eye establish the question."
+        },
+        {
+          "from": 23,
+          "to": 28,
+          "component": "RollingNumber left group",
+          "action": "Reports group starts at 24 with a local 96-frame Sequence. The zero group follows at 28: a four-frame sibling stagger."
+        },
+        {
+          "from": 28,
+          "to": 101,
+          "component": "RollingNumber groups",
+          "action": "Reports roll toward 128; verified fixes remain zero. The left count settles at global frame 101 (24 + ceil(96 × 0.8))."
+        },
+        {
+          "from": 101,
+          "to": 108,
+          "component": "RollingNumber hold",
+          "action": "Read the settled comparison; the fixed zero did not simulate progress."
+        },
+        {
+          "from": 108,
+          "to": 120,
+          "component": "Frame-driven opacity wrapper",
+          "action": "Fade the entire example to the neutral canvas; the next shot begins at 120."
+        }
+      ]
+    },
+    {
+      "id": "problem",
+      "from": 120,
+      "to": 240,
+      "title": "India needs follow-through",
+      "copy": "India has complaints. | What's missing? | Follow-through.",
+      "narration": "India has complaints. What’s missing is follow-through.",
+      "visual": "Only one phrase at a time. The argument replaces the counter illustration. Instrument Serif, dark ink; the last phrase can use a restrained blue underline. No charts behind the words.",
+      "layers": [
+        {
+          "component": "WordStream",
+          "from": 120,
+          "durationInFrames": 120,
+          "props": {
+            "text": "India has complaints. | What's missing? | Follow-through.",
+            "wordGap": 10,
+            "hold": 20,
+            "drift": 0.4,
+            "fontSize": 72,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Center"
+        }
+      ],
+      "beats": [
+        {
+          "from": 120,
+          "to": 143,
+          "component": "WordStream phrase 1",
+          "action": "Words arrive at 120, 130, 140; the last resolves at 143."
+        },
+        {
+          "from": 143,
+          "to": 163,
+          "component": "WordStream phrase 1 hold/exit",
+          "action": "Hold; left run-out occupies 158–163."
+        },
+        {
+          "from": 163,
+          "to": 176,
+          "component": "WordStream phrase 2",
+          "action": "Words arrive at 163 and 173; complete at 176."
+        },
+        {
+          "from": 176,
+          "to": 196,
+          "component": "WordStream phrase 2 hold/exit",
+          "action": "Hold; run-out occupies 191–196."
+        },
+        {
+          "from": 196,
+          "to": 199,
+          "component": "WordStream phrase 3",
+          "action": "Follow-through appears and resolves."
+        },
+        {
+          "from": 199,
+          "to": 228,
+          "component": "WordStream final hold",
+          "action": "Keep the point legible; the source stops its final crawl at 219."
+        },
+        {
+          "from": 228,
+          "to": 240,
+          "component": "Opacity wrapper + case-token continuity",
+          "action": "Fade the phrase while a blue point establishes the map’s case location."
+        }
+      ]
+    },
+    {
+      "id": "map",
+      "from": 240,
+      "to": 360,
+      "title": "Many reports become one case",
+      "copy": "One problem.\nOne shared case.",
+      "narration": "Pramanik brings reports about one problem into a shared case.",
+      "visual": "Only product footage allowed: tightly cropped map. Three nearby report points converge at one leaking water pipe. Remove navigation, controls and app chrome. Keep the consolidated point as the case token in later shots.",
+      "layers": [
+        {
+          "component": "MaskRevealUp",
+          "from": 240,
+          "durationInFrames": 120,
+          "props": {
+            "text": "One problem.\nOne shared case.",
+            "fontSize": 60,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "distance": 24,
+            "color": "#171717"
+          },
+          "placement": "Top third, clear of the map case"
+        }
+      ],
+      "beats": [
+        {
+          "from": 240,
+          "to": 266,
+          "component": "MaskRevealUp + map crop",
+          "action": "Two lines enter at 240 and 243; all entry opacity settles at 266."
+        },
+        {
+          "from": 266,
+          "to": 312,
+          "component": "Map + frame-driven paths",
+          "action": "Three report points converge. This illustrates a fictional leak."
+        },
+        {
+          "from": 312,
+          "to": 342,
+          "component": "Map + case label",
+          "action": "Hold the single case, labelled Water leak."
+        },
+        {
+          "from": 342,
+          "to": 360,
+          "component": "Opacity wrapper + shared token",
+          "action": "Map fades; the case token remains and travels toward the coordinator."
+        }
+      ]
+    },
+    {
+      "id": "parallel-agents",
+      "from": 360,
+      "to": 630,
+      "title": "Three specialists work concurrently",
+      "copy": "Three specialists.\nWorking in parallel.",
+      "narration": "Three specialists work in parallel: checking reports, remembering earlier conversations, and finding the responsible office.",
+      "visual": "A coordinator sits above three labelled specialist endpoints: Reports, History, Responsibility. All work begins together. Result marks return independently and join at the coordinator. Small credit: OpenAI Agents SDK. The flow is a diagram, not three task cards.",
+      "layers": [
+        {
+          "component": "MaskRevealUp",
+          "from": 360,
+          "durationInFrames": 270,
+          "props": {
+            "text": "Three specialists.\nWorking in parallel.",
+            "fontSize": 60,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Top third"
+        }
+      ],
+      "beats": [
+        {
+          "from": 360,
+          "to": 390,
+          "component": "MaskRevealUp + flow diagram slot",
+          "action": "Reveal the statement and coordinator."
+        },
+        {
+          "from": 390,
+          "to": 420,
+          "component": "Flow diagram slot: simultaneous fork",
+          "action": "Stage the specialist nodes at 390, 394 and 398. Draw their connections with eased transforms/path strokes. All three work tokens launch together at 420 after the entrances."
+        },
+        {
+          "from": 420,
+          "to": 492,
+          "component": "Flow diagram slot: parallel work",
+          "action": "All three specialists work concurrently from frame 420. Each remains active until its own result returns. Entrance stagger does not imply sequential jobs."
+        },
+        {
+          "from": 492,
+          "to": 510,
+          "component": "Flow diagram slot: first result",
+          "action": "Reports returns “Same leak, several reports”; other branches keep working."
+        },
+        {
+          "from": 510,
+          "to": 528,
+          "component": "Flow diagram slot: second result",
+          "action": "History returns “Earlier repair promised”; Responsibility remains active."
+        },
+        {
+          "from": 528,
+          "to": 570,
+          "component": "Flow diagram slot: third result and join",
+          "action": "Responsibility returns “Water department identified”; join all findings at the coordinator."
+        },
+        {
+          "from": 570,
+          "to": 612,
+          "component": "Flow diagram hold",
+          "action": "Let the assembled finding marks be read."
+        },
+        {
+          "from": 612,
+          "to": 630,
+          "component": "Topology continuation + title fade",
+          "action": "Preserve the coordinator and case; remove specialist labels as the next-action path extends."
+        }
+      ],
+      "stagedEntrances": [
+        {
+          "element": "Reports node",
+          "from": 390
+        },
+        {
+          "element": "History node",
+          "from": 394
+        },
+        {
+          "element": "Responsibility node",
+          "from": 398
+        }
+      ],
+      "concurrentWorkStart": 420
+    },
+    {
+      "id": "plan",
+      "from": 630,
+      "to": 750,
+      "title": "The coordinator chooses the next step",
+      "copy": "One clear next step.",
+      "narration": "The coordinator turns their findings into the next action.",
+      "visual": "Joined findings feed one outward path labelled “Ask for a repair date.” This is a plan, not proof a call has happened. The path becomes a voice baseline at the next cut.",
+      "layers": [
+        {
+          "component": "WordPush",
+          "from": 630,
+          "durationInFrames": 120,
+          "props": {
+            "text": "One clear next step.",
+            "wordGap": 12,
+            "accel": 0.85,
+            "fontSize": 72,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Upper center"
+        }
+      ],
+      "beats": [
+        {
+          "from": 630,
+          "to": 674,
+          "component": "WordPush",
+          "action": "Four-word phrase builds; allow through 674 for the final source push to settle."
+        },
+        {
+          "from": 674,
+          "to": 714,
+          "component": "Flow diagram slot",
+          "action": "Next-action path draws and its short label arrives."
+        },
+        {
+          "from": 714,
+          "to": 738,
+          "component": "WordPush hold + plan hold",
+          "action": "Read the plan with no camera movement."
+        },
+        {
+          "from": 738,
+          "to": 750,
+          "component": "Path-to-waveform continuation",
+          "action": "Fade the headline; the path straightens into the conversation baseline."
+        }
+      ]
+    },
+    {
+      "id": "conversation",
+      "from": 750,
+      "to": 1020,
+      "title": "The agent asks with memory",
+      "copy": "Pramanik ↔ Water officer",
+      "narration": null,
+      "dialogue": [
+        {
+          "from": 750,
+          "to": 900,
+          "speaker": "Pramanik",
+          "text": "You promised a repair yesterday. When will it be finished?"
+        },
+        {
+          "from": 900,
+          "to": 1020,
+          "speaker": "Water officer",
+          "text": "We'll replace the pipe seal tomorrow afternoon."
+        }
+      ],
+      "visual": "A simple voice waveform connects two named endpoints. Show the current speaker’s sentence as two short lines, never a transcript panel. Persistent label: Illustrative conversation · synthetic voices. Credit: GPT Realtime · phone connection via Bolna. No real phone call is placed.",
+      "layers": [
+        {
+          "component": "MaskRevealUp",
+          "from": 750,
+          "durationInFrames": 150,
+          "props": {
+            "text": "You promised a repair yesterday.\nWhen will it be finished?",
+            "fontSize": 46,
+            "fontWeight": 400,
+            "fontFamily": "Inter",
+            "distance": 16,
+            "color": "#171717"
+          },
+          "placement": "Center, agent dialogue"
+        },
+        {
+          "component": "MaskRevealUp",
+          "from": 900,
+          "durationInFrames": 120,
+          "props": {
+            "text": "We'll replace the pipe seal\ntomorrow afternoon.",
+            "fontSize": 46,
+            "fontWeight": 400,
+            "fontFamily": "Inter",
+            "distance": 16,
+            "color": "#171717"
+          },
+          "placement": "Center, officer dialogue"
+        }
+      ],
+      "beats": [
+        {
+          "from": 750,
+          "to": 776,
+          "component": "MaskRevealUp + waveform slot",
+          "action": "Agent sentence enters in two lines; keep the waveform secondary."
+        },
+        {
+          "from": 776,
+          "to": 888,
+          "component": "Held agent dialogue",
+          "action": "Allow speech and a short breath. No narrator over dialogue."
+        },
+        {
+          "from": 888,
+          "to": 900,
+          "component": "Conversation turn",
+          "action": "Waveform settles and the speaker label changes."
+        },
+        {
+          "from": 900,
+          "to": 926,
+          "component": "MaskRevealUp + waveform slot",
+          "action": "Officer response enters in two lines."
+        },
+        {
+          "from": 926,
+          "to": 1002,
+          "component": "Held officer dialogue",
+          "action": "Hold the answer while spoken. Do not invent a precise hour."
+        },
+        {
+          "from": 1002,
+          "to": 1020,
+          "component": "Evidence-word continuity",
+          "action": "Retain “replace the pipe seal” and “tomorrow afternoon” while the surrounding sentence clears."
+        }
+      ]
+    },
+    {
+      "id": "promise",
+      "from": 1020,
+      "to": 1170,
+      "title": "Conversation becomes durable memory",
+      "copy": "The call ends. The work continues.",
+      "narration": "The conversation, promise and deadline become part of the case’s memory.",
+      "visual": "Retained quote fragments become an action and deadline connected to the saved audio mark and case history. Two simple typographic anchors, no form fields. Use exactly “tomorrow afternoon,” not an invented 4 pm.",
+      "layers": [
+        {
+          "component": "BlurOutUp",
+          "from": 1020,
+          "durationInFrames": 150,
+          "props": {
+            "text": "The call ends. The work continues.",
+            "fontSize": 60,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "staggerDelay": 1,
+            "color": "#171717"
+          },
+          "placement": "Top third"
+        }
+      ],
+      "beats": [
+        {
+          "from": 1020,
+          "to": 1042,
+          "component": "BlurOutUp + retained quote anchors",
+          "action": "Clean six-word entry resolves by 1042."
+        },
+        {
+          "from": 1042,
+          "to": 1095,
+          "component": "Memory path slot",
+          "action": "Audio mark, action and deadline settle along a simple line."
+        },
+        {
+          "from": 1095,
+          "to": 1131,
+          "component": "Memory hold",
+          "action": "Keep the saved promise still and legible."
+        },
+        {
+          "from": 1131,
+          "to": 1151,
+          "component": "Clock preparation",
+          "action": "The deadline anchor becomes a clock without erasing the saved action."
+        },
+        {
+          "from": 1151,
+          "to": 1170,
+          "component": "BlurOutUp exit",
+          "action": "Word exits start at 1151 through 1156; each completes after 14 frames. Keep evidence marks intact."
+        }
+      ]
+    },
+    {
+      "id": "follow-up",
+      "from": 1170,
+      "to": 1380,
+      "title": "A worker keeps the case moving",
+      "copy": "Deadline arrives. | Review the case. | Plan follow-up.",
+      "narration": "At the deadline, a background worker reviews the case and plans the next follow-up.",
+      "visual": "The saved clock reaches the deadline, a worker reads the case, and a return arc carries its history back to the coordinator. A planned call path activates only after review. Zinc-labelled means awaiting action; no claim of a completed follow-up call.",
+      "layers": [
+        {
+          "component": "WordStream",
+          "from": 1170,
+          "durationInFrames": 210,
+          "props": {
+            "text": "Deadline arrives. | Review the case. | Plan follow-up.",
+            "wordGap": 12,
+            "hold": 30,
+            "drift": 0.25,
+            "fontSize": 64,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Top third"
+        }
+      ],
+      "beats": [
+        {
+          "from": 1170,
+          "to": 1185,
+          "component": "WordStream phrase 1 + clock slot",
+          "action": "Deadline arrives: words reveal at 1170 and 1182; complete at 1185."
+        },
+        {
+          "from": 1185,
+          "to": 1215,
+          "component": "Phrase 1 hold + deadline marker",
+          "action": "Clock reaches the saved deadline. Run-out begins at 1210."
+        },
+        {
+          "from": 1215,
+          "to": 1242,
+          "component": "WordStream phrase 2 + worker slot",
+          "action": "Review the case: reveals at 1215, 1227, 1239; complete at 1242."
+        },
+        {
+          "from": 1242,
+          "to": 1272,
+          "component": "Phrase 2 hold + memory read",
+          "action": "Worker reviews records; run-out begins at 1267."
+        },
+        {
+          "from": 1272,
+          "to": 1287,
+          "component": "WordStream phrase 3 + return arc",
+          "action": "Plan follow-up: reveals at 1272 and 1284; complete at 1287."
+        },
+        {
+          "from": 1287,
+          "to": 1356,
+          "component": "Final phrase hold + coordinator slot",
+          "action": "History-bearing case returns to the coordinator. Show planning, not an unconditional auto-dial."
+        },
+        {
+          "from": 1356,
+          "to": 1380,
+          "component": "Claim-to-ground-check transition",
+          "action": "Fade the phrase; introduce the officer’s “It’s fixed” as an zinc-labelled claim."
+        }
+      ]
+    },
+    {
+      "id": "ground-check",
+      "from": 1380,
+      "to": 1620,
+      "title": "An officer’s claim needs a ground check",
+      "copy": "Saying ‘fixed’ isn't enough.",
+      "narration": "Residents check the result. Unresolved cases go back. Only confirmed repairs close the loop.",
+      "visual": "The zinc-labelled officer claim stops at Ground check. A conditional fork shows “If still leaking → Follow up” and “If repair confirmed → Close case.” These are alternative outcomes, not two contradictory results from the same visit. A green result requires reviewed confirmation, not the call or AI assessment alone.",
+      "layers": [
+        {
+          "component": "BlurOutUp",
+          "from": 1380,
+          "durationInFrames": 90,
+          "props": {
+            "text": "Saying ‘fixed’ isn't enough.",
+            "staggerDelay": 1,
+            "fontSize": 70,
+            "fontFamily": "Instrument Serif",
+            "fontWeight": 400,
+            "color": "#171717"
+          },
+          "placement": "Top third"
+        },
+        {
+          "component": "MaskRevealUp",
+          "from": 1470,
+          "durationInFrames": 150,
+          "props": {
+            "text": "Ground check",
+            "fontSize": 56,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Above conditional branches"
+        }
+      ],
+      "beats": [
+        {
+          "from": 1380,
+          "to": 1415,
+          "component": "BlurOutUp + pending claim",
+          "action": "Statement arrives; the officer claim waits."
+        },
+        {
+          "from": 1415,
+          "to": 1453,
+          "component": "Ground-check flow slot",
+          "action": "Claim travels toward resident/location marker, with no green check yet."
+        },
+        {
+          "from": 1453,
+          "to": 1470,
+          "component": "BlurOutUp exit",
+          "action": "Short headline clears upward."
+        },
+        {
+          "from": 1470,
+          "to": 1500,
+          "component": "MaskRevealUp + conditional fork slot",
+          "action": "Ground check enters; reveal two clearly conditional routes."
+        },
+        {
+          "from": 1500,
+          "to": 1545,
+          "component": "Conditional return route",
+          "action": "Trace violet “If still leaking → Follow up” back to the coordinator."
+        },
+        {
+          "from": 1545,
+          "to": 1590,
+          "component": "Conditional verified route",
+          "action": "Trace green “If repair confirmed → Close case.” Do not play both as actual outcomes."
+        },
+        {
+          "from": 1590,
+          "to": 1620,
+          "component": "Diagram hold + zoom-out",
+          "action": "Keep both options labelled while the existing flow expands toward the overall loop."
+        }
+      ]
+    },
+    {
+      "id": "public-record-and-close",
+      "from": 1620,
+      "to": 1800,
+      "title": "Public accountability, then the brand",
+      "copy": "Every answer leaves a record. → Accountability that follows through.",
+      "narration": "Every answer leaves a public record.",
+      "visual": "Previously introduced nodes resolve into Report → Plan → Call → Track → Check, with the specialist fork above Plan, the open-case return arc, and the conditional verified exit. Audio · Transcript · Promises sits below Call. At 1710, transition to Pramanik and the closing line for the remaining three seconds.",
+      "layers": [
+        {
+          "component": "MaskRevealUp",
+          "from": 1620,
+          "durationInFrames": 90,
+          "props": {
+            "text": "Every answer leaves a record.",
+            "fontSize": 56,
+            "fontWeight": 400,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Top third"
+        },
+        {
+          "component": "WordPush",
+          "from": 1710,
+          "durationInFrames": 90,
+          "props": {
+            "text": "Accountability that follows through.",
+            "wordGap": 12,
+            "accel": 0.85,
+            "fontSize": 70,
+            "fontFamily": "Instrument Serif",
+            "color": "#171717"
+          },
+          "placement": "Below static Pramanik wordmark"
+        }
+      ],
+      "beats": [
+        {
+          "from": 1620,
+          "to": 1643,
+          "component": "MaskRevealUp + full loop slot",
+          "action": "The existing scene expands; no unrelated new diagram is introduced."
+        },
+        {
+          "from": 1643,
+          "to": 1680,
+          "component": "Loop hold + public evidence labels",
+          "action": "Hold the loop and Audio · Transcript · Promises. These were introduced earlier."
+        },
+        {
+          "from": 1680,
+          "to": 1710,
+          "component": "Frame-driven fade to brand",
+          "action": "Diagram fades while the blue token becomes a restrained brand dot."
+        },
+        {
+          "from": 1710,
+          "to": 1754,
+          "component": "WordPush + stable wordmark",
+          "action": "Closing phrase builds below Pramanik. The final source push settles by 1754."
+        },
+        {
+          "from": 1754,
+          "to": 1800,
+          "component": "Brand hold",
+          "action": "Stable final frame. No blurred exit, no confetti."
+        }
+      ]
+    }
+  ],
+  "reservedComponents": [
+    {
+      "component": "InfiniteBentoPan",
+      "studyComposition": "BentoPanStudy",
+      "reason": "Source includes generated revenue/MRR/code/dashboard filler. Kept out of the main film to honor the uncluttered, no-UI direction. Available if a later component choice changes that direction."
+    }
+  ],
+  "pendingVisuals": [
+    "Parallel fork/join and full-loop drawing",
+    "Voice waveform",
+    "Clock and case-memory marks",
+    "Resident-check branch"
+  ],
+  "timingNotes": [
+    "WordStream uses fixed phrase rhythm for editorial headlines only, never as a claim of transcript-aligned captions. Actual audio timing is pending.",
+    "WordPush source helper omits the additional one-frame offset in the final push; allow helper + 1 frame for complete settlement.",
+    "MaskRevealUp locally adapted to clipped, clean line entry and held finish because supplied docs conflict with the registry source.",
+    "BlurOutUp locally adapted to crisp entrance; six-word, 150-frame sequence begins staggered exits at local 131, and four-word, 90-frame sequence at local 73.",
+    "Finite local Sequence duration is required for RollingNumber and BlurOutUp. Scene wrappers handle fades for components that hold their final state.",
+    "RollingNumber settles at 80% of its finite local Sequence, not a universal fixed frame. The report count now uses [24,120), settles at global 101, and holds through the transition. The zero group starts at 28, four frames after its sibling, and stays at zero."
+  ],
+  "palette": {
+    "background": "#fafafa",
+    "foreground": "#171717",
+    "darkBackground": "#0a0a0a",
+    "onDark": "#fafafa",
+    "surface": "#27272a",
+    "active": "#0ea5e9",
+    "pending": "#27272a",
+    "followUp": "#7c3aed",
+    "confirmed": "#22c55e"
+  },
+  "safeArea": {
+    "horizontal": 80,
+    "vertical": 64,
+    "minimumAnnotationFontSize": 22
+  },
+  "craft": {
+    "scope": "Rules apply to authored scenes, typography, chrome and motion wrappers. Preserve prebuilt effect-specific tracking, blur, gradients and elevation. Previously documented local clean-entry/font adaptations remain explicit; no further flattening of registry effects.",
+    "sources": [
+      "https://remocn.dev/docs/craft/motion-principles",
+      "https://remocn.dev/docs/craft/design-defaults",
+      "https://remocn.dev/docs/craft/anti-patterns"
+    ],
+    "fontChoice": "Instrument Serif 400 retained for Pramanik’s established editorial identity; Inter for body and JetBrains Mono for the registry counter. All fonts load once at module scope.",
+    "authoredStyle": [
+      "Sentence case and default tracking",
+      "Solid text colors; no gradient text",
+      "No decorative washes or blur blobs",
+      "Use a 1px neutral border or a single small neutral shadow only when separation needs it",
+      "No glow, stacked shadows, spread or decorative filter blur over 24px"
+    ],
+    "motion": [
+      "One primary focal action per beat",
+      "Sibling scene elements enter 3–6 frames apart; specialist nodes at 390/394/398, counter groups at 24/28",
+      "Parallel work starts together at 420 after staged entrances; this is meaningful concurrency, not simultaneous entrance clutter",
+      "Ease visible entrances and exits; use linear motion only for intentional constant drift",
+      "Preserve object continuity on the case path; follow-up return uses a curve",
+      "No bounce or overshoot added to authored motion",
+      "Animate translate/scale/opacity or SVG stroke progress; top/left/width/height are static layout only",
+      "No camera drift across text in current plan; if later introduced, promote one inner text container only, never Drift, a bordered card, or individual glyph spans"
+    ],
+    "determinism": "Only frame-driven animation. No Math.random, Date.now, timers or CSS keyframe animations. If stochastic visuals are later needed, use an existing deterministic seeded facility; do not add a dependency without approval.",
+    "componentIntegration": [
+      "Sequence durations account for full entry, settle, hold and exit; the source helpers determine minimum duration where available",
+      "Components remain transparent; scene containers own backgrounds",
+      "Use only actual declared props: no animation speed on UI primitives",
+      "Let shadcn resolve registryDependencies; import each installed component directly, not through uninstalled deep helper paths"
+    ],
+    "transitions": {
+      "current": "Frame-driven fades and object continuity at existing scene boundaries. No TransitionSeries presentation is currently mounted or installed.",
+      "overlapFrames": 0,
+      "totalFrames": 1800,
+      "ifAddedLater": "Use a presentation function in TransitionSeries.Transition and a timing object. Rebudget scene durations and global cues because adjacent sequences overlap; never append overlap without adjusting the timeline."
+    }
+  }
+}

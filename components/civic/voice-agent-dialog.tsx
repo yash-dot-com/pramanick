@@ -8,6 +8,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { LocalizedText } from "@/components/language-provider"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import type { CivicIssue } from "@/lib/civic/model"
 import { CitizenVoicePanel } from "./citizen-voice-panel"
 export function VoiceAgentDialog({
@@ -41,18 +48,31 @@ export function VoiceAgentDialog({
             <LocalizedText text="Ask about resident reports, earlier calls, promises and next steps." />
           </DialogDescription>
         </DialogHeader>
-        <select
-          aria-label="Case context"
-          className="h-9 w-full rounded-lg border bg-background px-3 text-sm"
+        <Select
           value={issueId}
-          onChange={(event) => setIssueId(event.target.value)}
+          disabled={!issues.length}
+          onValueChange={(value) => {
+            if (value) setIssueId(value)
+          }}
         >
-          {issues.map((issue) => (
-            <option key={issue.id} value={issue.id}>
-              {issue.title}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger aria-label="Case context" className="w-full">
+            <SelectValue>
+              <LocalizedText
+                text={
+                  issues.find((issue) => issue.id === issueId)?.title ||
+                  "No cases available"
+                }
+              />
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent align="start" alignItemWithTrigger={false}>
+            {issues.map((issue) => (
+              <SelectItem key={issue.id} value={issue.id}>
+                <LocalizedText text={issue.title} />
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         {issueId && <CitizenVoicePanel key={issueId} issueId={issueId} />}
       </DialogContent>
     </Dialog>

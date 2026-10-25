@@ -12,6 +12,13 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { LocalizedText, useLanguage } from "@/components/language-provider"
 import { LANGUAGE_LABELS, type VoiceLanguage } from "@/lib/voice/language"
 import type { IntakeDraft } from "@/lib/voice/intake"
@@ -316,19 +323,24 @@ export function CitizenVoicePanel({
   }
   return (
     <div className="space-y-4">
-      <select
-        aria-label="Conversation language"
+      <Select
         disabled={active}
-        className="h-9 w-full rounded-lg border bg-background px-3 text-sm"
         value={language}
-        onChange={(event) => setLanguage(event.target.value as VoiceLanguage)}
+        onValueChange={(value) => {
+          if (value) setLanguage(value as VoiceLanguage)
+        }}
       >
-        {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
-          <option key={value} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger aria-label="Conversation language" className="w-full">
+          <SelectValue>{LANGUAGE_LABELS[language]}</SelectValue>
+        </SelectTrigger>
+        <SelectContent align="start" alignItemWithTrigger={false}>
+          {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <div className="flex min-h-32 flex-col items-center justify-center gap-3 rounded-xl border bg-muted/20 p-5">
         {stage === "thinking" || stage === "connecting" ? (
           <Loader2 className="size-7 animate-spin" />

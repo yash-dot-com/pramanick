@@ -1,0 +1,1 @@
+OpenAI's Agents SDK coordinates specialists to aggregate reports, recall conversation history, and build a case specific action plan.

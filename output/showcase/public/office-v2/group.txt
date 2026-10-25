@@ -1,0 +1,1 @@
+Agents bring related reports together, identify duplicates, and build one shared case with locations, photos, and earlier conversations.

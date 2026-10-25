@@ -132,31 +132,56 @@ export function ResponsibilityLeaderboard() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <select
-            aria-label="Record source"
+          <Select
             value={shownRecordSet}
-            onChange={(event) => setRecordSet(event.target.value)}
-            className="rounded-lg border bg-background px-3 py-2 text-xs"
+            onValueChange={(value) => {
+              if (value) setRecordSet(value)
+            }}
           >
-            {data?.profiles.some(
-              (profile) => profile.dataMode === "scripted_demo"
-            ) && <option value="scripted_demo">Sample records</option>}
-            <option value="provider_records">Public records</option>
-          </select>
+            <SelectTrigger
+              className="w-44 max-w-full"
+              aria-label="Record source"
+            >
+              <SelectValue>
+                <LocalizedText
+                  text={
+                    shownRecordSet === "scripted_demo"
+                      ? "Sample records"
+                      : "Public records"
+                  }
+                />
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent align="start" alignItemWithTrigger={false}>
+              {data?.profiles.some(
+                (profile) => profile.dataMode === "scripted_demo"
+              ) && (
+                <SelectItem value="scripted_demo">
+                  <LocalizedText text="Sample records" />
+                </SelectItem>
+              )}
+              <SelectItem value="provider_records">
+                <LocalizedText text="Public records" />
+              </SelectItem>
+            </SelectContent>
+          </Select>
           <Select
             value={kind}
             onValueChange={(value) => {
               if (value) setKind(value)
             }}
           >
-            <SelectTrigger className="w-44" aria-label="Profile type">
+            <SelectTrigger
+              className="w-44 max-w-full"
+              aria-label="Profile type"
+            >
               <SelectValue>
                 <LocalizedText
                   text={kind === "person" ? "People" : "Offices"}
                 />
               </SelectValue>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent align="start" alignItemWithTrigger={false}>
               <SelectItem value="person">
                 <LocalizedText text="People" />
               </SelectItem>
@@ -172,14 +197,14 @@ export function ResponsibilityLeaderboard() {
             }}
           >
             <SelectTrigger
-              className="w-64"
+              className="w-64 max-w-full"
               aria-label="Sort by service measure"
             >
               <SelectValue>
                 <LocalizedText text={metrics[metric]} />
               </SelectValue>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent align="start" alignItemWithTrigger={false}>
               {Object.entries(metrics).map(([key, label]) => (
                 <SelectItem key={key} value={key}>
                   <LocalizedText text={label} />

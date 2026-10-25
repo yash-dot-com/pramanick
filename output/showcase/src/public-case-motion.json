@@ -1,0 +1,38 @@
+{
+  "title": "School gate potholes",
+  "area": "Kothrud",
+  "events": [
+    {
+      "title": "Community report received",
+      "date": "2026-10-21T15:29:13.296Z",
+      "summary": "School entrance reported as difficult to use.",
+      "kind": "report"
+    },
+    {
+      "title": "Agent call saved",
+      "date": "2026-10-22T15:29:13.296Z",
+      "summary": "Officer accepted the repair and promised\na patch within two days.",
+      "kind": "call",
+      "duration": 21,
+      "deadline": "2026-10-24T15:29:13.296Z"
+    },
+    {
+      "title": "Agent followed up",
+      "date": "2026-10-24T13:29:13.296Z",
+      "summary": "Earlier promise recalled. Officer reported\nthe repair complete.",
+      "kind": "followup"
+    },
+    {
+      "title": "Resident checks received",
+      "date": "2026-10-24T14:29:13.296Z",
+      "summary": "Two residents confirmed the entrance\nis usable and the patches are holding.",
+      "kind": "evidence"
+    },
+    {
+      "title": "Repair verified",
+      "date": "2026-10-24T14:29:13.296Z",
+      "summary": "Resident findings reviewed.\nThe full case history stays public.",
+      "kind": "verified"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+**/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -17,6 +18,11 @@
 
 # production
 /build
+
+# Local video exports and preview frames; the published cut lives in public/.
+/output/*.mp4
+/output/*.png
+/output/*.srt
 
 # misc
 .DS_Store

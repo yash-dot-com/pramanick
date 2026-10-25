@@ -13,12 +13,14 @@ import {
   MapPin,
   MessageCircle,
   Flag,
+  Info,
   TriangleAlert,
   Route,
   Waves,
+  X,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Map,
   MapControls,
@@ -30,12 +32,10 @@ import {
 import {
   CATEGORIES,
   LOCALITIES,
-  formatDate,
   localityName,
   type CivicIssue,
   type Office,
 } from "@/lib/civic/model"
-import { StatusBadge } from "./status-badge"
 import { caseStatus } from "@/lib/civic/status-presentation"
 
 const icons = {
@@ -52,6 +52,8 @@ const statusIcons = {
   verified: Check,
   disputed: TriangleAlert,
 }
+const mapNoteClassName =
+  "relative w-60 max-w-[calc(100vw-2rem)] rounded-xl border border-white/10 bg-zinc-950 p-3 text-left text-zinc-50 shadow-xl after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-x-[7px] after:border-t-[7px] after:border-x-transparent after:border-t-zinc-950 after:content-['']"
 class MapBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -75,7 +77,18 @@ function MapBehavior({
   onPoint: (point: [number, number]) => void
   onUnavailable: () => void
 }) {
-  const { map } = useMap()
+  const { map, mapLib } = useMap()
+  useEffect(() => {
+    if (!map || !mapLib) return
+    const attribution = new mapLib.AttributionControl({ compact: true })
+    map.addControl(attribution, "bottom-left")
+    return () => {
+      // The parent map may have already removed its controls during teardown.
+      if (map.hasControl(attribution)) {
+        map.removeControl(attribution)
+      }
+    }
+  }, [map, mapLib])
   const lng = selected?.lng
   const lat = selected?.lat
   useEffect(() => {
@@ -132,6 +145,8 @@ function MapBehavior({
 export function CivicMap({
   issues,
   offices,
+  showIssues = true,
+  showOffices = true,
   selectedId,
   selectedOfficeId,
   localityId,
@@ -141,6 +156,8 @@ export function CivicMap({
 }: {
   issues: CivicIssue[]
   offices: Office[]
+  showIssues?: boolean
+  showOffices?: boolean
   selectedId: string | null
   selectedOfficeId: string | null
   localityId: string
@@ -181,7 +198,7 @@ export function CivicMap({
         </p>
       </div>
       <div className="grid w-full max-w-sm gap-2">
-        {issues.map((issue) => (
+        {(showIssues ? issues : []).map((issue) => (
           <Button
             variant="outline"
             className="h-auto justify-start gap-3 py-3 text-left whitespace-normal"
@@ -201,20 +218,31 @@ export function CivicMap({
     </div>
   )
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[1.25rem]">
+    <div className="absolute inset-0 overflow-hidden rounded-[1.25rem] [&_.maplibregl-ctrl-attrib]:m-0! [&_.maplibregl-ctrl-attrib]:max-w-full [&_.maplibregl-ctrl-bottom-left]:right-16! [&_.maplibregl-ctrl-bottom-left]:bottom-3! [&_.maplibregl-ctrl-bottom-left]:left-14! [&_.maplibregl-ctrl-bottom-left]:z-10">
       {offline || forceOffline ? (
         fallback
       ) : (
         <MapBoundary fallback={fallback}>
-          <Map center={[73.855, 18.549]} zoom={11.4} minZoom={9} maxZoom={18}>
-            <MapControls showCompass showFullscreen position="bottom-right" />
+          <Map
+            center={[73.855, 18.549]}
+            zoom={11.4}
+            minZoom={9}
+            maxZoom={18}
+            attributionControl={false}
+          >
+            <MapControls
+              showCompass
+              showFullscreen
+              position="top-right"
+              className="top-16 right-3 flex-row sm:top-3 [&>div]:flex-row [&>div>button]:rounded-none! [&>div>button:not(:last-child)]:border-r [&>div>button:not(:last-child)]:border-b-0"
+            />
             <MapBehavior
               selected={selected}
               localityId={localityId}
               onPoint={onPoint}
               onUnavailable={() => setForceOffline(true)}
             />
-            {issues.map((issue) => {
+            {(showIssues ? issues : []).map((issue) => {
               const CategoryIcon = icons[issue.category]
               const StateIcon = statusIcons[issue.status]
               const presentation = caseStatus[issue.status]
@@ -261,43 +289,44 @@ export function CivicMap({
                       </span>
                     </button>
                   </MarkerContent>
-                  <MarkerTooltip offset={30}>
-                    <div className="max-w-72 min-w-56 space-y-2">
-                      <p className="text-xs text-muted-foreground">
+                  <MarkerTooltip
+                    anchor="bottom"
+                    offset={30}
+                    className={mapNoteClassName}
+                  >
+                    <div className="space-y-1.5">
+                      <p className="truncate text-[10px] text-zinc-400">
                         <LocalizedText
                           text={CATEGORIES[issue.category].label}
                         />{" "}
                         · {localityName(issue.localityId)}
                       </p>
-                      <p className="text-sm font-medium">
+                      <p className="line-clamp-2 text-xs leading-5 font-medium">
                         <LocalizedText text={issue.title} />
                       </p>
-                      <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-                        <span>
-                          {issue.complaintCount}
-                          <LocalizedText text="complaints" />
+                      <div className="flex items-center justify-between gap-2 text-[10px] text-zinc-300">
+                        <span className="flex min-w-0 items-center gap-1.5">
+                          <span
+                            aria-hidden="true"
+                            className={`size-1.5 shrink-0 rounded-full ${presentation.dot}`}
+                          />
+                          <LocalizedText text={presentation.label} />
                         </span>
-                        <StatusBadge status={issue.status} />
+                        <span className="shrink-0">
+                          {issue.complaintCount}{" "}
+                          <LocalizedText
+                            text={
+                              issue.complaintCount === 1 ? "report" : "reports"
+                            }
+                          />
+                        </span>
                       </div>
-                      <p className="line-clamp-2 text-xs text-muted-foreground">
-                        <LocalizedText
-                          text={
-                            issue.events[0]?.title ?? "Reported by a resident"
-                          }
-                        />
-                      </p>
-                      {issue.nextFollowUp && (
-                        <p className="text-xs text-muted-foreground">
-                          <LocalizedText text="Next:" />
-                          {formatDate(issue.nextFollowUp)}
-                        </p>
-                      )}
                     </div>
                   </MarkerTooltip>
                 </MapMarker>
               )
             })}
-            {offices
+            {(showOffices ? offices : [])
               .filter((office) => office.lat != null && office.lng != null)
               .map((office) => (
                 <MapMarker
@@ -316,7 +345,11 @@ export function CivicMap({
                       <Building2 />
                     </Button>
                   </MarkerContent>
-                  <MarkerTooltip>
+                  <MarkerTooltip
+                    anchor="bottom"
+                    offset={28}
+                    className={mapNoteClassName}
+                  >
                     <LocalizedText text={office.name} />
                   </MarkerTooltip>
                 </MapMarker>
@@ -324,38 +357,69 @@ export function CivicMap({
           </Map>
         </MapBoundary>
       )}
-      <div className="map-edge-depth" aria-hidden="true" />
+      {!offline && !forceOffline && (
+        <div className="map-edge-depth" aria-hidden="true" />
+      )}
       <details
-        open
-        className="absolute right-16 bottom-3 z-10 max-w-[calc(100%-5rem)] rounded-xl border bg-background/95 px-3 py-2 text-[10px] shadow-[var(--surface-shadow)] backdrop-blur-sm"
+        className="group absolute right-3 bottom-3 z-10"
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.currentTarget.open = false
+            event.currentTarget.querySelector("summary")?.focus()
+          }
+        }}
       >
-        <summary className="cursor-pointer font-medium">
-          <LocalizedText text="Map key" />
-          <span className="ml-3 font-normal text-muted-foreground">
-            <LocalizedText text="Numbers = resident reports" />
+        <summary
+          className={buttonVariants({
+            variant: "outline",
+            size: "icon",
+            className:
+              "size-10 cursor-pointer list-none rounded-full group-open:text-primary [&::-webkit-details-marker]:hidden",
+          })}
+          title="Map key"
+        >
+          <Info className="size-4 group-open:hidden" aria-hidden="true" />
+          <X className="hidden size-4 group-open:block" aria-hidden="true" />
+          <span className="sr-only">
+            <LocalizedText text="Map key" />
           </span>
         </summary>
-        <div className="mt-2.5 grid grid-cols-2 gap-x-5 gap-y-2">
-          {Object.entries(caseStatus).map(([status, presentation]) => {
-            const Icon = statusIcons[status as keyof typeof statusIcons]
-            return (
+        <div className="absolute right-0 bottom-full mb-2 max-h-[70dvh] w-60 max-w-[calc(100vw-6rem)] overflow-y-auto rounded-xl border bg-background p-4 shadow-[var(--surface-shadow)]">
+          <h2 className="mb-3 text-sm font-semibold">
+            <LocalizedText text="Map key" />
+          </h2>
+          <ul className="space-y-2.5">
+            {Object.entries(caseStatus).map(([status, presentation]) => {
+              const Icon = statusIcons[status as keyof typeof statusIcons]
+              return (
+                <li key={status} className="flex items-center gap-3 text-xs">
+                  <span
+                    aria-hidden="true"
+                    className="flex size-6 shrink-0 items-center justify-center rounded-lg"
+                    style={{
+                      background: `linear-gradient(160deg, ${presentation.from}, ${presentation.to})`,
+                      color: presentation.ink || "#ffffff",
+                    }}
+                  >
+                    <Icon className="size-3.5" />
+                  </span>
+                  <LocalizedText text={presentation.label} />
+                </li>
+              )
+            })}
+            <li className="flex items-center gap-3 border-t pt-2.5 text-xs">
               <span
-                key={status}
-                className="flex items-center gap-1.5 text-muted-foreground"
+                aria-hidden="true"
+                className="flex size-6 shrink-0 items-center justify-center rounded-lg border bg-muted/40"
               >
-                <span
-                  className="flex size-4 items-center justify-center rounded-md text-white"
-                  style={{
-                    background: presentation.to,
-                    color: presentation.ink || "#ffffff",
-                  }}
-                >
-                  <Icon className="size-2.5" />
-                </span>
-                <LocalizedText text={presentation.label} />
+                <Building2 className="size-3.5" />
               </span>
-            )
-          })}
+              <LocalizedText text="Office location" />
+            </li>
+          </ul>
+          <p className="mt-3 border-t pt-3 text-[11px] leading-relaxed text-muted-foreground">
+            <LocalizedText text="Numbers show how many residents reported an issue." />
+          </p>
         </div>
       </details>
       <Button

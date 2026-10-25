@@ -10,6 +10,7 @@ process.env.DATABASE_PATH = resolve(
   "test.sqlite"
 )
 process.env.PRAMANIK_DEMO_CITY = "false"
+process.env.NEXT_PUBLIC_DEMO_MODE = "true"
 const { runSpecialists } = await import("../lib/voice/coordinator")
 const { store, surveyFor } = await import("../lib/civic/repository")
 const { seed } = await import("../lib/db/seed")
@@ -102,6 +103,11 @@ test("fixtures are idempotent, foreign-key complete and never authorize a phone 
     (person) => person.dataMode === "scripted_demo" && person.kind === "person"
   )
   assert.equal(profiles.length, 2)
+  assert.equal(
+    profiles.find((person) => person.name === "Meera Deshmukh")
+      ?.promisesVerifiedByDeadline,
+    1
+  )
   assert.ok(
     profiles.every(
       (person) => person.assignedCases === 2 && person.answeredCalls === 4

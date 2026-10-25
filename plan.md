@@ -6,6 +6,7 @@
 
 ## Latest interface work
 
+- [Current UI refinement checklist](docs/UI-REFINEMENTS.md): one change at a time, verified by you.
 - Light / dark / device theme using the existing shadcn tokens; map follows the theme.
 - Simpler sidebar: progress, next step, Updates / Photos / Calls.
 - Detailed audit history, downloads and agent activity stay available under Full record.

@@ -1,0 +1,1 @@
+The Kanban board and public case file show promises, conversation records, completed actions, and what the agent will do next.

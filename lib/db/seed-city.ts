@@ -1,7 +1,11 @@
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import type { database } from "./index"
 import * as s from "./schema"
 import { demoId } from "./seed-office"
+import {
+  DEMO_CITY_LAYOUT,
+  demoCityPositions,
+} from "../civic/demo-city-positions"
 import {
   CATEGORIES,
   LOCALITIES,
@@ -137,18 +141,38 @@ export function seedCityDemo(db: ReturnType<typeof database>["db"]) {
   if (process.env.PRAMANIK_DEMO_CITY === "false") return
   db.transaction((tx) => {
     const marker = "city-demo-v1"
-    if (
-      tx
-        .select()
-        .from(s.participants)
-        .where(eq(s.participants.id, marker))
-        .get()
-    )
+    const seeded = tx
+      .select()
+      .from(s.participants)
+      .where(eq(s.participants.id, marker))
+      .get()
+    if (seeded) {
+      if (seeded.tokenHash !== demoId(DEMO_CITY_LAYOUT)) {
+        for (const area of LOCALITIES) {
+          const positions = demoCityPositions(area, scenarios.length)
+          for (const [index, position] of positions.entries())
+            tx.update(s.issues)
+              .set(position)
+              .where(
+                and(
+                  eq(s.issues.id, `city-demo-${area.id}-${index + 1}`),
+                  eq(s.issues.isDemo, true)
+                )
+              )
+              .run()
+        }
+        tx.update(s.participants)
+          .set({ tokenHash: demoId(DEMO_CITY_LAYOUT) })
+          .where(eq(s.participants.id, marker))
+          .run()
+      }
       return
+    }
     const now = Date.now()
     const at = (hours: number) =>
       new Date(now - hours * 3_600_000).toISOString()
     for (const [areaIndex, area] of LOCALITIES.entries()) {
+      const positions = demoCityPositions(area, scenarios.length)
       const officeId = `city-demo-office-${area.id}`
       const contactId = `${officeId}-contact`
       tx.insert(s.offices)
@@ -218,11 +242,7 @@ export function seedCityDemo(db: ReturnType<typeof database>["db"]) {
             issueType: scenario.type,
             localityId: area.id,
             landmark,
-            lat:
-              area.lat +
-              (Math.floor(index / 4) - 1) * 0.0025 +
-              areaIndex * 0.00015,
-            lng: area.lng + ((index % 4) - 1.5) * 0.0025,
+            ...positions[index],
             status,
             officeId: status === "reported" ? null : officeId,
             assignmentCertainty:
@@ -588,7 +608,7 @@ export function seedCityDemo(db: ReturnType<typeof database>["db"]) {
       }
     }
     tx.insert(s.participants)
-      .values({ id: marker, tokenHash: demoId(marker) })
+      .values({ id: marker, tokenHash: demoId(DEMO_CITY_LAYOUT) })
       .run()
   })
 }

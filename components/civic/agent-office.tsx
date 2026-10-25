@@ -1,4 +1,5 @@
 "use client"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
 import Link from "next/link"
 import {
@@ -18,6 +19,13 @@ import type { PublicAgentDashboard } from "@/lib/voice/dashboard"
 import { formatDate } from "@/lib/civic/model"
 import { cn } from "@/lib/utils"
 import { StatusBadge } from "./status-badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const desks = [
   {
@@ -227,19 +235,28 @@ export function AgentOffice({
         </div>
         <label className="space-y-1 text-xs text-muted-foreground">
           <span className="block">Look inside a case</span>
-          <select
-            aria-label="Office case"
+          <Select
             value={caseId}
-            onChange={(event) => setCaseId(event.target.value)}
-            className="max-w-72 rounded-lg border bg-background px-3 py-2 text-xs text-foreground"
+            onValueChange={(value) => {
+              if (value) setCaseId(value)
+            }}
           >
-            <option value="all">All casework</option>
-            {data.issues.map((issue) => (
-              <option key={issue.id} value={issue.id}>
-                {issue.title}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger aria-label="Office case" className="w-72 max-w-full">
+              <SelectValue>
+                {caseId === "all"
+                  ? "All casework"
+                  : data.issues.find((issue) => issue.id === caseId)?.title}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent align="start" alignItemWithTrigger={false}>
+              <SelectItem value="all">All casework</SelectItem>
+              {data.issues.map((issue) => (
+                <SelectItem key={issue.id} value={issue.id}>
+                  {issue.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </label>
       </div>
       <div className="relative bg-[radial-gradient(var(--border)_1px,transparent_1px)] [background-size:18px_18px] p-5 md:p-7">
@@ -299,7 +316,7 @@ export function AgentOffice({
             : "No agent is shown as busy unless a saved task is running."}
         </p>
       </div>
-      {demoCases.length > 0 && (
+      {DEMO_MODE && demoCases.length > 0 && (
         <div className="space-y-4 border-t p-5 md:p-7">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
@@ -335,7 +352,7 @@ export function AgentOffice({
                   }{" "}
                   conversations
                 </p>
-                <span className="mt-auto flex items-center gap-1 text-[11px] font-medium text-teal-700 dark:text-teal-300">
+                <span className="mt-auto flex items-center gap-1 text-[11px] font-medium text-primary">
                   <AudioLines className="size-3.5" /> Listen & inspect the
                   history <ArrowRight className="size-3" />
                 </span>

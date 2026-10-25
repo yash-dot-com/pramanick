@@ -1,0 +1,128 @@
+{
+  "version": 4,
+  "format": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "durationInFrames": 2700
+  },
+  "entry": "src/follow-through-index.tsx",
+  "composition": "PramanikFollowThrough",
+  "audio": "Synthetic English narration only; no music",
+  "scenes": [
+    {
+      "id": "opening",
+      "from": 0,
+      "durationInFrames": 540,
+      "voice": "India has a follow-up problem. Complaints don't fix themselves. Our autonomous voice agents call responsible officers, track promises, and publish progress and evidence on a public dashboard for everyone to inspect and verify.",
+      "to": 540,
+      "visualCues": [
+        "WordStream: 0–105",
+        "MaskRevealUp + RollingNumber: 105–210; number groups stagger by 4 frames",
+        "WordPush + MaskRevealUp: 210–405",
+        "MaskRevealUp + three icon labels: 405–540"
+      ]
+    },
+    {
+      "id": "case",
+      "from": 540,
+      "durationInFrames": 300,
+      "voice": "Reports about the same problem come together in one case file, with locations, photos, earlier conversations, and promises already made.",
+      "to": 840,
+      "visualCues": [
+        "MaskRevealUp: 558–816",
+        "Resident: 567; report: 630; cropped map: 704; shared case: 750",
+        "Horizontal camera pan: 828–876"
+      ]
+    },
+    {
+      "id": "team",
+      "from": 840,
+      "durationInFrames": 420,
+      "voice": "Specialist agents work at the same time. They check what residents reported, what happened before, and which office is responsible. A coordinator brings their findings together and plans the next step.",
+      "to": 1260,
+      "visualCues": [
+        "MaskRevealUp: 882–1218",
+        "Coordinator: 886; specialist entrances: 928/932/936",
+        "All three work packets start together at 984",
+        "Findings return independently: 1090/1110/1130",
+        "Action plan: 1158; camera pan: 1230–1290"
+      ]
+    },
+    {
+      "id": "call",
+      "from": 1260,
+      "durationInFrames": 270,
+      "voice": "The voice agent calls the designated officer, asks informed questions, revisits earlier promises, and asks what will happen, and by when.",
+      "to": 1530,
+      "visualCues": [
+        "BlurOutUp: 1298–1490",
+        "Voice agent and officer: 1302/1306",
+        "Waveform: 1350–1510; illustrative promise: 1430",
+        "Camera pan: 1500–1560"
+      ]
+    },
+    {
+      "id": "follow-up",
+      "from": 1530,
+      "durationInFrames": 330,
+      "voice": "The agent saves the answer and promised deadline. Scheduled background work brings the case back for review and further follow-up, without citizens having to remember every date.",
+      "to": 1860,
+      "visualCues": [
+        "MaskRevealUp: 1568–1808",
+        "Case memory: 1570; deadline: 1630; review worker: 1730",
+        "Curved return packet: 1760–1830",
+        "Camera pan: 1830–1890"
+      ]
+    },
+    {
+      "id": "check",
+      "from": 1860,
+      "durationInFrames": 390,
+      "voice": "An officer saying done doesn't close the case. Residents can share observations and photos. AI helps review the evidence, alongside human checks. If the evidence conflicts, the case stays open.",
+      "to": 2250,
+      "visualCues": [
+        "BlurOutUp: 1900–2200",
+        "Officer claim: 1902; resident evidence: 1950; human review: 2050",
+        "Conditional confirmed route: 2120; conflicting-evidence return: 2155",
+        "Camera pan: 2220–2280"
+      ]
+    },
+    {
+      "id": "public",
+      "from": 2250,
+      "durationInFrames": 300,
+      "voice": "The public dashboard shows published call recordings, transcripts, promises, evidence, and next steps. Residents can add information and check progress together.",
+      "to": 2550,
+      "visualCues": [
+        "MaskRevealUp: 2296–2522",
+        "Evidence node entrances: 2310/2314/2318",
+        "Next steps statement: 2410; community participation: 2450",
+        "World fades to the final brand: 2526–2550"
+      ]
+    },
+    {
+      "id": "close",
+      "from": 2550,
+      "durationInFrames": 150,
+      "voice": "Less chasing. More answers. Pramanik. Accountability that follows through.",
+      "to": 2700,
+      "visualCues": [
+        "WordPush brand: 2550–2700, held through last frame",
+        "WordPush tagline: 2580–2700",
+        "Less chasing. More answers.: 2610; stable closing hold through 2700"
+      ]
+    }
+  ],
+  "transitions": "One continuous horizontal SVG/HTML world with eased translateX camera pans; data packets follow the drawn paths. No TransitionSeries overlap or mounted transition presentation.",
+  "productUI": "Only a crop of the map asset; all other shots are authored motion typography and diagrams.",
+  "components": [
+    "WordStream",
+    "WordPush",
+    "MaskRevealUp",
+    "BlurOutUp",
+    "RollingNumber"
+  ],
+  "notUsed": "InfiniteBentoPan: unrelated filler metrics excluded.",
+  "illustrations": "Opening counters and voice-call commitment are labelled as illustrative. No real officer was called."
+}

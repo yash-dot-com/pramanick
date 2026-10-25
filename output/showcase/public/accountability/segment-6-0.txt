@@ -1,0 +1,1 @@
+Tool calls save the exact commitment. A deadline becomes a persistent review job, processed by a worker after the conversation ends.

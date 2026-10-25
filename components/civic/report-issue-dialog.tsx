@@ -1,4 +1,5 @@
 "use client"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
 import {
   LocalizedText,
@@ -411,16 +412,18 @@ export function ReportIssueDialog({
                   )}
                   <LocalizedText text="Use my live location" />
                 </Button>
-                <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <input
-                    type="checkbox"
-                    checked={isDemo}
-                    disabled={busy}
-                    onChange={(event) => setIsDemo(event.target.checked)}
-                    className="size-4 accent-primary"
-                  />
-                  <LocalizedText text="Fictional demo case" />
-                </label>
+                {DEMO_MODE && (
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={isDemo}
+                      disabled={busy}
+                      onChange={(event) => setIsDemo(event.target.checked)}
+                      className="size-4 accent-primary"
+                    />
+                    <LocalizedText text="Fictional demo case" />
+                  </label>
+                )}
               </div>
             )}
             <LocationPicker

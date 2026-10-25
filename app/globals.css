@@ -218,15 +218,26 @@
 
 /* Feather only the map perimeter; the map centre and controls remain sharp. */
 .map-edge-depth {
+  --map-edge-width: clamp(16px, 2vw, 28px);
+  --map-corner-depth: clamp(48px, 6vw, 80px);
+  --map-edge-mask:
+    linear-gradient(to right, #000, transparent) left / var(--map-edge-width) 100% no-repeat,
+    linear-gradient(to left, #000, transparent) right / var(--map-edge-width) 100% no-repeat,
+    linear-gradient(to bottom, #000, transparent) top / 100% var(--map-edge-width) no-repeat,
+    linear-gradient(to top, #000, transparent) bottom / 100% var(--map-edge-width) no-repeat,
+    radial-gradient(circle at top left, #000, #0009 30%, transparent 72%) top left / var(--map-corner-depth) var(--map-corner-depth) no-repeat,
+    radial-gradient(circle at top right, #000, #0009 30%, transparent 72%) top right / var(--map-corner-depth) var(--map-corner-depth) no-repeat,
+    radial-gradient(circle at bottom left, #000, #0009 30%, transparent 72%) bottom left / var(--map-corner-depth) var(--map-corner-depth) no-repeat,
+    radial-gradient(circle at bottom right, #000, #0009 30%, transparent 72%) bottom right / var(--map-corner-depth) var(--map-corner-depth) no-repeat;
   pointer-events: none;
   position: absolute;
   inset: 0;
   z-index: 2;
-  border-radius: 1.25rem;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  background: color-mix(in oklch, var(--background) 24%, transparent);
-  box-shadow: inset 0 0 24px 6px color-mix(in oklch, var(--background) 55%, transparent);
-  mask-image: linear-gradient(to right, #000, transparent 32px, transparent calc(100% - 32px), #000), linear-gradient(to bottom, #000, transparent 32px, transparent calc(100% - 32px), #000);
-  -webkit-mask-image: linear-gradient(to right, #000, transparent 32px, transparent calc(100% - 32px), #000), linear-gradient(to bottom, #000, transparent 32px, transparent calc(100% - 32px), #000);
+  border-radius: inherit;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background: color-mix(in oklch, var(--background) 20%, transparent);
+  box-shadow: inset 0 0 18px 3px color-mix(in oklch, var(--background) 55%, transparent);
+  -webkit-mask: var(--map-edge-mask);
+  mask: var(--map-edge-mask);
 }

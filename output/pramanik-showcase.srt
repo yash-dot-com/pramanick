@@ -1,0 +1,88 @@
+1
+00:00:00,000 --> 00:00:02,756
+We pay taxes. We report problems. But
+
+2
+00:00:02,756 --> 00:00:05,052
+complaints don't fix themselves.
+
+3
+00:00:06,000 --> 00:00:08,574
+Pramanik is an open AI accountability office
+
+4
+00:00:08,574 --> 00:00:10,290
+that follows every promise.
+
+5
+00:00:11,000 --> 00:00:14,115
+OpenAI's Agents SDK coordinates specialists to aggregate
+
+6
+00:00:14,115 --> 00:00:17,065
+reports, recall conversation history, and build a
+
+7
+00:00:17,065 --> 00:00:18,650
+case specific action plan.
+
+8
+00:00:19,000 --> 00:00:21,433
+Our GPT Realtime voice agent calls the
+
+9
+00:00:21,433 --> 00:00:24,551
+responsible contact, asks for a deadline, and
+
+10
+00:00:24,551 --> 00:00:26,173
+records the commitment.
+
+11
+00:00:27,000 --> 00:00:29,643
+Tool calling saves the outcome. Persistent jobs
+
+12
+00:00:29,643 --> 00:00:31,281
+schedule the next follow up.
+
+13
+00:00:33,000 --> 00:00:35,113
+When the officer says it's done, the
+
+14
+00:00:35,113 --> 00:00:37,551
+case stays open for resident verification.
+
+15
+00:00:39,000 --> 00:00:41,678
+A public survey collects ground observations and
+
+16
+00:00:41,678 --> 00:00:44,847
+photos. GPT vision supports human review. Conflicting
+
+17
+00:00:44,847 --> 00:00:46,650
+evidence keeps the issue open.
+
+18
+00:00:47,000 --> 00:00:49,153
+The Kanban board and public case file
+
+19
+00:00:49,153 --> 00:00:52,893
+show promises, conversation records, completed actions, and
+
+20
+00:00:52,893 --> 00:00:54,650
+what the agent will do next.
+
+21
+00:00:55,000 --> 00:00:58,276
+Pramanik. Every promise tracked. Every resolution checked
+
+22
+00:00:58,276 --> 00:00:59,650
+by the people affected.
+

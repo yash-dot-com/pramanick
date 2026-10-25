@@ -1,0 +1,80 @@
+[
+  {
+    "id": "problem",
+    "from": 0,
+    "durationInFrames": 120,
+    "voice": "India has a follow-up problem."
+  },
+  {
+    "id": "taxes",
+    "from": 120,
+    "durationInFrames": 150,
+    "voice": "We pay taxes for basic services. Public officials should answer to the people they serve."
+  },
+  {
+    "id": "chasing",
+    "from": 270,
+    "durationInFrames": 180,
+    "voice": "A complaint number isn't a repair. Getting answers still means calls, reminders, and time most citizens cannot spare."
+  },
+  {
+    "id": "office",
+    "from": 450,
+    "durationInFrames": 150,
+    "voice": "So we built Pramanik: an autonomous accountability office of AI agents."
+  },
+  {
+    "id": "group",
+    "from": 600,
+    "durationInFrames": 210,
+    "voice": "Agents bring related reports together, identify duplicates, and build one shared case with locations, photos, and earlier conversations."
+  },
+  {
+    "id": "team",
+    "from": 810,
+    "durationInFrames": 270,
+    "voice": "Specialists work in parallel. They review reports, remember past promises, and check responsibility. GPT reasoning helps the coordinator turn their findings into a plan."
+  },
+  {
+    "id": "contact",
+    "from": 1080,
+    "durationInFrames": 180,
+    "voice": "Using public ward directories, the office identifies the responsible officer or local representative and their contact details."
+  },
+  {
+    "id": "voice",
+    "from": 1260,
+    "durationInFrames": 300,
+    "voice": "We gave agents a voice and a real phone number through Bolna. GPT Realtime powers conversations in Hindi, Marathi, and English. The agent calls with context and asks for action."
+  },
+  {
+    "id": "promises",
+    "from": 1560,
+    "durationInFrames": 240,
+    "voice": "Every answer and promised date becomes part of the case's memory. Background jobs bring it back for review and the next follow-up."
+  },
+  {
+    "id": "survey",
+    "from": 1800,
+    "durationInFrames": 240,
+    "voice": "An officer saying done isn't enough. A public survey asks affected residents, including the people who complained, for observations and photos."
+  },
+  {
+    "id": "reopen",
+    "from": 2040,
+    "durationInFrames": 270,
+    "voice": "AI helps compare the evidence with the claim, alongside human review. If the ground tells a different story, the case reopens. The agent calls again with every earlier promise."
+  },
+  {
+    "id": "public",
+    "from": 2310,
+    "durationInFrames": 210,
+    "voice": "Calls, promises, evidence, and next steps stay in a public record, so everyone can question progress and verify the result."
+  },
+  {
+    "id": "close",
+    "from": 2520,
+    "durationInFrames": 180,
+    "voice": "Basic services should not require endless chasing. You report the problem. We keep following up. Pramanik."
+  }
+]

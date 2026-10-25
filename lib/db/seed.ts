@@ -14,6 +14,7 @@ import {
 import { readFileSync } from "node:fs"
 import { seedOfficeDemo } from "./seed-office"
 import { seedCityDemo } from "./seed-city"
+import { DEMO_MODE } from "../demo-mode"
 
 type MapPoint = {
   geometry: { type: string; coordinates: [number, number] }
@@ -113,6 +114,7 @@ export function seed() {
           .run()
       }
     }
+    if (!DEMO_MODE) return
     // Seed exactly once; deleted/changed cases are never silently recreated.
     const seeded = tx
       .select()
@@ -166,6 +168,8 @@ export function seed() {
       }
     }
   })
-  seedOfficeDemo(db)
-  seedCityDemo(db)
+  if (DEMO_MODE) {
+    seedOfficeDemo(db)
+    seedCityDemo(db)
+  }
 }

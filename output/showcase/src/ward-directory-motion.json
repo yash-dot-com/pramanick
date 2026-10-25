@@ -1,0 +1,50 @@
+[
+  {
+    "contact_id": "PMC-KOTHRUD",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Kothrud\u2013Bavdhan Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-25432621 / 020-25432620",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  },
+  {
+    "contact_id": "PMC-WARJE",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Warje\u2013Karvenagar Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-25432192 / 020-25432193",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  },
+  {
+    "contact_id": "PMC-GHOLE",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Shivajinagar\u2013Ghole Road Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-25511956 / 020-25501500",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  },
+  {
+    "contact_id": "PMC-NAGAR",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Nagar Road\u2013Wadgaon Sheri Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-25509000 / 020-26630103",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  },
+  {
+    "contact_id": "PMC-YERAWADA",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Yerawada\u2013Kalas\u2013Dhanori Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-25509100",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  },
+  {
+    "contact_id": "PMC-DHOLE",
+    "agency": "Pune Municipal Corporation",
+    "office_name": "Dhole Patil Road Ward Office",
+    "position": "Ward administrative office",
+    "office_phone": "020-26141470 / 020-26141472",
+    "source_url": "https://propertytax.punecorporation.org/CollectionCenter.html"
+  }
+]

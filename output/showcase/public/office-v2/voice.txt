@@ -1,0 +1,1 @@
+We gave agents a voice and a real phone number through Bolna. GPT Realtime powers conversations in Hindi, Marathi, and English. The agent calls with context and asks for action.

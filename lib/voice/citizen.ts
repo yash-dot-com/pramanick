@@ -158,6 +158,9 @@ export async function citizenTurn(id: string, form: FormData) {
     throw new CivicError("Send an audio clip under 25 seconds and 4 MB", 413)
   if (!/^(audio\/|video\/webm|video\/mp4)/.test(file.type))
     throw new CivicError("Unsupported audio format")
+  // MediaRecorder adds codec parameters (e.g. audio/webm;codecs=opus).
+  // Sarvam validates the multipart MIME type against exact base media types.
+  const mediaType = file.type.split(";")[0].trim().toLowerCase()
   const { db } = store(),
     key = turnKey(id, turnId)
   const prior = db
@@ -216,7 +219,13 @@ export async function citizenTurn(id: string, form: FormData) {
   })
   try {
     const body = new FormData()
-    body.set("file", file)
+    body.set(
+      "file",
+      new Blob([file], {
+        type: mediaType === "video/mp4" ? "audio/mp4" : mediaType,
+      }),
+      file.name
+    )
     body.set("model", "saaras:v4")
     body.set("language_code", languageCodes[session.language])
     body.set("mode", "transcribe")

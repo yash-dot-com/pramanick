@@ -1,18 +1,19 @@
 "use client"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
-import { LanguageSwitcher, LocalizedText } from "@/components/language-provider"
+import { LocalizedText } from "@/components/language-provider"
 
 import Link from "next/link"
-import { ThemeSwitcher } from "@/components/theme-switcher"
+import { SettingsDropdown } from "@/components/settings-dropdown"
 import dynamic from "next/dynamic"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   Activity,
   ArrowLeft,
   ArrowUpRight,
   CheckCircle2,
+  ChevronDown,
   FileText,
-  Loader2,
   Mic,
   Pause,
   PhoneCall,
@@ -47,7 +48,6 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  LOCALITIES,
   STATUSES,
   formatDate,
   localityName,
@@ -58,7 +58,6 @@ import type { voiceOperations } from "@/lib/voice/operations"
 import type { callActivity } from "@/lib/voice/bolna"
 import { IssueDossier } from "./issue-dossier"
 import { StatusBadge } from "./status-badge"
-import { AgentActivityTrace } from "./agent-activity-trace"
 
 const VoiceAgentDialog = dynamic(
   () =>
@@ -93,7 +92,6 @@ export function OperationsDashboard() {
   >(null)
   const [executionId, setExecutionId] = useState("")
   const [noCallConfirmed, setNoCallConfirmed] = useState(false)
-  const requestId = useRef<string | null>(null)
   const refresh = useCallback(async () => {
     const response = await fetch("/api/operations", { cache: "no-store" })
     const result = await response.json()
@@ -143,21 +141,6 @@ export function OperationsDashboard() {
       setBusy(false)
     }
   }
-  async function start() {
-    requestId.current ??= crypto.randomUUID()
-    const [kind, id] = scope.split(":")
-    if (
-      await perform(
-        "/api/voice/runs",
-        {
-          [kind === "issue" ? "issueId" : "localityId"]: id,
-          requestId: requestId.current,
-        },
-        "Run started. Gathering evidence and preparing the call brief."
-      )
-    )
-      requestId.current = null
-  }
   async function inspectCall(id: string) {
     try {
       const response = await fetch(`/api/voice/calls/${id}`)
@@ -194,7 +177,7 @@ export function OperationsDashboard() {
           <LocalizedText text="Back to map" />
         </Link>
         <p className="text-sm text-muted-foreground">
-          <LocalizedText text={error || "Loading agent workspace…"} />
+          <LocalizedText text={error || "Loading accountability office…"} />
         </p>
         <Button
           variant="outline"
@@ -229,15 +212,14 @@ export function OperationsDashboard() {
             <ArrowLeft />
           </Button>
           <h1 className="text-lg font-semibold">
-            <LocalizedText text="Agent workspace" />
+            <LocalizedText text="Accountability office" />
           </h1>
           <Badge variant="outline">
-            <LocalizedText text="Yash · demo" />
+            <LocalizedText text="Case coordination & follow-through" />
           </Badge>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ThemeSwitcher />
-          <LanguageSwitcher />
+          <SettingsDropdown />
           <Button
             variant="outline"
             size="sm"
@@ -261,7 +243,7 @@ export function OperationsDashboard() {
             onClick={() =>
               void refresh().catch((error) => setError(error.message))
             }
-            aria-label="Refresh workspace"
+            aria-label="Refresh accountability office"
           >
             <RefreshCw />
           </Button>
@@ -306,115 +288,6 @@ export function OperationsDashboard() {
             </Card>
           ))}
         </div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              <LocalizedText text="Ask Pramanik to follow up" />
-            </CardTitle>
-            <CardDescription>
-              <LocalizedText text="Pramanik reads the reports, prepares questions, and follows up with the demo contact for an update." />
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <Select
-                value={scope}
-                disabled={busy}
-                onValueChange={(value) => {
-                  if (value) {
-                    setScope(value)
-                    requestId.current = null
-                  }
-                }}
-              >
-                <SelectTrigger
-                  className="w-full sm:w-80"
-                  aria-label="Follow-up scope"
-                >
-                  <SelectValue>
-                    <LocalizedText
-                      text={
-                        scope.startsWith("locality:")
-                          ? `All open issues in ${localityName(scope.slice(9))}`
-                          : (issues.find((issue) => issue.id === scope.slice(6))
-                              ?.title ?? "Choose an issue")
-                      }
-                    />
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {LOCALITIES.map((locality) => (
-                    <SelectItem
-                      key={locality.id}
-                      value={`locality:${locality.id}`}
-                    >
-                      <LocalizedText text="All open issues ·" />
-                      <LocalizedText text={locality.name} />
-                    </SelectItem>
-                  ))}
-                  {issues
-                    .filter((issue) => issue.status !== "verified")
-                    .map((issue) => (
-                      <SelectItem key={issue.id} value={`issue:${issue.id}`}>
-                        <LocalizedText text={issue.title} />
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <Button
-                disabled={
-                  busy || !data.contact.phoneConfigured || data.contact.revoked
-                }
-                onClick={() => void start()}
-              >
-                {busy ? <Loader2 className="animate-spin" /> : <Play />}
-                <LocalizedText text="Start follow-up" />
-              </Button>
-              <Badge variant={data.worker?.online ? "secondary" : "outline"}>
-                <LocalizedText
-                  text={data.worker?.online ? "Agent online" : "Agent offline"}
-                />
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              <LocalizedText text={data.contact.displayName} /> ·{" "}
-              <LocalizedText text={data.contact.designation} /> ·{" "}
-              <LocalizedText
-                text={data.contact.recipient ?? "Phone not configured"}
-              />{" "}
-              ·{" "}
-              <LocalizedText
-                text={
-                  data.contact.language === "mr"
-                    ? "मराठी"
-                    : data.contact.language === "hi"
-                      ? "हिन्दी"
-                      : "English"
-                }
-              />
-            </p>
-            {!data.contact.phoneConfigured && (
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <p>
-                  <LocalizedText text="A demo phone number needs to be set up, with permission to call it, before a phone follow-up can start." />
-                </p>
-                <details>
-                  <summary className="cursor-pointer">
-                    <LocalizedText text="Phone setup instructions" />
-                  </summary>
-                  <p className="mt-2">
-                    <LocalizedText text="Add BOLNA_DEMO_PHONE and BOLNA_DEMO_CALL_AUTHORIZED=true in .env.local, then restart the server and worker." />
-                  </p>
-                </details>
-              </div>
-            )}
-            {!data.worker?.online && (
-              <p className="text-xs text-muted-foreground">
-                <LocalizedText text="The work is saved. Pending steps will continue when the agent is back online." />
-              </p>
-            )}
-          </CardContent>
-        </Card>
         {error && (
           <div
             role="alert"
@@ -436,10 +309,6 @@ export function OperationsDashboard() {
             {notice}
           </p>
         )}
-        <AgentActivityTrace
-          data={data}
-          onInspectCall={(id) => void inspectCall(id)}
-        />
         <Tabs defaultValue="board">
           <TabsList className="flex h-auto flex-wrap">
             <TabsTrigger value="board">
@@ -455,9 +324,11 @@ export function OperationsDashboard() {
             <TabsTrigger value="jobs">
               <LocalizedText text="Queue" />
             </TabsTrigger>
-            <TabsTrigger value="contact">
-              <LocalizedText text="Demo person" />
-            </TabsTrigger>
+            {DEMO_MODE && (
+              <TabsTrigger value="contact">
+                <LocalizedText text="Demo person" />
+              </TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="board">
             <div className="mt-4 flex gap-3 overflow-x-auto pb-4">
@@ -486,7 +357,7 @@ export function OperationsDashboard() {
                     .map((issue) => (
                       <Card
                         key={issue.id}
-                        className="gap-3 py-4"
+                        className="gap-0 rounded-xl py-0"
                         draggable={!busy}
                         onDragStart={(event) => {
                           event.dataTransfer.setData(
@@ -496,91 +367,111 @@ export function OperationsDashboard() {
                           event.dataTransfer.effectAllowed = "move"
                         }}
                       >
-                        <CardContent className="space-y-3 px-4">
-                          <div className="flex flex-wrap gap-1">
-                            <StatusBadge status={issue.status} />
-                          </div>
-                          <button
-                            className="text-left text-sm font-medium hover:underline"
-                            onClick={() => setSelected(issue.id)}
-                          >
-                            <LocalizedText text={issue.title} />
-                          </button>
-                          <p className="text-xs text-muted-foreground">
-                            {localityName(issue.localityId)} ·{" "}
-                            {issue.complaintCount}
-                            <LocalizedText text="complaints" />
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            <LocalizedText
-                              text={
-                                data.civic.offices.find(
-                                  (office) => office.id === issue.officeId
-                                )?.name ??
-                                (issue.officeId === "PRAMANIK-DEMO"
-                                  ? "Pramanik demo civic office"
-                                  : "Office review pending")
-                              }
-                            />
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {Math.max(
-                              0,
-                              Math.floor(
-                                (Date.now() -
-                                  new Date(issue.createdAt).getTime()) /
-                                  86_400_000
-                              )
-                            )}{" "}
-                            <LocalizedText text="days open ·" />
-                            <LocalizedText text={issue.events[0]?.title} />
-                          </p>
-                          {issue.nextFollowUp && (
-                            <p className="text-xs">
-                              <LocalizedText text="Next:" />
-                              {formatDate(issue.nextFollowUp)}
+                        <details className="group/case">
+                          <summary className="cursor-pointer list-none rounded-xl p-3 outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                            <span className="mb-2 flex items-center justify-between gap-2">
+                              <StatusBadge status={issue.status} />
+                              <ChevronDown
+                                aria-hidden="true"
+                                className="size-4 shrink-0 text-muted-foreground group-open/case:rotate-180"
+                              />
+                            </span>
+                            <span className="line-clamp-2 text-sm leading-snug font-medium">
+                              <LocalizedText text={issue.title} />
+                            </span>
+                            <span className="mt-1.5 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                              <span className="truncate">
+                                {localityName(issue.localityId)}
+                              </span>
+                              <span className="shrink-0">
+                                {issue.complaintCount}{" "}
+                                <LocalizedText
+                                  text={
+                                    issue.complaintCount === 1
+                                      ? "report"
+                                      : "reports"
+                                  }
+                                />
+                              </span>
+                            </span>
+                          </summary>
+                          <CardContent className="space-y-3 border-t px-3 py-3">
+                            <p className="text-xs text-muted-foreground">
+                              <LocalizedText
+                                text={
+                                  data.civic.offices.find(
+                                    (office) => office.id === issue.officeId
+                                  )?.name ??
+                                  (issue.officeId === "PRAMANIK-DEMO"
+                                    ? "Pramanik demo civic office"
+                                    : "Office review pending")
+                                }
+                              />
                             </p>
-                          )}
-                          <Select
-                            value={issue.status}
-                            disabled={busy}
-                            onValueChange={(value) => {
-                              if (value && value !== issue.status)
-                                moveIssue(issue.id, value as IssueStatus)
-                            }}
-                          >
-                            <SelectTrigger
-                              className="w-full"
-                              aria-label={`Move ${issue.title}`}
+                            <p className="text-xs text-muted-foreground">
+                              {Math.max(
+                                0,
+                                Math.floor(
+                                  (Date.now() -
+                                    new Date(issue.createdAt).getTime()) /
+                                    86_400_000
+                                )
+                              )}{" "}
+                              <LocalizedText text="days open ·" />{" "}
+                              <LocalizedText text={issue.events[0]?.title} />
+                            </p>
+                            {issue.nextFollowUp && (
+                              <p className="text-xs">
+                                <LocalizedText text="Next:" />{" "}
+                                {formatDate(issue.nextFollowUp)}
+                              </p>
+                            )}
+                            <Select
+                              value={issue.status}
+                              disabled={busy}
+                              onValueChange={(value) => {
+                                if (value && value !== issue.status)
+                                  moveIssue(issue.id, value as IssueStatus)
+                              }}
                             >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={issue.status}>
-                                {STATUSES[issue.status]}
-                              </SelectItem>
-                              {transitions[issue.status].map((next) => (
-                                <SelectItem key={next} value={next}>
+                              <SelectTrigger
+                                className="w-full"
+                                size="sm"
+                                aria-label={`Move ${issue.title}`}
+                              >
+                                <SelectValue>
                                   <LocalizedText
-                                    text={
-                                      next === "verified"
-                                        ? "Review before verifying"
-                                        : STATUSES[next]
-                                    }
+                                    text={STATUSES[issue.status]}
                                   />
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value={issue.status}>
+                                  {STATUSES[issue.status]}
                                 </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelected(issue.id)}
-                          >
-                            <FileText />
-                            <LocalizedText text="Open dossier" />
-                          </Button>
-                        </CardContent>
+                                {transitions[issue.status].map((next) => (
+                                  <SelectItem key={next} value={next}>
+                                    <LocalizedText
+                                      text={
+                                        next === "verified"
+                                          ? "Review before verifying"
+                                          : STATUSES[next]
+                                      }
+                                    />
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelected(issue.id)}
+                            >
+                              <FileText />
+                              <LocalizedText text="Open dossier" />
+                            </Button>
+                          </CardContent>
+                        </details>
                       </Card>
                     ))}
                   {!issues.some((issue) => issue.status === status) && (
@@ -595,7 +486,7 @@ export function OperationsDashboard() {
           <TabsContent value="runs">
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
               {!data.followUpRuns.length && (
-                <Empty text="No follow-up runs yet. Choose a scope and press Start follow-up." />
+                <Empty text="No follow-up runs yet." />
               )}
               {data.followUpRuns.map((run) => {
                 const jobs = data.jobs.filter(
@@ -881,7 +772,7 @@ export function OperationsDashboard() {
             </div>
           </TabsContent>
           <TabsContent value="contact">
-            {profileDraft && (
+            {DEMO_MODE && profileDraft && (
               <Card className="mt-4 max-w-xl">
                 <CardHeader>
                   <CardTitle className="text-base">

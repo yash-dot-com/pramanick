@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { CivicError, store } from "@/lib/civic/repository"
 import * as s from "@/lib/db/schema"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
 const defaults = {
   displayName: "Aarav Patil (demo)",
@@ -14,6 +15,7 @@ function configuredPhone() {
 }
 export function phoneConfigured() {
   return (
+    DEMO_MODE &&
     process.env.BOLNA_DEMO_CALL_AUTHORIZED === "true" &&
     /^\+[1-9]\d{7,14}$/.test(configuredPhone())
   )
@@ -25,6 +27,11 @@ function contactId() {
 }
 
 export function demoContact(requirePhone = true) {
+  if (!DEMO_MODE)
+    throw new CivicError(
+      "Phone outreach is not configured for this workspace",
+      409
+    )
   if (requirePhone && !phoneConfigured())
     throw new CivicError(
       "Add your consenting demo phone as BOLNA_DEMO_PHONE and set BOLNA_DEMO_CALL_AUTHORIZED=true locally",
@@ -100,6 +107,19 @@ export function canCallDemoContact(contact: typeof s.contacts.$inferSelect) {
 }
 
 export function contactProfile() {
+  if (!DEMO_MODE)
+    return {
+      id: "",
+      displayName: "No outreach contact configured",
+      designation: "Phone outreach unavailable",
+      language: "en",
+      publicationConsent: false,
+      recordingConsent: false,
+      revoked: false,
+      phoneConfigured: false,
+      recipient: null,
+      isDemo: false,
+    }
   const contact = demoContact(false)
   return {
     id: contact.id,

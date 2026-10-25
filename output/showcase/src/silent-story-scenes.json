@@ -1,0 +1,218 @@
+[
+  {
+    "id": "problem",
+    "from": 0,
+    "durationInFrames": 90,
+    "text": "India has a\nfollow-up problem.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 0,
+    "sourceDuration": 90
+  },
+  {
+    "id": "taxes",
+    "from": 90,
+    "durationInFrames": 90,
+    "text": "You pay taxes.\nPublic servants owe you answers.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 90,
+    "sourceDuration": 90
+  },
+  {
+    "id": "logged",
+    "from": 180,
+    "durationInFrames": 210,
+    "text": "Your complaint gets logged.\nYou’re still chasing repairs.",
+    "background": "lavender",
+    "kind": "diagram",
+    "sourceFrom": 180,
+    "sourceDuration": 210
+  },
+  {
+    "id": "time",
+    "from": 390,
+    "durationInFrames": 120,
+    "text": "You shouldn’t have to keep calling\nand visiting offices for answers.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 390,
+    "sourceDuration": 120
+  },
+  {
+    "id": "introducing",
+    "from": 510,
+    "durationInFrames": 120,
+    "text": "Introducing Pramanik.",
+    "background": "lavender",
+    "kind": "fog-rise",
+    "sourceFrom": 510,
+    "sourceDuration": 120
+  },
+  {
+    "id": "pramanik",
+    "from": 630,
+    "durationInFrames": 120,
+    "text": "Pramanik’s agents follow up,\nso you don’t have to.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 630,
+    "sourceDuration": 120
+  },
+  {
+    "id": "merge",
+    "from": 750,
+    "durationInFrames": 210,
+    "text": "Agents remove duplicate complaints\nand group related reports into one case.",
+    "background": "lavender",
+    "kind": "diagram",
+    "sourceFrom": 750,
+    "sourceDuration": 210
+  },
+  {
+    "id": "context",
+    "kind": "soft-blur-in",
+    "durationInFrames": 120,
+    "text": "Reports, photos, location and past calls\ngive agents the full picture.",
+    "background": "lavender",
+    "from": 960,
+    "sourceFrom": 960,
+    "sourceDuration": 120
+  },
+  {
+    "id": "specialists",
+    "from": 1080,
+    "durationInFrames": 240,
+    "text": "Specialist agents check reports,\nhistory and who’s responsible.",
+    "background": "lavender",
+    "kind": "diagram",
+    "technology": "OpenAI Agents SDK · GPT-5.4 mini",
+    "sourceFrom": 1080,
+    "sourceDuration": 240
+  },
+  {
+    "id": "ward",
+    "from": 1320,
+    "durationInFrames": 120,
+    "text": "Agents find officers’ and leaders’ contacts\nin public ward directories.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 1320,
+    "sourceDuration": 120
+  },
+  {
+    "id": "call",
+    "from": 1440,
+    "durationInFrames": 210,
+    "text": "Voice agents call the person responsible\nin Hindi, Marathi or English.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "support": "Bolna gives the agents a real phone number to make calls.",
+    "technology": "GPT-Realtime-2.1",
+    "sourceFrom": 1440,
+    "sourceDuration": 210
+  },
+  {
+    "id": "memory",
+    "from": 1650,
+    "durationInFrames": 120,
+    "text": "Agents recall past calls and promises,\nthen ask what’s done—and what’s next.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "technology": "GPT-5.4 mini · Case memory + reasoning",
+    "sourceFrom": 1650,
+    "sourceDuration": 120
+  },
+  {
+    "id": "promises",
+    "from": 1770,
+    "durationInFrames": 180,
+    "text": "Agents save promises and deadlines,\nthen schedule a follow-up.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "technology": "Tool calling + persistent background jobs",
+    "sourceFrom": 1770,
+    "sourceDuration": 180
+  },
+  {
+    "id": "evidence",
+    "from": 1950,
+    "durationInFrames": 210,
+    "text": "An officer says “done”.\nAgents ask you to check.",
+    "background": "lavender",
+    "kind": "diagram",
+    "technology": "GPT visual assessment + human review",
+    "sourceFrom": 1950,
+    "sourceDuration": 210
+  },
+  {
+    "id": "residents",
+    "kind": "soft-blur-in",
+    "durationInFrames": 240,
+    "text": "You share survey responses, photos\nand observations from the ground.",
+    "background": "lavender",
+    "from": 2160,
+    "sourceFrom": 2160,
+    "sourceDuration": 120
+  },
+  {
+    "id": "compare",
+    "kind": "soft-blur-in",
+    "durationInFrames": 120,
+    "text": "Agents compare your evidence\nwith the officer’s claim.",
+    "background": "lavender",
+    "from": 2400,
+    "sourceFrom": 2280,
+    "sourceDuration": 120
+  },
+  {
+    "id": "reopen",
+    "from": 2520,
+    "durationInFrames": 150,
+    "text": "Conflicting evidence reopens the case.\nAgents call again for answers and action.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 2400,
+    "sourceDuration": 150
+  },
+  {
+    "id": "public",
+    "from": 2670,
+    "durationInFrames": 210,
+    "text": "Agents publish calls, promises and evidence.\nA public dashboard shows progress and next steps.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 2550,
+    "sourceDuration": 150
+  },
+  {
+    "id": "inspect",
+    "kind": "soft-blur-in",
+    "durationInFrames": 300,
+    "text": "You inspect progress, question answers\nand verify the outcome together.",
+    "background": "lavender",
+    "from": 2880,
+    "sourceFrom": 2700,
+    "sourceDuration": 120
+  },
+  {
+    "id": "close",
+    "from": 3180,
+    "durationInFrames": 120,
+    "text": "You report the problem.\nPramanik’s agents keep following up.",
+    "background": "lavender",
+    "kind": "soft-blur-in",
+    "sourceFrom": 2820,
+    "sourceDuration": 120
+  },
+  {
+    "id": "end-card",
+    "from": 3300,
+    "durationInFrames": 90,
+    "text": "Pramanik.",
+    "background": "lavender",
+    "kind": "fog-rise",
+    "sourceFrom": 2940,
+    "sourceDuration": 90
+  }
+]

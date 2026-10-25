@@ -2,15 +2,44 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { instrumentSerif } from "@/lib/fonts"
 import { TechnologyStack } from "@/components/technology-stack"
+import { FollowThroughAccordion } from "@/components/follow-through-accordion"
 import { PublicNavigation } from "@/components/civic/public-navigation"
 import { Button } from "@/components/ui/button"
 import { LocalizedText } from "@/components/language-provider"
 
 export const metadata: Metadata = {
-  title: "Pramanik — An autonomous office that follows through.",
+  title: "Pramanik — An autonomous AI accountability office.",
   description:
-    "An autonomous office of voice agents that calls, follows up in real time, and keeps every response and promise on public record.",
+    "An accountability office run by autonomous voice agents that call for action, track commitments, and check repair claims against residents’ reports and photos.",
 }
+
+const followThrough = [
+  {
+    title: "One issue, one shared case.",
+    description:
+      "Related complaints become one case. Resident reports, photos, past conversations, and officer commitments stay together.",
+  },
+  {
+    title: "A team of agents makes the plan.",
+    description:
+      "Specialist AI agents review reports, history, and responsibility. A coordinator combines their findings into an action plan.",
+  },
+  {
+    title: "Voice agents ask for action.",
+    description:
+      "An agent calls the designated contact with the case history, revisits promises, and asks for clear actions and deadlines.",
+  },
+  {
+    title: "The follow-up continues after the call.",
+    description:
+      "Agents save commitments, update the case, and schedule the next follow-up. Every call builds on what came before.",
+  },
+  {
+    title: "“Done” needs a ground check.",
+    description:
+      "Completion claims open a public survey. Residents share observations and photos. AI assesses the images to support human review; conflicting evidence keeps the case open.",
+  },
+]
 
 export default function Page() {
   return (
@@ -27,9 +56,6 @@ export default function Page() {
           id="main-content"
           className="relative z-10 mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-6 pt-16 pb-48 text-center sm:pt-20 sm:pb-56"
         >
-          <p className="mb-6 text-[11px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
-            <LocalizedText text="A complaint shouldn’t become your second job." />
-          </p>
           <h1
             className={`${instrumentSerif.className} max-w-3xl text-[2.8rem] leading-[1.04] font-normal tracking-[-0.025em] text-balance sm:text-[4.5rem]`}
           >
@@ -40,7 +66,7 @@ export default function Page() {
             </span>
           </h1>
           <p className="mt-7 max-w-lg text-sm leading-7 text-pretty text-muted-foreground sm:text-base">
-            <LocalizedText text="An autonomous office of voice agents that calls the responsible office, follows up in real time, and remembers every promise. Every conversation and next step stays on public record." />
+            <LocalizedText text="An accountability office run by autonomous voice agents. They call for action, track commitments, and check repair claims against residents’ reports and photos." />
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button
@@ -61,23 +87,6 @@ export default function Page() {
               <LocalizedText text="Explore issue map" />
             </Button>
           </div>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-            <Link
-              href="/operations"
-              className="underline underline-offset-4 hover:text-primary"
-            >
-              <LocalizedText text="See the agent workspace" /> ↗
-            </Link>
-            <Link
-              href="/leaderboard"
-              className="underline underline-offset-4 hover:text-primary"
-            >
-              <LocalizedText text="View officer records" /> ↗
-            </Link>
-          </div>
-          <p className="mt-7 max-w-md text-xs leading-6 text-muted-foreground">
-            <LocalizedText text="What was said. What was promised. What actually changed." />
-          </p>
         </section>
         <div
           aria-hidden="true"
@@ -87,19 +96,52 @@ export default function Page() {
               "radial-gradient(ellipse 85% 95% at 50% 100%, #0055eb 0%, #0055eb 28%, #9fc6e7 39%, #ffe33a 48%, #ff9517 56%, #ff3bd5 65%, transparent 80%)",
           }}
         />
-        <footer className="absolute inset-x-0 bottom-6 z-10 mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 text-[10px] text-foreground/65 sm:px-10">
-          <p>
-            Pramanik ·{" "}
-            <LocalizedText text="Public problems. Public follow-through." />
-          </p>
-          <Link
-            href="/leaderboard"
-            className="underline-offset-4 hover:underline"
-          >
-            <LocalizedText text="Every response stays on record" />
-          </Link>
-        </footer>
       </div>
+      <section
+        aria-labelledby="follow-through-heading"
+        className="border-t px-6 py-16 sm:px-10 sm:py-24"
+      >
+        <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-16">
+          <div className="space-y-5">
+            <h2
+              id="follow-through-heading"
+              className="font-heading text-4xl leading-tight font-normal tracking-tight sm:text-5xl"
+            >
+              <LocalizedText text="Complaints don’t fix themselves." />
+            </h2>
+            <p className="max-w-md text-sm leading-7 text-muted-foreground sm:text-base">
+              <LocalizedText text="Democracy gives people a voice in how they are governed. Our taxes fund public services, and public officials are answerable to the people they serve." />
+            </p>
+            <p className="max-w-md text-sm leading-7 text-muted-foreground sm:text-base">
+              <LocalizedText text="Pramanik groups related complaints, keeps a shared case history, and prepares a brief before calling the responsible contact. Agents record commitments, schedule follow-ups, and check repair claims against residents’ observations and photos." />
+            </p>
+          </div>
+          <FollowThroughAccordion steps={followThrough} />
+        </div>
+      </section>
+      <section
+        aria-label="Public accountability and community participation"
+        className="border-t px-6 py-12 sm:px-10 sm:py-16"
+      >
+        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-2 sm:gap-16">
+          <div className="space-y-3">
+            <h2 className="text-lg font-medium">
+              <LocalizedText text="A record everyone can inspect." />
+            </h2>
+            <p className="text-sm leading-7 text-muted-foreground">
+              <LocalizedText text="The public case board and case file show published conversations, promises, evidence, completed actions, and next steps." />
+            </p>
+          </div>
+          <div className="space-y-3">
+            <h2 className="text-lg font-medium">
+              <LocalizedText text="Less chasing. More participation." />
+            </h2>
+            <p className="text-sm leading-7 text-muted-foreground">
+              <LocalizedText text="Residents report issues, add evidence, and check progress together. Everyone can question a commitment and see whether it was kept." />
+            </p>
+          </div>
+        </div>
+      </section>
       <TechnologyStack />
     </main>
   )

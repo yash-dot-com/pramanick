@@ -229,7 +229,7 @@ export function IssueDossier({
         : issue.status === "disputed"
           ? "Resident observations show more work is needed. The case remains open."
           : run?.state === "awaiting_configuration"
-            ? "Reports and questions are prepared. A demo phone needs to be connected before the first call."
+            ? "Reports and questions are prepared. Phone outreach needs to be configured before the first call."
             : run?.state === "paused"
               ? "The history is saved. Resume when you are ready for the next call."
               : run?.state === "needs_review"
@@ -240,7 +240,7 @@ export function IssueDossier({
                     ? "Calls and responses will appear here. A reported repair stays open until residents check it."
                     : "Start a follow-up so the agent can prepare questions and track the response."
   const friendlyError = error.includes("BOLNA_DEMO_PHONE")
-    ? "A demo phone still needs to be connected. You can continue reading this issue while the call setup is completed."
+    ? "Phone outreach is not configured. You can continue reading the saved issue and case history."
     : error
   return (
     <section className="space-y-6 p-5 pb-8">

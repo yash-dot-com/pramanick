@@ -1,0 +1,157 @@
+{
+  "issue": {
+    "id": "office-demo-pothole",
+    "title": "School gate potholes repaired and checked",
+    "status": "verified",
+    "localityId": "kothrud"
+  },
+  "dossier": {
+    "timeline": [
+      {
+        "id": "8242b110-14bf-42bc-afa7-c627576330ae",
+        "createdAt": "2026-10-21T15:29:13.296Z",
+        "issueId": "office-demo-pothole",
+        "kind": "complaint",
+        "title": "Community reports received",
+        "description": "3 fictional residents describe the same location.",
+        "source": "Scripted demonstration"
+      },
+      {
+        "id": "3ed53367-dda0-42e6-a99e-ba3b76f8a888",
+        "createdAt": "2026-10-22T14:29:13.296Z",
+        "issueId": "office-demo-pothole",
+        "kind": "agent",
+        "title": "Coordinator assigned three specialists",
+        "description": "Reports, conversation memory and responsibility research were reviewed in parallel in this scripted example.",
+        "source": "Scripted demonstration"
+      },
+      {
+        "id": "59e50c6e-2fa2-4935-a8d8-eae843762a40",
+        "createdAt": "2026-10-24T14:29:13.296Z",
+        "issueId": "office-demo-pothole",
+        "kind": "status",
+        "title": "Case moved to verified",
+        "description": "Two fictional residents independently confirmed the repaired entrance.",
+        "source": "Scripted demonstration"
+      }
+    ],
+    "calls": [
+      {
+        "id": "cb814a20-8d7f-4199-a9d5-bdb24e958c0a",
+        "status": "completed",
+        "createdAt": "2026-10-22T15:29:13.296Z",
+        "duration": 20.887891,
+        "phoneAttempt": false,
+        "scriptedDemo": true,
+        "summary": "Meera accepted responsibility for the school gate road and promised a patch repair within two days.",
+        "progress": "in_progress",
+        "nextAction": "Check the promised repair and ask residents to confirm.",
+        "responseSignals": {
+          "responsibilityClarified": true,
+          "actionPlanGiven": true,
+          "deadlineGiven": true,
+          "evidenceQuote": "I am Meera Deshmukh, the ward civil works engineer. My team is responsible for this road. We will patch both potholes within two days.",
+          "uncertainty": "Illustrative assessment of a fictional scripted conversation."
+        },
+        "person": {
+          "id": "office-demo-meera-contact",
+          "name": "Meera Deshmukh",
+          "role": "Ward civil works engineer",
+          "isDemo": true
+        },
+        "transcript": "agent: This is a scripted demonstration. I am Pramanik, following up on three reports about potholes at Vidya School's west gate. Who will handle the repair?\nofficer: I am Meera Deshmukh, the ward civil works engineer. My team is responsible for this road. We will patch both potholes within two days.\nagent: I have saved that deadline. Residents will check the surface after your team finishes.",
+        "recordingUrl": "/api/voice/calls/cb814a20-8d7f-4199-a9d5-bdb24e958c0a/recording"
+      },
+      {
+        "id": "b957c799-fc99-49fb-a018-0ffdf574ab84",
+        "status": "completed",
+        "createdAt": "2026-10-24T13:29:13.296Z",
+        "duration": 21.876644,
+        "phoneAttempt": false,
+        "scriptedDemo": true,
+        "summary": "The agent recalled the earlier promise. Meera reported the patch repair finished; residents subsequently confirmed a usable surface.",
+        "progress": "completion_claimed",
+        "nextAction": "Compare the resident checks before closing the case.",
+        "responseSignals": {
+          "responsibilityClarified": false,
+          "actionPlanGiven": true,
+          "deadlineGiven": false,
+          "evidenceQuote": "Our road team has patched both potholes and removed the loose material. The school entrance is usable now. Please ask the residents to check it.",
+          "uncertainty": "Illustrative assessment of a fictional scripted conversation."
+        },
+        "person": {
+          "id": "office-demo-meera-contact",
+          "name": "Meera Deshmukh",
+          "role": "Ward civil works engineer",
+          "isDemo": true
+        },
+        "transcript": "agent: Meera, I am following up on the two day repair promise for Vidya School's west gate. Three households reported the same potholes. What has changed?\nofficer: Our road team has patched both potholes and removed the loose material. The school entrance is usable now. Please ask the residents to check it.\nagent: Thank you. I will record this as your completion claim and ask residents to verify the repair before closing the case.",
+        "recordingUrl": "/api/voice/calls/b957c799-fc99-49fb-a018-0ffdf574ab84/recording"
+      }
+    ],
+    "commitments": [
+      {
+        "id": "5c2bec73-87a8-470c-a8eb-2d329970ed1e",
+        "createdAt": "2026-10-22T15:29:13.296Z",
+        "issueId": "office-demo-pothole",
+        "sourceCallId": "cb814a20-8d7f-4199-a9d5-bdb24e958c0a",
+        "action": "Meera accepted responsibility for the school gate road and promised a patch repair within two days.",
+        "dueAt": "2026-10-24T15:29:13.296Z",
+        "status": "fulfilled"
+      }
+    ],
+    "verification": {
+      "id": "76025cf4-d48b-4b44-afb5-8556c942b7eb",
+      "state": "closed",
+      "conflicting": false,
+      "responses": [
+        {
+          "answer": "fixed",
+          "note": "Scripted resident check: the entrance is usable and both patches are holding.",
+          "createdAt": "2026-10-24T14:29:13.296Z",
+          "evidenceId": null
+        },
+        {
+          "answer": "fixed",
+          "note": "Scripted resident check: the entrance is usable and both patches are holding.",
+          "createdAt": "2026-10-24T14:29:13.296Z",
+          "evidenceId": null
+        }
+      ],
+      "reviewNote": "Residents confirmed the repair. Keep the history available if the problem returns.",
+      "reviewedAt": null
+    },
+    "evidence": [
+      {
+        "id": "2d6bbfbd-af7e-48ec-aa8f-fe454b3af933",
+        "caption": "Demo illustration: Two deep potholes outside the school gate fill with water. Children step into traffic to avoid them. This is an illustration, not a site photograph.",
+        "url": "/demo-office/evidence/roads-report.png",
+        "createdAt": "2026-10-21T15:29:13.296Z",
+        "phase": "report",
+        "location": {
+          "source": "demo",
+          "observedAt": "2026-10-21T15:29:13.296Z",
+          "accuracy": 0,
+          "distanceMeters": 0,
+          "proximity": "simulated"
+        },
+        "assessment": null
+      },
+      {
+        "id": "ce181919-b10d-43dd-a737-1667dd176e21",
+        "caption": "Demo illustration: Repaired surface confirmed by fictional residents. This is an illustration, not a site photograph.",
+        "url": "/demo-office/evidence/roads-verification.png",
+        "createdAt": "2026-10-24T14:29:13.296Z",
+        "phase": "verification",
+        "location": {
+          "source": "demo",
+          "observedAt": "2026-10-24T14:29:13.296Z",
+          "accuracy": 0,
+          "distanceMeters": 0,
+          "proximity": "simulated"
+        },
+        "assessment": null
+      }
+    ]
+  }
+}

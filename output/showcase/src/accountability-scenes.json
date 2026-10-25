@@ -1,0 +1,84 @@
+[
+  {
+    "start": 0,
+    "duration": 6,
+    "id": "hook",
+    "title": ["You reported it.", "Who follows up?"],
+    "technical": "A report is only the beginning.",
+    "voice": "Reporting a problem shouldn't mean chasing it forever."
+  },
+  {
+    "start": 6,
+    "duration": 6,
+    "id": "identity",
+    "title": ["An office of", "autonomous agents."],
+    "technical": "Calls. Commitments. Ground checks.",
+    "voice": "Pramanik is an accountability office run by autonomous voice agents."
+  },
+  {
+    "start": 12,
+    "duration": 9,
+    "id": "reports",
+    "title": ["Many reports.", "One shared case."],
+    "technical": "Resident reports + evidence + case history",
+    "voice": "Related complaints share one case. Agents bring together resident reports, evidence, and the conversations that came before."
+  },
+  {
+    "start": 21,
+    "duration": 9,
+    "id": "memory",
+    "title": ["Every conversation", "becomes context."],
+    "technical": "Persisted history → the next call brief",
+    "voice": "Before the next call, the agent recalls the earlier promise and builds a brief with specific questions."
+  },
+  {
+    "start": 30,
+    "duration": 9,
+    "id": "agents",
+    "title": ["Specialists investigate.", "A coordinator plans."],
+    "technical": "OpenAI Agents SDK · GPT-5.4 mini",
+    "voice": "Three specialists review reports, history, and responsibility in parallel. A coordinator combines their findings into an action plan."
+  },
+  {
+    "start": 39,
+    "duration": 12,
+    "id": "call",
+    "title": ["Context becomes", "a conversation."],
+    "technical": "GPT-Realtime-2.1 + Bolna · tool calling",
+    "voice": "A call grounded in memory.",
+    "dialogue": [
+      {
+        "speaker": "Samantha (English (US))",
+        "text": "Yesterday you promised a new seal. Has the repair started?"
+      },
+      {
+        "speaker": "Rishi",
+        "text": "The seal has arrived. We'll complete the repair tomorrow afternoon."
+      }
+    ]
+  },
+  {
+    "start": 51,
+    "duration": 10,
+    "id": "jobs",
+    "title": ["The call ends.", "The work continues."],
+    "technical": "record_commitment → deadline_review → worker",
+    "voice": "Tool calls save the exact commitment. A deadline becomes a persistent review job, processed by a worker after the conversation ends."
+  },
+  {
+    "start": 61,
+    "duration": 8,
+    "id": "verify",
+    "title": ["A claim needs", "a ground check."],
+    "technical": "Resident observations + photos + human review",
+    "voice": "Residents check the repair with observations and photos. AI supports human review. Conflicting evidence keeps the case open."
+  },
+  {
+    "start": 69,
+    "duration": 6,
+    "id": "end",
+    "title": ["Pramanik"],
+    "technical": "Accountability that follows through.",
+    "voice": "Pramanik. Every promise tracked. Every outcome open to scrutiny. Built by Yash."
+  }
+]

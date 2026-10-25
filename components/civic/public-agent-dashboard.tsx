@@ -5,17 +5,12 @@ import { useCallback, useEffect, useState } from "react"
 import {
   ArrowRight,
   AudioLines,
-  CheckCheck,
   ChevronLeft,
   ChevronRight,
-  Clock3,
   FileText,
-  MapPin,
-  MessageSquare,
   Plus,
   RefreshCw,
   Search,
-  UsersRound,
 } from "lucide-react"
 import {
   LocalizedText,
@@ -24,6 +19,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { LOCALITIES, formatDate, localityName } from "@/lib/civic/model"
 import type { PublicAgentDashboard as Dashboard } from "@/lib/voice/dashboard"
 import { cn } from "@/lib/utils"
@@ -38,16 +40,6 @@ const filters = [
   { id: "disputed", label: "Still needs fixing" },
   { id: "verified", label: "Verified repairs" },
 ] as const
-const nextSteps: Record<string, string> = {
-  reported: "Review the reports and identify the responsible office.",
-  assigned: "Ask the responsible office for an inspection date.",
-  following_up:
-    "Follow up on the officer’s last promise and request a progress update.",
-  awaiting_verification:
-    "The office says the work is done. Residents need to check it.",
-  disputed: "Residents say the problem remains. Request a fresh inspection.",
-  verified: "Residents checked the repair. The full record stays available.",
-}
 function timeAgo(value: string, now: string) {
   const hours = Math.max(0, (Date.parse(now) - Date.parse(value)) / 3_600_000)
   if (hours < 1) return "Just now"
@@ -140,7 +132,7 @@ export function PublicAgentDashboard() {
   const updates =
     data?.updates
       .filter((update) => visibleIds.has(update.issueId))
-      .slice(0, 6) ?? []
+      .slice(0, 4) ?? []
   function chooseStatus(value: string) {
     setStatus(value)
     setPage(0)
@@ -149,13 +141,11 @@ export function PublicAgentDashboard() {
     {
       label: "Issues being followed",
       value: areaIssues.filter((issue) => issue.status !== "verified").length,
-      icon: FileText,
       filter: "open",
     },
     {
       label: "Conversations recorded",
       value: conversationCount,
-      icon: MessageSquare,
       filter: "conversations",
     },
     {
@@ -163,13 +153,11 @@ export function PublicAgentDashboard() {
       value: areaIssues.filter(
         (issue) => issue.status === "awaiting_verification"
       ).length,
-      icon: Clock3,
       filter: "awaiting_verification",
     },
     {
       label: "Repairs verified",
       value: areaIssues.filter((issue) => issue.status === "verified").length,
-      icon: CheckCheck,
       filter: "verified",
     },
   ]
@@ -250,7 +238,6 @@ export function PublicAgentDashboard() {
                 className="grid grid-cols-2 overflow-hidden rounded-xl border lg:grid-cols-4"
               >
                 {counts.map((item) => {
-                  const Icon = item.icon
                   return (
                     <button
                       key={item.label}
@@ -263,14 +250,10 @@ export function PublicAgentDashboard() {
                           chooseStatus(item.filter)
                         }
                       }}
-                      className="group space-y-3 border-r border-b p-4 text-left transition-colors last:border-r-0 hover:bg-muted/40 sm:p-5 lg:border-b-0"
+                      className="border-r border-b px-4 py-3 text-left transition-colors last:border-r-0 hover:bg-muted/40 lg:border-b-0"
                     >
-                      <div className="flex items-center justify-between">
-                        <Icon className="size-4 text-muted-foreground" />
-                        <ArrowRight className="size-3 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                      </div>
-                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <p className="text-3xl font-semibold tracking-tight tabular-nums">
+                      <div className="flex items-center gap-3">
+                        <p className="text-xl font-semibold tracking-tight tabular-nums">
                           {item.value}
                         </p>
                         <p className="text-xs text-muted-foreground">
@@ -333,22 +316,39 @@ export function PublicAgentDashboard() {
                       className="h-10 bg-muted/20 pl-9"
                     />
                   </div>
-                  <select
-                    aria-label="Filter by area"
+                  <Select
                     value={localityId}
-                    onChange={(event) => {
-                      setLocalityId(event.target.value)
+                    onValueChange={(value) => {
+                      if (!value) return
+                      setLocalityId(value)
                       setPage(0)
                     }}
-                    className="h-10 rounded-lg border bg-background px-3 text-xs"
                   >
-                    <option value="all">All areas</option>
-                    {LOCALITIES.map((area) => (
-                      <option key={area.id} value={area.id}>
-                        {area.name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger
+                      aria-label="Filter by area"
+                      className="h-10 w-full sm:w-44"
+                    >
+                      <SelectValue>
+                        <LocalizedText
+                          text={
+                            localityId === "all"
+                              ? "All areas"
+                              : localityName(localityId)
+                          }
+                        />
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent align="start" alignItemWithTrigger={false}>
+                      <SelectItem value="all">
+                        <LocalizedText text="All areas" />
+                      </SelectItem>
+                      {LOCALITIES.map((area) => (
+                        <SelectItem key={area.id} value={area.id}>
+                          <LocalizedText text={area.name} />
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div
                   className="flex flex-wrap gap-2"
@@ -385,7 +385,7 @@ export function PublicAgentDashboard() {
                       />
                     </p>
                     {view === "issues" ? (
-                      <div className="grid gap-4 md:grid-cols-2">
+                      <div className="grid items-start gap-3 md:grid-cols-2">
                         {issues
                           .slice(currentPage * 8, currentPage * 8 + 8)
                           .map((issue) => (
@@ -393,15 +393,12 @@ export function PublicAgentDashboard() {
                               key={issue.id}
                               className="flex flex-col overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-sm"
                             >
-                              <div className="flex flex-1 flex-col gap-4 p-5">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="space-y-2.5 p-3.5">
+                                <div className="flex flex-wrap items-center gap-2">
                                   <StatusBadge status={issue.status} />
-                                  <span className="text-[10px] text-muted-foreground">
-                                    {timeAgo(issue.updatedAt, data.capturedAt)}
-                                  </span>
                                 </div>
                                 <div>
-                                  <h2 className="text-base leading-snug font-semibold">
+                                  <h2 className="text-sm leading-snug font-medium">
                                     <button
                                       onClick={() =>
                                         setSelected({
@@ -409,81 +406,15 @@ export function PublicAgentDashboard() {
                                           tab: "timeline",
                                         })
                                       }
-                                      className="text-left underline-offset-4 hover:underline"
+                                      className="line-clamp-2 text-left underline-offset-4 hover:underline"
                                     >
                                       <LocalizedText text={issue.title} />
                                     </button>
                                   </h2>
-                                  <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground">
-                                    <MapPin className="mt-0.5 size-3 shrink-0" />
-                                    {localityName(issue.localityId)} ·{" "}
-                                    {issue.landmark.replace(
-                                      /^Fictional\s+/i,
-                                      ""
-                                    )}
+                                  <p className="mt-1 text-xs text-muted-foreground">
+                                    {localityName(issue.localityId)}
                                   </p>
                                 </div>
-                                <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                                  <span className="flex items-center gap-1">
-                                    <UsersRound className="size-3" />
-                                    {issue.complaintCount}{" "}
-                                    <LocalizedText text="resident reports" />
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <MessageSquare className="size-3" />
-                                    {issue.callCount}{" "}
-                                    <LocalizedText text="conversations" />
-                                  </span>
-                                </div>
-                                <div className="mt-auto space-y-1.5 rounded-lg bg-muted/40 p-3">
-                                  <p className="text-[10px] font-medium text-muted-foreground">
-                                    <LocalizedText
-                                      text={
-                                        issue.status === "verified"
-                                          ? "Outcome"
-                                          : "What happens next"
-                                      }
-                                    />
-                                  </p>
-                                  <p className="line-clamp-3 text-xs leading-relaxed">
-                                    <LocalizedText
-                                      text={
-                                        issue.nextAction ||
-                                        nextSteps[issue.status]
-                                      }
-                                    />
-                                  </p>
-                                </div>
-                                {issue.person && (
-                                  <p className="text-[11px] text-muted-foreground">
-                                    <LocalizedText text="Following up with" />{" "}
-                                    <span className="font-medium text-foreground">
-                                      {issue.person}
-                                    </span>
-                                  </p>
-                                )}
-                                {issue.promise?.dueAt && (
-                                  <p
-                                    className={cn(
-                                      "flex items-center gap-1.5 text-[10px]",
-                                      issue.promise.status === "overdue"
-                                        ? "text-amber-700 dark:text-amber-400"
-                                        : "text-muted-foreground"
-                                    )}
-                                  >
-                                    <Clock3 className="size-3" />
-                                    <LocalizedText
-                                      text={
-                                        issue.promise.status === "overdue"
-                                          ? "Promise overdue"
-                                          : "Promised by"
-                                      }
-                                    />{" "}
-                                    · {formatDate(issue.promise.dueAt)}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="flex items-center justify-between gap-2 border-t bg-muted/10 px-5 py-3">
                                 <button
                                   onClick={() =>
                                     setSelected({
@@ -491,25 +422,11 @@ export function PublicAgentDashboard() {
                                       tab: "timeline",
                                     })
                                   }
-                                  className="flex items-center gap-1 text-xs font-medium"
+                                  className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                                 >
                                   <LocalizedText text="View case" />
                                   <ArrowRight className="size-3" />
                                 </button>
-                                {issue.audioCount > 0 && (
-                                  <button
-                                    onClick={() =>
-                                      setSelected({
-                                        id: issue.id,
-                                        tab: "conversations",
-                                      })
-                                    }
-                                    className="flex items-center gap-1.5 text-[11px] text-primary"
-                                  >
-                                    <AudioLines className="size-3.5" />
-                                    <LocalizedText text="Listen to follow-ups" />
-                                  </button>
-                                )}
                               </div>
                             </article>
                           ))}
@@ -519,7 +436,7 @@ export function PublicAgentDashboard() {
                         {conversations
                           .slice(currentPage * 8, currentPage * 8 + 8)
                           .map((call) => (
-                            <article key={call.id} className="space-y-3 p-5">
+                            <article key={call.id} className="space-y-2 p-3.5">
                               <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div>
                                   <h2 className="text-sm font-semibold">
@@ -527,7 +444,6 @@ export function PublicAgentDashboard() {
                                       "Conversation participant"}
                                   </h2>
                                   <p className="mt-1 text-[10px] text-muted-foreground">
-                                    {call.person?.role} ·{" "}
                                     {formatDate(call.createdAt)}
                                   </p>
                                 </div>
@@ -540,16 +456,8 @@ export function PublicAgentDashboard() {
                                     : call.status.replaceAll("-", " ")}
                                 </Badge>
                               </div>
-                              <p className="text-xs font-medium">
+                              <p className="line-clamp-2 text-xs font-medium">
                                 <LocalizedText text={call.issueTitle} />
-                              </p>
-                              <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-                                <LocalizedText
-                                  text={
-                                    call.summary ||
-                                    "The conversation summary is being prepared."
-                                  }
-                                />
                               </p>
                               <button
                                 onClick={() =>
@@ -568,8 +476,8 @@ export function PublicAgentDashboard() {
                                 <LocalizedText
                                   text={
                                     call.recordingUrl
-                                      ? "Listen & read the conversation"
-                                      : "Read the conversation"
+                                      ? "Listen"
+                                      : "Read conversation"
                                   }
                                 />
                                 <ArrowRight className="size-3" />
@@ -649,7 +557,7 @@ export function PublicAgentDashboard() {
                       </nav>
                     )}
                   </div>
-                  <aside className="space-y-5 rounded-xl border bg-muted/10 p-5">
+                  <aside className="space-y-3 rounded-xl border bg-muted/10 p-3.5">
                     <div className="flex items-center justify-between">
                       <h2 className="text-sm font-semibold">
                         <LocalizedText text="Latest updates" />
@@ -657,7 +565,7 @@ export function PublicAgentDashboard() {
                       <span className="size-1.5 rounded-full bg-primary" />
                     </div>
                     {updates.length ? (
-                      <ol className="space-y-5">
+                      <ol className="space-y-3">
                         {updates.map((update) => (
                           <li
                             key={update.id}
@@ -675,11 +583,11 @@ export function PublicAgentDashboard() {
                                   tab: "timeline",
                                 })
                               }
-                              className="text-left text-xs leading-relaxed font-medium hover:underline"
+                              className="line-clamp-1 text-left text-xs font-medium hover:underline"
                             >
                               <LocalizedText text={update.title} />
                             </button>
-                            <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
+                            <p className="mt-1 line-clamp-1 text-[11px] text-muted-foreground">
                               <LocalizedText text={update.issueTitle} />
                             </p>
                           </li>
@@ -690,21 +598,6 @@ export function PublicAgentDashboard() {
                         <LocalizedText text="New case updates will appear here. Try all areas to see more." />
                       </p>
                     )}
-                    <div className="space-y-2 border-t pt-4">
-                      <p className="text-[11px] font-medium">
-                        <LocalizedText text="An officer’s update is a step, not the finish." />
-                      </p>
-                      <p className="text-[11px] leading-relaxed text-muted-foreground">
-                        <LocalizedText text="A repair stays open for residents to check. If the problem remains, its history carries forward." />
-                      </p>
-                      <Link
-                        href="/leaderboard"
-                        className="inline-flex items-center gap-1 pt-1 text-[11px] font-medium"
-                      >
-                        <LocalizedText text="See the service record" />
-                        <ArrowRight className="size-3" />
-                      </Link>
-                    </div>
                   </aside>
                 </div>
               </section>
@@ -716,7 +609,7 @@ export function PublicAgentDashboard() {
             Pramanik · <LocalizedText text="Every response stays on record." />
           </p>
           <Link href="/operations" className="hover:underline">
-            <LocalizedText text="Agent workspace" />
+            <LocalizedText text="Accountability office" />
             <span aria-hidden> ↗</span>
           </Link>
         </footer>

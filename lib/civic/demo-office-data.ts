@@ -91,7 +91,7 @@ export const demoOfficeCases: DemoCase[] = [
       },
       {
         key: "road-followup",
-        hoursAgo: 22,
+        hoursAgo: 26,
         summary:
           "The agent recalled the earlier promise. Meera reported the patch repair finished; residents subsequently confirmed a usable surface.",
         progress: "completion_claimed",

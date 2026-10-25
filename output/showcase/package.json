@@ -1,0 +1,37 @@
+{
+  "name": "pramanik-showcase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "remotion render src/index.ts PramanikLandscape ../pramanik-showcase-60s.mp4 --codec=h264 --crf=18 --concurrency=4",
+    "render:reel": "remotion render src/index.ts PramanikReel ../pramanik-reel-60s.mp4 --codec=h264 --crf=18 --concurrency=4",
+    "prepare:motion": "node prepare-motion.mjs",
+    "studio:motion": "remotion studio src/follow-through-index.tsx --port=4393",
+    "render:motion": "remotion render src/follow-through-index.tsx PramanikFollowThrough ../pramanik-follow-through-90s.mp4 --port=4393 --codec=h264 --crf=18 --concurrency=4",
+    "prepare:office": "node prepare-motion.mjs src/office-scenes.json office-v2 ../pramanik-accountability-office-v2.srt",
+    "studio:office": "remotion studio src/accountability-office-index.tsx --port=4397",
+    "render:office": "remotion render src/accountability-office-index.tsx PramanikAccountabilityOffice ../pramanik-accountability-office-v2.mp4 --port=4397 --codec=h264 --crf=18 --concurrency=4",
+    "studio:silent-story": "remotion studio src/silent-story-index.tsx --port=4401",
+    "render:silent-story": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-silent-motion-story.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:v2": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-silent-motion-story-v2.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:v3": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-silent-motion-story-v3.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:v4": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-silent-motion-story-v4.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:final": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-silent-motion-story-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:agents": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-agents-motion-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:lavender": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-lavender-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:concise": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-lavender-concise.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:product": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-product-motion-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:presence": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-agent-presence-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted"
+  },
+  "dependencies": {
+    "@paper-design/shaders-react": "^0.0.82",
+    "@remotion/cli": "^4.0.538",
+    "@remotion/google-fonts": "^4.0.538",
+    "@remotion/transitions": "^4.0.538",
+    "culori": "^4.0.2",
+    "lucide-react": "^1.61.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.538"
+  }
+}

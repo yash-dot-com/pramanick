@@ -1,0 +1,1 @@
+Before the next call, the agent recalls the earlier promise and builds a brief with specific questions.

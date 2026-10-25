@@ -1,24 +1,19 @@
 "use client"
 
 import {
-  LanguageSwitcher,
   LocalizedText,
   useTranslatedText,
 } from "@/components/language-provider"
 
-import Link from "next/link"
-import { ThemeSwitcher } from "@/components/theme-switcher"
 import dynamic from "next/dynamic"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   Building2,
-  LayoutDashboard,
   ListFilter,
   MapPin,
   Mic,
   Plus,
   Search,
-  Trophy,
   Users,
   X,
 } from "lucide-react"
@@ -59,7 +54,13 @@ const VoiceAgentDialog = dynamic(
   { ssr: false }
 )
 
-export function CivicWorkspace() {
+export function CivicWorkspace({
+  showIssues = true,
+  showOffices = true,
+}: {
+  showIssues?: boolean
+  showOffices?: boolean
+}) {
   const searchIssues = useTranslatedText("Search issues")
   const searchOffices = useTranslatedText("Search offices")
   const [data, setData] = useState<CivicSnapshot | null>(null)
@@ -72,8 +73,6 @@ export function CivicWorkspace() {
   const [selectedOfficeId, setSelectedOfficeId] = useState<string | null>(null)
   const [panel, setPanel] = useState<"list" | "detail" | null>("list")
   const [directory, setDirectory] = useState(false)
-  const [showIssues, setShowIssues] = useState(true)
-  const [showOffices, setShowOffices] = useState(true)
   const [reportOpen, setReportOpen] = useState(false)
   const [sidebarWidth, setSidebarWidth] = useState(380)
   const [voiceDraft, setVoiceDraft] = useState<IntakeDraft | null>(null)
@@ -235,15 +234,25 @@ export function CivicWorkspace() {
           ) : (
             <div className="flex h-full flex-col">
               <div className="space-y-3 border-b p-3">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
-                  <Input
-                    className="pl-9"
-                    aria-label="Search issues or offices"
-                    placeholder={directory ? searchOffices : searchIssues}
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                  />
+                <div className="flex items-center gap-2">
+                  <div className="relative min-w-0 flex-1">
+                    <Search className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
+                    <Input
+                      className="pl-9"
+                      aria-label="Search issues or offices"
+                      placeholder={directory ? searchOffices : searchIssues}
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                    />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={closePanel}
+                    aria-label="Close sidebar"
+                  >
+                    <X />
+                  </Button>
                 </div>
                 <Select
                   value={category}
@@ -366,8 +375,10 @@ export function CivicWorkspace() {
       )}
       <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl border">
         <CivicMap
-          issues={showIssues ? issues : []}
-          offices={showOffices ? offices : []}
+          issues={issues}
+          offices={offices}
+          showIssues={showIssues}
+          showOffices={showOffices}
           selectedId={selectedId}
           selectedOfficeId={selectedOfficeId}
           localityId={localityId}
@@ -386,8 +397,6 @@ export function CivicWorkspace() {
             >
               <ListFilter />
             </Button>
-            <ThemeSwitcher />
-            <LanguageSwitcher />
             <Select value={localityId} onValueChange={localityChanged}>
               <SelectTrigger className="w-40" aria-label="Select locality">
                 <MapPin className="size-4" />
@@ -407,31 +416,11 @@ export function CivicWorkspace() {
             <Button
               variant="outline"
               size="icon"
-              nativeButton={false}
-              render={<Link href="/dashboard" />}
-              aria-label="Public agent dashboard"
-              title="Public agent dashboard"
-            >
-              <LayoutDashboard />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
               onClick={() => setVoiceOpen(true)}
               aria-label="Report an issue by voice"
               title="Report by voice"
             >
               <Mic />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              nativeButton={false}
-              render={<Link href="/leaderboard" />}
-              aria-label="Responsibility leaderboard"
-              title="Responsibility leaderboard"
-            >
-              <Trophy />
             </Button>
             <Button
               size="icon"
@@ -445,24 +434,6 @@ export function CivicWorkspace() {
               title="Report an issue"
             >
               <Plus />
-            </Button>
-          </div>
-          <div className="pointer-events-auto flex items-center gap-1 rounded-xl border bg-background p-1.5 shadow-sm">
-            <Button
-              size="sm"
-              variant={showIssues ? "secondary" : "ghost"}
-              aria-pressed={showIssues}
-              onClick={() => setShowIssues(!showIssues)}
-            >
-              <LocalizedText text="Issues" />
-            </Button>
-            <Button
-              size="sm"
-              variant={showOffices ? "secondary" : "ghost"}
-              aria-pressed={showOffices}
-              onClick={() => setShowOffices(!showOffices)}
-            >
-              <LocalizedText text="Offices" />
             </Button>
           </div>
         </div>

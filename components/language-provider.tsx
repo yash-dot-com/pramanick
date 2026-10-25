@@ -9,6 +9,13 @@ import {
   type ReactNode,
 } from "react"
 import { localeNames, messages, type Locale } from "@/lib/i18n/messages"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 const Context = createContext<{
   locale: Locale
   setLocale: (value: Locale) => void
@@ -153,18 +160,27 @@ export function LanguageSwitcher() {
   const { locale, setLocale, error } = useLanguage()
   return (
     <div className="flex items-center gap-2">
-      <select
-        aria-label="Language / भाषा"
+      <Select
         value={locale}
-        onChange={(event) => setLocale(event.target.value as Locale)}
-        className="h-8 rounded-lg border bg-background px-2 text-xs text-foreground"
+        onValueChange={(value) => {
+          if (value) setLocale(value as Locale)
+        }}
       >
-        {Object.entries(localeNames).map(([value, label]) => (
-          <option key={value} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger
+          aria-label="Language / भाषा"
+          size="sm"
+          className="w-full min-w-28 text-xs"
+        >
+          <SelectValue>{localeNames[locale]}</SelectValue>
+        </SelectTrigger>
+        <SelectContent align="start" alignItemWithTrigger={false}>
+          {Object.entries(localeNames).map(([value, label]) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {error && (
         <span
           role="status"

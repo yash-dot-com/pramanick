@@ -48,8 +48,8 @@ export function DockedPanel({
       style={{ width: `min(${width}px, calc(100vw - 24px))` }}
       aria-label={title}
     >
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-muted/20 px-3">
-        {onBack && (
+      {onBack && (
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-muted/20 px-3">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -58,19 +58,19 @@ export function DockedPanel({
           >
             <ArrowLeft />
           </Button>
-        )}
-        <h2 className="flex-1 text-sm font-medium">
-          <LocalizedText text={title} />
-        </h2>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={onClose}
-          aria-label="Close sidebar"
-        >
-          <X />
-        </Button>
-      </header>
+          <h2 className="flex-1 text-sm font-medium">
+            <LocalizedText text={title} />
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onClose}
+            aria-label="Close sidebar"
+          >
+            <X />
+          </Button>
+        </header>
+      )}
       <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
       <div
         role="separator"

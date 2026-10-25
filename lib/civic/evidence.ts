@@ -9,6 +9,7 @@ import { enqueueJob } from "@/lib/voice/queue"
 import { demoContact } from "@/lib/voice/contact"
 import { CivicError, store } from "./repository"
 import { publicText } from "./dossier"
+import { DEMO_MODE } from "@/lib/demo-mode"
 
 const assessmentSchema = z.object({
   finding: z.enum(["appears_fixed", "problem_visible", "inconclusive"]),
@@ -19,16 +20,22 @@ const assessmentSchema = z.object({
 const imagePattern = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/
 
 export function queueEvidenceAssessment(id: string) {
-  const item = store()
-    .db.select()
-    .from(s.evidence)
-    .where(eq(s.evidence.id, id))
-    .get()
+  const { db } = store()
+  const item = db.select().from(s.evidence).where(eq(s.evidence.id, id)).get()
   if (!item || item.phase !== "verification" || item.assessment) return
+  // Assessment never dials this contact or attributes a repair to it. The
+  // existing job FK can use a directory record without inventing a person.
+  const contact = DEMO_MODE
+    ? demoContact(false)
+    : db
+        .select()
+        .from(s.contacts)
+        .where(and(eq(s.contacts.isDemo, false), isNull(s.contacts.revokedAt)))
+        .get()
+  if (!contact) return
   return enqueueJob({
     issueId: item.issueId,
-    // The existing job schema requires a contact; this technical job never dials it.
-    contactId: demoContact(false).id,
+    contactId: contact.id,
     kind: "assess_evidence",
     dedupeKey: `assess:${item.id}`,
   })
