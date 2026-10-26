@@ -21,7 +21,8 @@
     "render:silent-story:lavender": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-lavender-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
     "render:silent-story:concise": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-lavender-concise.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
     "render:silent-story:product": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-product-motion-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
-    "render:silent-story:presence": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-agent-presence-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted"
+    "render:silent-story:presence": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-agent-presence-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted",
+    "render:silent-story:community": "remotion render src/silent-story-index.tsx PramanikSilentStory ../pramanik-community-office-final.mp4 --port=4401 --codec=h264 --crf=18 --concurrency=4 --muted"
   },
   "dependencies": {
     "@paper-design/shaders-react": "^0.0.82",

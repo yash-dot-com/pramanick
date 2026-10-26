@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "office-demo-water",
+      "title": "Water leaking beside the metro footpath",
+      "localityId": "pcmc",
+      "status": "following_up",
+      "complaintCount": 2
+    },
+    {
+      "id": "office-demo-pothole",
+      "title": "School gate potholes repaired and checked",
+      "localityId": "kothrud",
+      "status": "verified",
+      "complaintCount": 3
+    },
+    {
+      "id": "office-demo-light",
+      "title": "Streetlights restored? Residents are checking",
+      "localityId": "ramwadi",
+      "status": "awaiting_verification",
+      "complaintCount": 2
+    }
+  ]
+}

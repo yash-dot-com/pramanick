@@ -1,8 +1,9 @@
 import React, {type CSSProperties} from "react"
-import {Img, Easing, interpolate, staticFile, useCurrentFrame} from "remotion"
-import {Camera, MapPin, Brain, Check, X, FileText, Phone, Play, ChevronRight, CheckCircle2, ClipboardCheck} from "lucide-react"
+import {Easing, interpolate, useCurrentFrame} from "remotion"
+import {Camera, MapPin, Brain, Check, X, FileText, Phone, Play, ChevronRight, CheckCircle2, ClipboardCheck, Users, Droplets, Lightbulb, Route} from "lucide-react"
 import theme from "./project-motion-theme.json"
 import caseRecord from "./public-case-motion.json"
+import communityCases from "./community-office-cases.json"
 
 // Presentation-only versions of the project's Card, Button and StatusBadge
 // surfaces. Tokens are extracted from app/globals.css; status greens match
@@ -41,8 +42,8 @@ export function VerificationGraphic({fontFamily}: {fontFamily:string}) {
   const x=interpolate(f,times,[1120,155,155,243,243,684,684,1180],{...clamp,easing:Easing.inOut(Easing.cubic)})
   const y=interpolate(f,times,[660,443,443,581,581,560,560,650],{...clamp,easing:Easing.inOut(Easing.quad)})
   return <div style={{position:"absolute",inset:0,fontFamily,color:theme.ink,opacity:appeared,transform:`translateY(${12*(1-appeared)}px)`}}>
-    <div style={{...surface,position:"absolute",left:92,top:235,width:510,height:380}}>
-      <div style={{position:"absolute",left:26,top:23,fontSize:27,fontWeight:500}}>Check the repair</div>
+    <div style={{...surface,position:"absolute",left:92,top:235,width:510,height:382.5}}>
+      <div style={{position:"absolute",left:26,top:23,fontSize:27,fontWeight:500}}>Residents check the repair</div>
       <div style={{position:"absolute",left:26,top:72,fontSize:21}}>School gate potholes</div>
       <div style={{position:"absolute",left:26,top:108,fontSize:16,color:theme.muted,display:"flex",gap:6,alignItems:"center"}}><MapPin size={17}/>Kothrud</div>
       <div style={{position:"absolute",left:26,top:151,fontSize:18,color:theme.muted}}>What do you see at the location?</div>
@@ -53,7 +54,7 @@ export function VerificationGraphic({fontFamily}: {fontFamily:string}) {
       <div style={{position:"absolute",left:26,top:263,width:458,height:43,border:`1px solid ${theme.border}`,borderRadius:13,background:"#fff",display:"flex",alignItems:"center",gap:10,padding:"0 13px",boxSizing:"border-box",fontSize:17}}><Camera size={20} color={theme.primary}/>school-gate-check.jpg<CheckCircle2 size={18} color="#098363" style={{marginLeft:"auto"}}/></div>
       <div style={{position:"absolute",left:26,top:325,width:250,height:42,borderRadius:30,border:`1px solid ${saved?theme.border:"#0862e880"}`,background:saved?"#edf6f1":primary,boxShadow:saved?theme["button-secondary-shadow"]:theme["button-primary-shadow"],display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontSize:18,fontWeight:500,color:saved?"#087b5b":"#fff",transform:`scale(${press(f,130)})`}}>{saved&&<Check size={18}/>} {saved?"Observation saved":"Save observation"}</div>
     </div>
-    <div style={{...surface,position:"absolute",left:628,top:235,width:560,height:380,opacity:progress(f,38)}}>
+    <div style={{...surface,position:"absolute",left:628,top:235,width:510,height:382.5,opacity:progress(f,38)}}>
       <div style={{position:"absolute",left:26,top:23,fontSize:27,fontWeight:500}}>Evidence + review</div>
       {[
         {icon:Camera,title:"Resident photo",detail:"Attached to the case",at:135},
@@ -75,17 +76,37 @@ export function VerificationGraphic({fontFamily}: {fontFamily:string}) {
 }
 
 export function DashboardGraphic({fontFamily}: {fontFamily:string}) {
-  const f=useCurrentFrame(), show=progress(f,32), zoom=interpolate(f,[32,190],[1,1.025],clamp)
+  const f=useCurrentFrame(), show=progress(f,28), selected=f>=136
+  const reportCount=communityCases.issues.reduce((total,item)=>total+item.complaintCount,0)
+  const labels={following_up:"Agent following up",verified:"Repair verified",awaiting_verification:"Residents checking"}
   return <div style={{position:"absolute",inset:0,fontFamily,color:theme.ink}}>
-    <div style={{...surface,position:"absolute",left:64,top:224,width:1152,height:418,borderRadius:28,overflow:"hidden",background:"#fcfcfd",opacity:show,transform:`translateY(${15*(1-show)}px) scale(${zoom})`,transformOrigin:"center center",boxShadow:"0 5px 14px #25213b17"}}>
-      <div style={{height:47,borderBottom:`1px solid ${theme.border}`,background:"#fff",display:"flex",alignItems:"center",padding:"0 21px",gap:14,fontSize:17}}><span style={{fontWeight:600}}>Pramanik</span><span style={{color:theme.muted}}>Public dashboard</span><div style={{marginLeft:"auto",borderRadius:24,background:primary,color:"white",fontSize:13,padding:"6px 15px",boxShadow:theme["button-primary-shadow"]}}>Dashboard</div></div>
-      <div style={{position:"relative",height:371,overflow:"hidden"}}>
-        <Img src={staticFile("shots/dashboard-current.png")} style={{position:"absolute",width:1152,height:648,left:0,top:-225}}/>
-        <Img src={staticFile("shots/dashboard-verified.png")} style={{position:"absolute",width:1152,height:648,left:0,top:-225,opacity:progress(f,86,16)}}/>
+    <div style={{...surface,position:"absolute",left:320,top:205,width:640,height:480,borderRadius:26,overflow:"hidden",background:"#fcfcfd",opacity:show,transform:`translateY(${15*(1-show)}px)`,boxShadow:"0 5px 14px #25213b17"}}>
+      <div style={{height:58,borderBottom:`1px solid ${theme.border}`,background:"#fff",display:"flex",alignItems:"center",padding:"0 21px",gap:12,fontSize:17}}>
+        <span style={{fontWeight:600}}>Pramanik</span><span style={{color:theme.muted}}>Community office</span>
+        <div style={{marginLeft:"auto",borderRadius:24,background:primary,color:"white",fontSize:12,padding:"6px 12px",boxShadow:theme["button-primary-shadow"]}}>Public dashboard</div>
       </div>
-      <div style={{position:"absolute",left:28,top:306,width:398,height:113,border:`1.5px solid ${theme.primary}`,borderRadius:18,opacity:progress(f,132),pointerEvents:"none"}}/>
+      <div style={{position:"absolute",left:21,right:21,top:76,display:"flex",gap:30}}>
+        <div><div style={{fontSize:26,fontWeight:500}}>{communityCases.issues.length}</div><div style={{fontSize:13,color:theme.muted,marginTop:4}}>Shared cases</div></div>
+        <div><div style={{fontSize:26,fontWeight:500}}>{reportCount}</div><div style={{fontSize:13,color:theme.muted,marginTop:4}}>Resident reports</div></div>
+        <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,fontSize:14,color:theme.muted}}><Users size={19}/>Open to everyone</div>
+      </div>
+      <div style={{position:"absolute",left:21,top:139,display:"flex",gap:14,fontSize:13}}><span style={{color:theme.primary,fontWeight:500}}>All community issues</span><span style={{color:theme.muted}}>Call records</span><span style={{color:theme.muted}}>Evidence</span></div>
+      {communityCases.issues.map((item,i)=>{
+        const Icon=i===0?Droplets:i===1?Route:Lightbulb
+        const verified=item.status==="verified", highlight=i===1&&selected
+        const status=labels[item.status as keyof typeof labels]
+        const area={pcmc:"PCMC",kothrud:"Kothrud",ramwadi:"Ramwadi"}[item.localityId as "pcmc"|"kothrud"|"ramwadi"]
+        return <div key={item.id} style={{position:"absolute",left:17,right:17,top:174+i*91,height:83,border:`1px solid ${highlight?theme.primary:theme.border}`,borderRadius:16,background:highlight?"#eef4ff":"#f8f8fa",opacity:progress(f,39+i*5),boxSizing:"border-box"}}>
+          <div style={{position:"absolute",left:13,top:15,width:30,height:30,borderRadius:9,background:"#eaf0fc",color:theme.primary,display:"grid",placeItems:"center"}}><Icon size={18}/></div>
+          <div style={{position:"absolute",left:54,right:154,top:11,fontSize:16,fontWeight:500,lineHeight:1.25}}>{item.title}</div>
+          <div style={{position:"absolute",left:54,bottom:10,display:"flex",alignItems:"center",gap:7,fontSize:12,color:theme.muted}}><MapPin size={13}/>{area}<Users size={14} style={{marginLeft:9}}/>{item.complaintCount} resident reports</div>
+          <div style={{position:"absolute",right:12,top:16,maxWidth:128,textAlign:"right",fontSize:11,color:verified?"#087b5b":theme.primary,border:`1px solid ${verified?"#b7dfd0":"#d5e1fa"}`,background:verified?"#eaf6f0":"#edf3ff",borderRadius:20,padding:"6px 8px"}}>{status}</div>
+          <div style={{position:"absolute",right:13,bottom:11,display:"flex",alignItems:"center",gap:3,fontSize:12,color:theme.primary}}>Open shared case<ChevronRight size={13}/></div>
+        </div>
+      })}
+      <div style={{position:"absolute",left:21,right:21,bottom:13,fontSize:12,color:theme.muted,display:"flex",alignItems:"center",gap:7}}><CheckCircle2 size={15}/>Agents follow up. Residents verify. Everyone can inspect.</div>
     </div>
-    <Cursor x={interpolate(f,[40,75,92,126,145,188],[1175,529,529,130,130,240],{...clamp,easing:Easing.inOut(Easing.cubic)})} y={interpolate(f,[40,75,92,126,145,188],[680,468,468,623,623,670],{...clamp,easing:Easing.inOut(Easing.quad)})} scale={Math.min(press(f,81),press(f,132))} opacity={progress(f,52)*(1-progress(f,172,16))}/>
+    <Cursor x={interpolate(f,[46,85,118,136,160,188],[1040,893,893,870,870,1040],{...clamp,easing:Easing.inOut(Easing.cubic)})} y={interpolate(f,[46,85,118,136,160,188],[690,443,443,540,540,690],{...clamp,easing:Easing.inOut(Easing.quad)})} scale={press(f,136)} opacity={progress(f,48)*(1-progress(f,178,16))}/>
   </div>
 }
 
@@ -93,9 +114,9 @@ export function PublicTimelineGraphic({fontFamily}: {fontFamily:string}) {
   const f=useCurrentFrame(), show=progress(f,28), scroll=interpolate(f,[154,266],[0,238],{...clamp,easing:Easing.inOut(Easing.cubic)})
   const starts=[40,76,125,178,228], tops=[0,86,240,352,468], heights=[70,138,96,100,94]
   const date=(value:string)=>new Intl.DateTimeFormat("en-IN",{day:"numeric",month:"short",timeZone:"Asia/Kolkata"}).format(new Date(value))
-  return <div style={{...surface,position:"absolute",left:204,top:220,width:872,height:452,borderRadius:25,overflow:"hidden",fontFamily,color:theme.ink,opacity:show,transform:`translateY(${12*(1-show)}px)`,background:"#fcfcfd"}}>
+  return <div style={{...surface,position:"absolute",left:320,top:205,width:640,height:480,borderRadius:25,overflow:"hidden",fontFamily,color:theme.ink,opacity:show,transform:`translateY(${12*(1-show)}px)`,background:"#fcfcfd"}}>
     <div style={{height:68,borderBottom:`1px solid ${theme.border}`,padding:"0 23px",display:"flex",alignItems:"center",gap:12}}>
-      <FileText size={24} color={theme.primary}/><div><div style={{fontSize:23,fontWeight:500}}>{caseRecord.title}</div><div style={{fontSize:14,color:theme.muted,marginTop:4}}>Kothrud · Public case record</div></div>
+      <FileText size={24} color={theme.primary}/><div><div style={{fontSize:20,fontWeight:500}}>{caseRecord.title}</div><div style={{fontSize:14,color:theme.muted,marginTop:4}}>Kothrud · Shared community case</div></div>
       <div style={{marginLeft:"auto",opacity:progress(f,246)}}><Badge success>Repair verified</Badge></div>
     </div>
     <div style={{position:"absolute",top:69,left:0,right:0,bottom:0,overflow:"hidden"}}>
@@ -108,8 +129,8 @@ export function PublicTimelineGraphic({fontFamily}: {fontFamily:string}) {
           return <div key={event.title} style={{position:"absolute",left:0,right:0,top:tops[i],height:heights[i],opacity:p,transform:`translateY(${10*(1-p)}px)`}}>
             <div style={{position:"absolute",left:0,top:3,width:36,height:36,borderRadius:"50%",background:success?green:"#edf3ff",border:`1px solid ${success?"#098363":"#cfddf8"}`,color:success?"white":theme.primary,display:"grid",placeItems:"center"}}><Icon size={18}/></div>
             <div style={{position:"absolute",left:53,right:0,top:0,padding:"9px 13px",boxSizing:"border-box",border:`1px solid ${success?"#b7dfd0":theme.border}`,borderRadius:16,background:success?"#f0f8f3":"#f8f8fa"}}>
-              <div style={{display:"flex",gap:10,alignItems:"center",fontSize:20,fontWeight:500}}>{event.title}<span style={{marginLeft:"auto",fontSize:13,color:theme.muted,fontWeight:400}}>{date(event.date)}</span></div>
-              <div style={{fontSize:16,color:theme.muted,lineHeight:1.45,whiteSpace:"pre-line",marginTop:7}}>{event.kind==="call"&&<span style={{fontWeight:500,color:theme.ink}}>Summary: </span>}{event.summary}</div>
+              <div style={{display:"flex",gap:10,alignItems:"center",fontSize:18,fontWeight:500}}>{event.title}<span style={{marginLeft:"auto",fontSize:13,color:theme.muted,fontWeight:400}}>{date(event.date)}</span></div>
+              <div style={{fontSize:14,color:theme.muted,lineHeight:1.45,whiteSpace:"pre-line",marginTop:7}}>{event.kind==="call"&&<span style={{fontWeight:500,color:theme.ink}}>Summary: </span>}{event.summary}</div>
               {event.kind==="call"&&<div style={{display:"flex",gap:9,alignItems:"center",marginTop:10,fontSize:13}}>
                 <span style={{display:"inline-flex",gap:7,alignItems:"center",border:`1px solid ${theme.border}`,borderRadius:20,padding:"5px 10px",background:"white"}}><Play size={13} fill={theme.primary} color={theme.primary}/>Call recording · 0:21</span>
                 <span style={{color:theme.primary}}>Promise due {date(event.deadline!)}</span>

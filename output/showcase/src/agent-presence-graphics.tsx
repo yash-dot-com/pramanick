@@ -1,6 +1,6 @@
 import React from "react"
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion"
-import {Building2, Phone, MicOff, Grid3X3, Volume2, MousePointer2, ArrowUpRight, Search} from "lucide-react"
+import {Building2, Phone, MicOff, Grid3X3, Volume2, MousePointer2, ArrowUpRight, Search, UserRound} from "lucide-react"
 import contact from "./phone-office-contact.json"
 import directory from "./ward-directory-motion.json"
 
@@ -8,7 +8,7 @@ const clamp = {extrapolateLeft: "clamp", extrapolateRight: "clamp"} as const
 
 // Each avatar has a fixed home; a small local orbit keeps the group alive
 // without moving the viewer's attention away from the sentence.
-export function AgentOrbs() {
+export function AgentOrbs({homeY = 518, roles = false}: {homeY?: number; roles?: boolean}) {
   const frame = useCurrentFrame()
   const {fps} = useVideoConfig()
   return <>{[84, 104, 126, 104, 84].map((size, i) => {
@@ -16,7 +16,7 @@ export function AgentOrbs() {
       config: {mass: 0.8, stiffness: 125, damping: 12}})
     const phase = frame * 0.035 + i * 1.35
     const x = 640 + (i - 2) * 148 + Math.sin(phase) * 8
-    const y = 518 + Math.abs(i - 2) * 13 + Math.cos(phase) * 7
+    const y = homeY + Math.abs(i - 2) * 13 + Math.cos(phase) * 7
     const id = `agent-metal-${i}`
     const blinkAt = 77 + i * 5
     const blink = interpolate(frame, [blinkAt, blinkAt + 3, blinkAt + 5, blinkAt + 8], [1, .12, .12, 1], clamp)
@@ -48,8 +48,26 @@ export function AgentOrbs() {
             width={11} height={28 * blink} rx={5.5} fill="#ffffff"/>) }
         </g>
       </svg>
+      {roles && <div style={{position: "absolute", top: size + 20, left: -32, right: -32, textAlign: "center", fontSize: 17, fontWeight: 500, color: "#27272a"}}>{["Reports", "Evidence", "Coordinator", "Calls", "Follow-ups"][i]}</div>}
     </div>
   })}</>
+}
+
+export function CommunityOfficeGraphic({fontFamily}: {fontFamily: string}) {
+  const frame = useCurrentFrame()
+  const shades = ["#e4ecff", "#f2e6ed", "#e4eee9", "#ece6fa", "#e4ecff", "#e4eee9", "#f2e6ed"]
+  return <div style={{position: "absolute", inset: 0, fontFamily}}>
+    <div style={{position: "absolute", top: 220, left: 0, right: 0, textAlign: "center", fontSize: 19, color: "#555664", opacity: interpolate(frame, [13, 28], [0, 1], clamp)}}>Residents across the neighbourhood</div>
+    {shades.map((shade, i) => {
+      const enter = spring({frame: frame - 16 - i * 3, fps: 30, config: {damping: 20, stiffness: 130}})
+      return <div key={i} style={{position: "absolute", left: 351 + i * 84, top: 262, width: 58, height: 58,
+        borderRadius: "50%", background: shade, color: "#474954", border: "2px solid #ffffff", display: "grid", placeItems: "center",
+        opacity: Math.min(1, enter * 2), transform: `translateY(${(1-enter)*20}px) scale(${enter})`}}><UserRound size={29} strokeWidth={1.5}/></div>
+    })}
+    <div style={{position: "absolute", top: 352, left: 402, width: 476, height: 1, background: "#7c72a54d", opacity: interpolate(frame, [36, 52], [0, 1], clamp)}}/>
+    <div style={{position: "absolute", top: 375, left: 0, right: 0, textAlign: "center", fontSize: 19, color: "#555664", opacity: interpolate(frame, [42, 58], [0, 1], clamp)}}>One autonomous team works on their behalf</div>
+    <AgentOrbs homeY={491} roles/>
+  </div>
 }
 
 export function OfficeCallPhone({fontFamily}: {fontFamily: string}) {
@@ -88,30 +106,29 @@ export function OfficeCallPhone({fontFamily}: {fontFamily: string}) {
 export function WardDirectoryGraphic({fontFamily}: {fontFamily: string}) {
   const frame = useCurrentFrame()
   const reveal = interpolate(frame, [24, 42], [0, 1], clamp)
-  const scroll = interpolate(frame, [48, 77], [0, 176], {...clamp, easing: t => t * t * (3 - 2 * t)})
+  const scroll = interpolate(frame, [48, 77], [0, 110], {...clamp, easing: t => t * t * (3 - 2 * t)})
   const click = frame >= 97
   const rows = [...directory.filter(row => row.contact_id !== contact.contact_id), contact]
-  const cursorX = interpolate(frame, [35, 55, 78, 92], [970, 1037, 1037, 965], clamp)
-  const cursorY = interpolate(frame, [35, 55, 78, 92], [287, 407, 490, 538], clamp)
+  const cursorX = interpolate(frame, [35, 55, 78, 92], [894, 930, 930, 855], clamp)
+  const cursorY = interpolate(frame, [35, 55, 78, 92], [287, 407, 530, 627], clamp)
   return <div style={{fontFamily, opacity: reveal}}>
-    <div style={{position: "absolute", left: 195, top: 230, width: 890, height: 347, borderRadius: 25,
+    <div style={{position: "absolute", left: 320, top: 205, width: 640, height: 480, borderRadius: 25,
       border: "1px solid #d9dce5", background: "#fbfbfdf5", boxShadow: "0 4px 8px #18182d12", overflow: "hidden",
       transform: `translateY(${(1 - reveal) * 20}px)`}}>
       <div style={{position: "absolute", left: 0, right: 0, top: 0, zIndex: 3, height: 65, display: "flex", alignItems: "center", gap: 12, padding: "0 24px",
-        background: "rgba(251,251,253,.86)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", borderBottom: "1px solid #e1e3e970"}}>
-        <span style={{fontSize: 21, fontWeight: 500}}>Public ward directory</span>
-        <div style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: 9, fontSize: 15, color: "#767985"}}><Search size={17}/> Pune Municipal Corporation</div>
+        background: "#fbfbfd", borderBottom: "1px solid #e1e3e9"}}>
+        <span style={{fontSize: 20, fontWeight: 500}}>Public ward directory</span>
+        <div style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#767985"}}><Search size={15}/> Pune Municipal Corporation</div>
       </div>
       <div style={{position: "absolute", inset: 0, overflow: "hidden", margin: "0 14px"}}>
         <div style={{transform: `translateY(${65 - scroll}px)`}}>
-          {rows.map((row, index) => {
+          {rows.map(row => {
             const selected = row.contact_id === contact.contact_id && click
-            const blur = interpolate(65 + index * 76 - scroll, [0, 45, 84], [4, 2, 0], clamp)
-            return <div key={row.contact_id} style={{height: 76, display: "flex", alignItems: "center", gap: 14, padding: "0 16px",
-              filter: `blur(${blur}px)`, background: selected ? "#eaf1ff" : "transparent", borderBottom: "1px solid #e8e9ee", borderRadius: selected ? 12 : 0}}>
+            return <div key={row.contact_id} style={{height: 85, boxSizing: "border-box", display: "flex", alignItems: "center", gap: 11, padding: "0 10px",
+              background: selected ? "#eaf1ff" : "transparent", borderBottom: "1px solid #e8e9ee", borderRadius: selected ? 12 : 0}}>
               <div style={{width: 39, height: 39, borderRadius: 11, display: "grid", placeItems: "center", background: selected ? "#075ef2" : "#eceef3", color: selected ? "white" : "#5a606d"}}><Building2 size={19}/></div>
-              <div><div style={{fontSize: 20, fontWeight: 500}}>{row.office_name}</div><div style={{fontSize: 13, color: "#757985", marginTop: 5}}>{row.position}</div></div>
-              <div style={{marginLeft: "auto", color: selected ? "white" : "#313744", background: selected ? "#075ef2" : "#f0f1f5", border: "1px solid #dee1e8", borderRadius: 18, padding: "8px 13px", display: "flex", alignItems: "center", gap: 7, fontSize: 14}}>
+              <div style={{flex: 1, minWidth: 0}}><div style={{fontSize: 16, fontWeight: 500, lineHeight: 1.3}}>{row.office_name}</div><div style={{fontSize: 12, color: "#757985", marginTop: 5}}>{row.position}</div></div>
+              <div style={{marginLeft: "auto", flexShrink: 0, color: selected ? "white" : "#313744", background: selected ? "#075ef2" : "#f0f1f5", border: "1px solid #dee1e8", borderRadius: 18, padding: "8px 10px", display: "flex", alignItems: "center", gap: 5, fontSize: 12}}>
                 {selected ? "Contact selected" : "View contact"}<ArrowUpRight size={15}/>
               </div>
             </div>

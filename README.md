@@ -46,4 +46,4 @@ Run the follow-up worker in a separate terminal:
 npm run worker
 ```
 
-See the [backend setup](docs/CORE-BACKEND.md), [environment and call configuration](docs/DEMO.md), and [video source](output/showcase/PROJECT-MOTION-VIDEO.md) for details.
+See the [backend setup](docs/CORE-BACKEND.md), [environment and call configuration](docs/DEMO.md), and [community-office video source](output/showcase/COMMUNITY-OFFICE-VIDEO.md) for details.

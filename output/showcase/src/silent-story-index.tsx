@@ -35,7 +35,7 @@ import { SoftBlurIn } from "./components/remocn/soft-blur-in"
 import { FogRise } from "./components/remocn/fog-rise"
 import { ShaderMeshGradientLavender } from "./components/remocn/shader-mesh-gradient-lavender"
 import {VerificationGraphic, DashboardGraphic, PublicTimelineGraphic} from "./project-motion-graphics"
-import {AgentOrbs, OfficeCallPhone, WardDirectoryGraphic} from "./agent-presence-graphics"
+import {CommunityOfficeGraphic, OfficeCallPhone, WardDirectoryGraphic} from "./agent-presence-graphics"
 import sceneData from "./silent-story-scenes.json"
 
 const serif = loadSerif("normal", {
@@ -779,7 +779,7 @@ function VoiceFrame({text}: {text: string}) {
 
 function Editorial({ scene }: { scene: SceneSpec }) {
   const f = useCurrentFrame()
-  if (scene.id === "pramanik") return <><div style={{transform: "translateY(-70px)"}}><Sentence text={scene.text}/></div><AgentOrbs/></>
+  if (scene.id === "pramanik") return <><Sentence text={scene.text} diagram/><CommunityOfficeGraphic fontFamily={sans}/></>
   if (scene.id === "ward") return <><Sentence text={scene.text} diagram/><WardDirectoryGraphic fontFamily={sans}/></>
   if (scene.id === "residents") return <><Sentence text={scene.text} diagram/><VerificationGraphic fontFamily={sans}/></>
   if (scene.id === "public") return <><Sentence text={scene.text} diagram/><DashboardGraphic fontFamily={sans}/></>
@@ -787,10 +787,10 @@ function Editorial({ scene }: { scene: SceneSpec }) {
   if (scene.id === "call") return <VoiceFrame text={scene.text} />
   if (scene.id === "logged") return <LoggedComplaints text={scene.text} />
   if (scene.id === "promises") return <FollowUpCycle text={scene.text} />
-  if (scene.id === "end-card") return <div style={{position: "absolute", left: 60, right: 60, top: 210, height: 300}}>
+  if (scene.id === "end-card") return <><div style={{position: "absolute", left: 60, right: 60, top: 160, height: 300}}>
     <FogRise text="Pramanik." fontSize={190} fontFamily={serif} color={C.ink}
       stagger={4} tracking={-0.025} drift={0.0005} exitAt={0} damping={20} />
-  </div>
+  </div><div style={{position: "absolute", top: 490, left: 60, right: 60, textAlign: "center"}}><SupportingSentence text="Your community’s accountability office." size={27} at={30}/></div></>
   if (scene.id === "introducing") return <>
     <div style={{position: "absolute", left: 60, right: 60, top: 170, textAlign: "center"}}>
       <Label text="Introducing" size={29} at={4} />
@@ -800,10 +800,10 @@ function Editorial({ scene }: { scene: SceneSpec }) {
         stagger={4} tracking={-0.025} drift={0.001} exitAt={0} damping={20} />
     </div>
     <div style={{position: "absolute", left: 60, right: 60, top: 475, textAlign: "center"}}>
-      <SupportingSentence text="An accountability office" size={27} at={44} />
+      <SupportingSentence text="Your community’s accountability office," size={27} at={44} />
     </div>
     <div style={{position: "absolute", left: 60, right: 60, top: 518, textAlign: "center"}}>
-      <SupportingSentence text="run by autonomous voice agents." size={27} at={48} />
+      <SupportingSentence text="staffed by autonomous voice agents." size={27} at={48} />
     </div>
   </>
   const hasCredit = scene.id === "memory"
