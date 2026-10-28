@@ -6,6 +6,7 @@ import { resolve } from "node:path"
 // Production must stay clean even with an accidentally enabled demo setting.
 Object.assign(process.env, {
   NODE_ENV: "production",
+  PRAMANIK_SHOWCASE_DATA: "false",
   NEXT_PUBLIC_DEMO_MODE: "true",
 })
 process.env.DATABASE_PATH = resolve(
@@ -25,7 +26,9 @@ assert.equal(phoneConfigured(), false)
 const dashboard = publicAgentDashboard()
 const profiles = responsibilityProfiles()
 assert.ok(profiles.profiles.length > 0)
-assert.ok(profiles.profiles.every((profile) => profile.dataMode === "provider_records"))
+assert.ok(
+  profiles.profiles.every((profile) => profile.dataMode === "provider_records")
+)
 assert.equal(dashboard.calls.length, 0)
 assert.equal(dashboard.demoOffice.officers.length, 0)
 assert.ok(responsibilityProfiles().profiles.length > 0)

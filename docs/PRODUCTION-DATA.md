@@ -1,9 +1,13 @@
-# Production data defaults
+# Production data modes
 
-Production always disables fictional fixtures, even if `NEXT_PUBLIC_DEMO_MODE=true` is accidentally configured. Outside production, that flag explicitly opts into demonstration data. Startup imports the published office directory and geographic anchors, but does not create fictional issues, officers, conversations, promises, surveys, or activity. Deployment no longer builds or copies the demo fixture database. Demo-only controls and the workspace badge are hidden.
+Normal production disables interactive demo mode, even when `NEXT_PUBLIC_DEMO_MODE=true`. Without `PRAMANIK_SHOWCASE_DATA=true`, startup imports only the published office directory and geographic anchors; it does not create sample issues or conversations.
 
-To remove existing fixture records, run `node --import tsx scripts/remove-demo-data.ts`. It backs up the database under ignored `data/private/backups/`, deletes marked demo records and their dependent history, preserves real cases, clears their fictional office assignments, and checks referential integrity before committing. An optional database path may be passed as the first argument.
+The public hackathon deployment explicitly sets `PRAMANIK_SHOWCASE_DATA=true` in `vercel.json`. The build creates `data/demo.sqlite`, includes it with migrations, directory data and existing audio assets, and restores that clean fixture into each Vercel instance. This populates maps, dashboards, case histories and responsibility profiles. Private local databases are never uploaded.
 
-Phone outreach is shown as unavailable unless an explicitly opted-in demonstration is configured. This change does not enable unrestricted calling of published directory numbers. The existing single-user identity and SQLite/Vercel storage architecture are unchanged; production authentication and durable hosted storage still require separate work.
+Showcase data does not enable interactive demo mode, phone authorization, or calls to directory contacts. Sample contacts retain blank, unauthorized phone numbers. Existing fixture provenance and publication markers remain intact.
 
-Fixture regression tests can opt in with `NEXT_PUBLIC_DEMO_MODE=true`. The video retains labels on its illustrative cases and scripted officer conversations.
+To remove fixture records, use `node --import tsx scripts/remove-demo-data.ts` on the intended database. It backs up the database under ignored `data/private/backups/`, preserves real cases and checks foreign keys.
+
+Vercel uses temporary per-instance SQLite storage. New reports and edits are not durable or shared between instances. Durable community data and continuous follow-up workers remain separate deployment work; this fix restores the populated browsing showcase.
+
+Checks: `node --import tsx scripts/production-data.test.ts`, `node --import tsx scripts/showcase-production.test.ts`, and `npm run vercel-build`.

@@ -1,6 +1,6 @@
 # Vercel demo deployment
 
-Push `main` to the existing GitHub-connected Vercel project. `vercel.json` runs `npm run vercel-build`, which runs `npm run db:demo` before Next.js compilation. No external database, new package, or API key is required to browse the populated demonstration.
+Push `main` to the existing GitHub-connected Vercel project. `vercel.json` runs `npm run vercel-build`, which runs `npm run db:demo` before Next.js compilation. The build explicitly enables `PRAMANIK_SHOWCASE_DATA=true`, and `vercel.json` sets the same non-secret flag for runtime functions. No external database, new package, or API key is required to browse the populated demonstration. Interactive demo mode and phone outreach remain disabled in production.
 
 `scripts/populate-demo.ts` builds `data/demo.sqlite` from the directory, the existing office/audio scenarios, and `lib/db/seed-city.ts`. It checks SQLite integrity and foreign keys, checkpoints the WAL and produces a self-contained database file. Repeated runs are idempotent. The generated file is ignored by Git and created during each deployment; private local databases are excluded from function bundles.
 

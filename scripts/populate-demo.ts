@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path"
 // This builds a clean deployable fixture, never the developer's private database.
 process.env.DATABASE_PATH = resolve(process.cwd(), "data/demo.sqlite")
 process.env.NEXT_PUBLIC_DEMO_MODE = "true"
+process.env.PRAMANIK_SHOWCASE_DATA = "true"
 mkdirSync(dirname(process.env.DATABASE_PATH), { recursive: true })
 const { store } = await import("../lib/civic/repository")
 const { sqlite } = store()

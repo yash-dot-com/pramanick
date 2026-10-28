@@ -5,7 +5,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs"
 import { createHash } from "node:crypto"
 import { dirname, resolve } from "node:path"
 import * as schema from "./schema"
-import { DEMO_MODE } from "../demo-mode"
+import { DEMO_MODE, SHOWCASE_DATA } from "../demo-mode"
 
 function connect() {
   const filename =
@@ -17,7 +17,7 @@ function connect() {
   // Vercel functions have a read-only bundle; each instance gets a writable copy.
   const bundled = resolve(process.cwd(), "data/demo.sqlite")
   if (
-    DEMO_MODE &&
+    (DEMO_MODE || SHOWCASE_DATA) &&
     process.env.VERCEL &&
     filename !== ":memory:" &&
     !existsSync(filename) &&

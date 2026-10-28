@@ -13,7 +13,7 @@
     "db:generate": "drizzle-kit generate",
     "db:seed": "tsx scripts/seed.ts",
     "db:demo": "node --import tsx scripts/populate-demo.ts",
-    "vercel-build": "next build --webpack",
+    "vercel-build": "PRAMANIK_SHOWCASE_DATA=true npm run db:demo && PRAMANIK_SHOWCASE_DATA=true next build --webpack",
     "voice:configure": "node --env-file-if-exists=.env.local --import tsx scripts/configure-voice.ts",
     "worker": "node --env-file-if-exists=.env.local --import tsx scripts/voice-worker.ts"
   },

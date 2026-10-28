@@ -1,5 +1,5 @@
 import type { NextConfig } from "next"
-import { DEMO_MODE } from "./lib/demo-mode"
+import { DEMO_MODE, SHOWCASE_DATA } from "./lib/demo-mode"
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3"],
@@ -7,9 +7,11 @@ const nextConfig: NextConfig = {
     "/*": [
       "./drizzle/**/*",
       "./data/pune/**/*",
-      ...(DEMO_MODE ? ["./data/demo.sqlite"] : []),
+      ...(DEMO_MODE || SHOWCASE_DATA ? ["./data/demo.sqlite"] : []),
       "./prompts/**/*.md",
-      ...(DEMO_MODE ? ["./public/demo-office/audio/**/*"] : []),
+      ...(DEMO_MODE || SHOWCASE_DATA
+        ? ["./public/demo-office/audio/**/*"]
+        : []),
     ],
   },
   outputFileTracingExcludes: {
