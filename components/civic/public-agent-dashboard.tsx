@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils"
 import { PublicNavigation } from "./public-navigation"
 import { PublicCaseFile } from "./public-case-file"
 import { StatusBadge } from "./status-badge"
+import { DashboardSkeleton } from "./loading-skeletons"
 
 const filters = [
   { id: "all", label: "All issues" },
@@ -221,15 +222,7 @@ export function PublicAgentDashboard() {
           </div>
         )}
         {!data && !error ? (
-          <div role="status" className="grid gap-3 sm:grid-cols-4">
-            {counts.map((item) => (
-              <div
-                key={item.label}
-                className="h-24 animate-pulse rounded-xl bg-muted"
-              />
-            ))}
-            <p className="sr-only">Loading follow-ups</p>
-          </div>
+          <DashboardSkeleton />
         ) : (
           data && (
             <>

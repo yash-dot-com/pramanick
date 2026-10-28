@@ -9,7 +9,6 @@ import {
   Check,
   FileText,
   Headphones,
-  Loader2,
   MapPin,
   MessageSquare,
   Phone,
@@ -37,6 +36,7 @@ import {
 import { callLabels } from "@/lib/voice/presentation"
 import { cn } from "@/lib/utils"
 import { StatusBadge } from "./status-badge"
+import { DossierSkeleton } from "./loading-skeletons"
 
 function PublicConversation({ call }: { call: PublicCaseCall }) {
   const notes = publicResponseNotes(call)
@@ -294,10 +294,7 @@ export function PublicCaseFile({
           </p>
         )}
         {!data ? (
-          <p className="flex items-center gap-2 py-8 text-sm text-muted-foreground">
-            <Loader2 className="size-4 animate-spin" />
-            <LocalizedText text="Reading the saved case history…" />
-          </p>
+          !error && <DossierSkeleton />
         ) : (
           <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">

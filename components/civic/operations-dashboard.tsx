@@ -58,6 +58,7 @@ import type { voiceOperations } from "@/lib/voice/operations"
 import type { callActivity } from "@/lib/voice/bolna"
 import { IssueDossier } from "./issue-dossier"
 import { StatusBadge } from "./status-badge"
+import { DashboardSkeleton } from "./loading-skeletons"
 
 const VoiceAgentDialog = dynamic(
   () =>
@@ -176,17 +177,23 @@ export function OperationsDashboard() {
         <Link href="/app" className="text-sm underline">
           <LocalizedText text="Back to map" />
         </Link>
-        <p className="text-sm text-muted-foreground">
-          <LocalizedText text={error || "Loading accountability office…"} />
-        </p>
-        <Button
-          variant="outline"
-          onClick={() =>
-            void refresh().catch((error) => setError(error.message))
-          }
-        >
-          <LocalizedText text="Refresh" />
-        </Button>
+        {error ? (
+          <div className="space-y-3">
+            <p role="alert" className="text-sm text-destructive">
+              <LocalizedText text={error} />
+            </p>
+            <Button
+              variant="outline"
+              onClick={() =>
+                void refresh().catch((error) => setError(error.message))
+              }
+            >
+              <LocalizedText text="Refresh" />
+            </Button>
+          </div>
+        ) : (
+          <DashboardSkeleton operations />
+        )}
       </main>
     )
   const issues = data.civic.issues

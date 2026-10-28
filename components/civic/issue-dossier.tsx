@@ -39,6 +39,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { CATEGORIES, formatDate, type Office } from "@/lib/civic/model"
 import type { readDossier } from "@/lib/civic/dossier"
 import { IssueJourney } from "./issue-journey"
+import { DossierSkeleton } from "./loading-skeletons"
 import { callLabels } from "@/lib/voice/presentation"
 import { StatusBadge } from "./status-badge"
 import { AgentActivityFeed, type AgentActivity } from "./agent-activity-feed"
@@ -162,10 +163,11 @@ export function IssueDossier({
       setBusy(false)
     }
   }
+  if (!data && !error) return <DossierSkeleton />
   if (!data)
     return (
       <div className="space-y-3 p-4 text-sm text-muted-foreground">
-        <LocalizedText text={error || "Loading issue dossier…"} />
+        <LocalizedText text={error} />
         {error && (
           <Button
             variant="outline"

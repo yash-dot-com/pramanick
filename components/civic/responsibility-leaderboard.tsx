@@ -7,8 +7,16 @@ import {
 
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { ArrowUpRight, Search, Trophy } from "lucide-react"
+import {
+  ArrowUpRight,
+  Search,
+  Trophy,
+  ClipboardCheck,
+  CalendarClock,
+  Building2,
+} from "lucide-react"
 import { PublicNavigation } from "./public-navigation"
+import { LeaderboardSkeleton } from "./loading-skeletons"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -234,11 +242,6 @@ export function ResponsibilityLeaderboard() {
             <LocalizedText text={error} />
           </p>
         )}
-        {!data && !error && (
-          <p className="text-sm text-muted-foreground">
-            <LocalizedText text="Loading public records…" />
-          </p>
-        )}
         <div className="overflow-x-auto rounded-xl border">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-muted/40 text-xs text-muted-foreground">
@@ -262,6 +265,13 @@ export function ResponsibilityLeaderboard() {
               </tr>
             </thead>
             <tbody>
+              {!data && !error && (
+                <tr>
+                  <td colSpan={6} className="p-0">
+                    <LeaderboardSkeleton />
+                  </td>
+                </tr>
+              )}
               {profiles.map((profile) => (
                 <tr key={profile.id} className="border-t">
                   <td className="p-4 text-muted-foreground">
@@ -471,40 +481,67 @@ export function ResponsibilityLeaderboard() {
                 {selected.notes.map((note, index) => (
                   <article
                     key={`${note.callId}-${index}`}
-                    className="space-y-2 rounded-lg border p-3 text-sm"
+                    className="group space-y-2.5 rounded-xl border bg-card p-3 text-sm shadow-[var(--surface-shadow)] transition-colors focus-within:border-primary/50 hover:border-primary/30"
                   >
-                    <blockquote className="border-l-2 pl-3">
+                    <blockquote className="border-l-2 border-primary/30 pl-3 text-sm leading-relaxed">
                       <LocalizedText text={note.evidenceQuote} />
                     </blockquote>
-                    <div className="flex flex-wrap gap-1">
-                      {note.actionPlanGiven && (
-                        <Badge variant="outline">
-                          <LocalizedText text="Action plan given" />
-                        </Badge>
-                      )}
-                      {note.deadlineGiven && (
-                        <Badge variant="outline">
-                          <LocalizedText text="Deadline given" />
-                        </Badge>
-                      )}
-                      {note.responsibilityClarified && (
-                        <Badge variant="outline">
-                          <LocalizedText text="Responsibility clarified" />
-                        </Badge>
-                      )}
-                    </div>
                     {note.uncertainty && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-[11px] leading-relaxed text-muted-foreground">
                         <LocalizedText text={note.uncertainty} />
                       </p>
                     )}
-                    <Link
-                      href={`/app?issue=${encodeURIComponent(note.issueId)}`}
-                      className="text-xs underline"
-                    >
-                      <LocalizedText text="Source case ·" />
-                      {formatDate(note.createdAt)}
-                    </Link>
+                    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2 border-t border-border/60 pt-2">
+                      <Link
+                        href={`/app?issue=${encodeURIComponent(note.issueId)}`}
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-md text-xs font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                      >
+                        <span>
+                          <span className="block">
+                            <LocalizedText text="Source case" />
+                          </span>
+                          <time
+                            dateTime={note.createdAt}
+                            className="text-[10px] font-normal"
+                          >
+                            {formatDate(note.createdAt)}
+                          </time>
+                        </span>
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="size-3.5 shrink-0"
+                        />
+                      </Link>
+                      <div className="ml-auto flex max-w-full flex-wrap justify-end gap-1">
+                        {note.actionPlanGiven && (
+                          <Badge
+                            variant="secondary"
+                            className="gap-1 text-[10px]"
+                          >
+                            <ClipboardCheck aria-hidden="true" />
+                            <LocalizedText text="Action plan given" />
+                          </Badge>
+                        )}
+                        {note.deadlineGiven && (
+                          <Badge
+                            variant="default"
+                            className="gap-1 text-[10px]"
+                          >
+                            <CalendarClock aria-hidden="true" />
+                            <LocalizedText text="Deadline given" />
+                          </Badge>
+                        )}
+                        {note.responsibilityClarified && (
+                          <Badge
+                            variant="secondary"
+                            className="gap-1 text-[10px]"
+                          >
+                            <Building2 aria-hidden="true" />
+                            <LocalizedText text="Responsibility clarified" />
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
                   </article>
                 ))}
               </section>

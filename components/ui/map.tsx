@@ -21,6 +21,7 @@ import { createPortal } from "react-dom"
 import { X, Minus, Plus, Locate, Maximize, Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type MapLibreModule = typeof MapLibreGL
 
@@ -281,11 +282,19 @@ type MapProps = {
 
 function DefaultLoader() {
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50 backdrop-blur-xs">
-      <div className="flex gap-1">
-        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/60" />
-        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/60 [animation-delay:150ms]" />
-        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/60 [animation-delay:300ms]" />
+    <div
+      role="status"
+      aria-busy="true"
+      className="absolute inset-0 z-10 overflow-hidden bg-background"
+    >
+      <span className="sr-only">Loading map</span>
+      <div
+        aria-hidden="true"
+        className="grid h-full scale-125 -rotate-12 grid-cols-4 grid-rows-3 gap-3 p-4 opacity-60"
+      >
+        {Array.from({ length: 12 }, (_, index) => (
+          <Skeleton key={index} className="h-full w-full rounded-lg" />
+        ))}
       </div>
     </div>
   )

@@ -38,6 +38,7 @@ import {
 import { CivicMap } from "./civic-map"
 import { DockedPanel } from "./docked-panel"
 import { IssueDossier } from "./issue-dossier"
+import { DossierSkeleton, RecordListSkeleton } from "./loading-skeletons"
 import type { IntakeDraft } from "@/lib/voice/intake"
 import { StatusBadge } from "./status-badge"
 import { OfficeProfile } from "./issue-detail-sidebar"
@@ -213,15 +214,13 @@ export function CivicWorkspace({
               />
             ) : selectedOffice ? (
               <OfficeProfile office={selectedOffice} onClose={closePanel} />
+            ) : loading ? (
+              <DossierSkeleton />
             ) : (
               <div className="space-y-3 p-4 text-sm text-muted-foreground">
                 <p>
                   <LocalizedText
-                    text={
-                      loading
-                        ? "Loading details…"
-                        : error || "This case is no longer available."
-                    }
+                    text={error || "This case is no longer available."}
                   />
                 </p>
                 {!loading && (
@@ -293,9 +292,7 @@ export function CivicWorkspace({
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto p-2">
                 {loading ? (
-                  <p className="p-3 text-sm text-muted-foreground">
-                    <LocalizedText text="Loading local records…" />
-                  </p>
+                  <RecordListSkeleton />
                 ) : error ? (
                   <div className="space-y-3 p-3">
                     <p role="alert" className="text-sm text-destructive">
